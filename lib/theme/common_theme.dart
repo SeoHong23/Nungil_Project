@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-//-------------------------------
-// 해당 페이지는 변경시 상의하기
-//-------------------------------
-// 2025 - 01 - 21 생성 - 강중원
+///-------------------------------
+/// 해당 페이지는 변경시 상의하기
+///-------------------------------
+/// 2025 - 01 - 21 생성 - 강중원
+/// 2025 - 01 - 21 textTheme().labelSmall 추가 - 김주경
 
 //텍스트 테마
 TextTheme textTheme() {
@@ -26,6 +27,9 @@ TextTheme textTheme() {
     // 중간 크기의 제목 스타일
     titleMedium: TextStyle(
         fontFamily: 'GmarketSans', fontSize: 15.0, color: Colors.black),
+
+    labelSmall: TextStyle(
+        fontFamily: 'GmarketSans', fontSize: 8.0, color: Colors.black),
   );
 }
 
