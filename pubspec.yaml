@@ -35,6 +35,12 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  # Google Fonts 라이브러리
+  google_fonts: ^6.1.0
+  # Font Awesome Flutter 아이콘 라이브러리
+  font_awesome_flutter: ^10.5.0
+  # flutter_launcher_icons 앱 아이콘 변경 라이브러리
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_test:
@@ -74,10 +80,15 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: GmarketSans
+      fonts:
+        - asset: assets/fonts/GmarketSansTTFMedium.ttf
+          weight: 400
+        - asset: assets/fonts/GmarketSansTTFLight.ttf
+          weight: 300
+        - asset: assets/fonts/GmarketSansTTFBold.ttf
+          weight: 700
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
@@ -88,3 +99,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  #앱 아이콘 변경
+flutter_icons:
+  android: true
+  ios: false
+  image_path: "assets/app_icon/nungil_app.png"
