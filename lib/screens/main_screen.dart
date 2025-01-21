@@ -1,0 +1,66 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nungil/screens/home/home_page.dart';
+import 'package:nungil/screens/list/list_page.dart';
+import 'package:nungil/screens/ranking/ranking_page.dart';
+import 'package:nungil/screens/user/user_page.dart';
+
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  int _selectedIndex = 0;
+
+  void changeStackPages(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: [
+            HomePage(),
+            RankingPage(),
+            ListPage(),
+            UserPage(),
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _selectedIndex,
+          onTap: (index) {
+            changeStackPages(index);
+          },
+          items: [
+            BottomNavigationBarItem(
+              label: '홈',
+              icon: Icon(CupertinoIcons.house_fill),
+            ),
+            BottomNavigationBarItem(
+              label: ' 랭킹',
+              icon: Icon(FontAwesomeIcons.rankingStar),
+            ),
+            BottomNavigationBarItem(
+              label: '리스트',
+              icon: Icon(CupertinoIcons.square_list_fill),
+            ),
+            BottomNavigationBarItem(
+              label: '유저',
+              icon: Icon(FontAwesomeIcons.solidUser),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
