@@ -6,6 +6,12 @@ import 'package:nungil/screens/list/list_page.dart';
 import 'package:nungil/screens/ranking/ranking_page.dart';
 import 'package:nungil/screens/user/user_page.dart';
 
+/*
+2025-01-21 강중원 - 생성
+2025-01-21 강중원 - 스택페이지에서 페이지뷰 형식으로 바꿈
+
+ */
+
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -14,9 +20,11 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final PageController _pageController = PageController();
+
   int _selectedIndex = 0;
 
-  void changeStackPages(int index) {
+  void changePages(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -26,8 +34,9 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: IndexedStack(
-          index: _selectedIndex,
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: (value) => changePages(value),
           children: [
             HomePage(),
             RankingPage(),
@@ -39,7 +48,9 @@ class _MainScreenState extends State<MainScreen> {
           type: BottomNavigationBarType.fixed,
           currentIndex: _selectedIndex,
           onTap: (index) {
-            changeStackPages(index);
+            changePages(index);
+
+            _pageController.jumpToPage(_selectedIndex);
           },
           items: [
             BottomNavigationBarItem(

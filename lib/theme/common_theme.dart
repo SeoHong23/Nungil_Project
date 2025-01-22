@@ -53,6 +53,7 @@ AppBarTheme appBarTheme() {
     centerTitle: false, //타이틀 중앙 여부
     color: baseBackgroundColor, //타이틀 색상
     elevation: 0.0,
+    scrolledUnderElevation: 0,
     iconTheme: IconThemeData(color: DefaultColors.black), //아이콘 색상
     titleTextStyle: TextStyle(
         fontFamily: 'GmarketSans',
