@@ -1,27 +1,3 @@
-class Director {
-  String directorNm;
-  String directorEnNm;
-  String directorId;
-
-  Director({
-    required this.directorNm,
-    required this.directorEnNm,
-    required this.directorId,
-  });
-}
-
-class Actor {
-  String actorNm;
-  String? actorEnNm;
-  String? actorId;
-
-  Actor({
-    required this.actorNm,
-    this.actorEnNm,
-    this.actorId,
-  });
-}
-
 class Plot {
   String plotLang;
   String plotText;
@@ -32,105 +8,72 @@ class Plot {
   });
 }
 
-
 class Staff {
   String staffNm;
-  String? staffEnNm;
   String staffRoleGroup;
   String? staffRole;
-  String? staffEtc;
   String? staffId;
 
   Staff({
     required this.staffNm,
-    this.staffEnNm,
     required this.staffRoleGroup,
     this.staffRole,
-    this.staffEtc,
     this.staffId,
   });
 }
 
 class Video {
-  String DOCID;
-  String movieId;
-  String movieSeq;
-  String title;
-  String titleEng;
-  String titleOrg;
-  String titleEtc;
-  String prodYear;
-  List<Director> directors;
-  List<Actor> actors;
-  String nation;
-  String company;
-  List<Plot> plots;
-  String runtime;
-  String rating;
-  String genre;
-  String type;
-  String use;
-  String ratedYn;
-  String repRatDate;
-  String repRlsDate;
-  List<String> posters;
-  List<String> stlls;
-  List<Staff> staffs;
-  String regDate;
-  String modDate;
+  String movieId; // 국내 해외 구분
+  String title; // 영화명
+  String titleEng; // 영문제명
+  String titleOrg; // 원제명
+  String titleEtc; // 기타제명(제명 검색을 위해 관리되는 제명 모음)
+  String prodYear; // 제작연도
+  double score; // 평점
+  String nation; // 국가
+  String company; // 제작사
+  List<Plot> plots; // 줄거리
+  String runtime; // 상영시간
+  String rating; // 심의등급
+  String genre; // 장르
+  String type; // 유형구분
+  String use; // 용도구분
+  String repRlsDate; // 대표 개봉일
+  List<String> posters; // 포스터
+  List<String> stlls; // 스틸이미지
+  List<Staff> staffs; // 제작진(감독, 각본, 출연진, 스태프 순서)
 
-  Video(
-      {required this.DOCID,
-      required this.movieId,
-      required this.movieSeq,
-      required this.title,
-      required this.titleEng,
-      required this.titleOrg,
-      required this.titleEtc,
-      required this.prodYear,
-      required this.directors,
-      required this.actors,
-      required this.nation,
-      required this.company,
-      required this.plots,
-      required this.runtime,
-      required this.rating,
-      required this.genre,
-      required this.type,
-      required this.use,
-      required this.ratedYn,
-      required this.repRatDate,
-      required this.repRlsDate,
-      required this.posters,
-      required this.stlls,
-      required this.staffs,
-      required this.regDate,
-      required this.modDate});
+  Video({
+    required this.movieId,
+    required this.title,
+    required this.titleEng,
+    required this.titleOrg,
+    required this.titleEtc,
+    required this.prodYear,
+    this.score = 5.0,
+    required this.nation,
+    required this.company,
+    required this.plots,
+    required this.runtime,
+    required this.rating,
+    required this.genre,
+    required this.type,
+    required this.use,
+    required this.repRlsDate,
+    required this.posters,
+    required this.stlls,
+    required this.staffs,
+  });
 }
 
 Video dummyVideo = Video(
-  DOCID: "F20701",
   movieId: "F",
-  movieSeq: "20701",
   title: "명탐정 코난 : 시한장치의 마천루",
   titleEng: "Detective Conan: The Time-Bombed Skyscraper",
   titleOrg: "名探偵コナン 時計じかけの摩天楼",
   titleEtc:
       "명탐정코난:시한장치의마천루^명탐정 코난 : 시한장치의 마천루^名探偵コナン 時計じかけの摩天楼^Detective Conan the Movie: The Time-Bombed Skyscraper, Detective Conan: The Time Bombed Skyscraper, 명탐정코난시한장치의마천루, 명탐정 코난 시한장치의 마천루, 명탐정 코난: 시한장치의 마천...",
   prodYear: "1997",
-  directors: [
-    Director(
-        directorNm: "코다마 켄지",
-        directorEnNm: "Kenji Kodama",
-        directorId: "00094033")
-  ],
-  actors: [
-    Actor(actorNm: "타카야마 미나미", actorEnNm: "Minami Takayama", actorId: "00103910"),
-    Actor(actorNm: "야마구치 캇페이",actorEnNm: "Kappei Yamaguchi", actorId: "00092835"),
-    Actor(actorNm: "야마자키 와카나", actorEnNm: "Wakana Yamazaki", actorId: "00138673"),
-    Actor(actorNm: "카미야 아키라", actorEnNm: "Kamiya Akira", actorId: "00180053"),
-    Actor(actorNm: "오가타 켄이치", actorEnNm: "Ogata Kenichi", actorId: "00138137"),
-  ],
   nation: "일본",
   company: "TMS Entertainment,소학관(쇼각칸),요미우리TV,토호,도쿄무비신사",
   plots: [
@@ -144,8 +87,6 @@ Video dummyVideo = Video(
   genre: "미스터리,스릴러,범죄",
   type: "애니메이션",
   use: "극장용",
-  ratedYn: "Y",
-  repRatDate: "20240902",
   repRlsDate: "20241002",
   posters: [
     "http://file.koreafilm.or.kr/poster/99/18/56/DPF030009_01.jpg",
@@ -164,61 +105,36 @@ Video dummyVideo = Video(
     "http://file.koreafilm.or.kr/still/copy/00/68/06/DST867667_01.jpg",
   ],
   staffs: [
-    Staff(
-        staffNm: "코다마 켄지",
-        staffEnNm: "Kenji Kodama",
-        staffRoleGroup: "감독",
-        staffId: "00094033"),
-    Staff(
-        staffNm: "코우치 카즈나리",
-        staffEnNm: "Kouchi Kazunari",
-        staffRoleGroup: "각본",
-        staffId: "00145445"),
+    Staff(staffNm: "코다마 켄지", staffRoleGroup: "감독", staffId: "00094033"),
+    Staff(staffNm: "코우치 카즈나리", staffRoleGroup: "각본", staffId: "00145445"),
     Staff(
         staffNm: "타카야마 미나미",
-        staffEnNm: "Minami Takayama",
         staffRoleGroup: "출연",
         staffRole: "에도가와 코난 목소리",
         staffId: "00103910"),
     Staff(
         staffNm: "야마구치 캇페이",
-        staffEnNm: "Kappei Yamaguchi",
         staffRoleGroup: "출연",
         staffRole: "쿠도 신이치 목소리",
         staffId: "00092835"),
     Staff(
         staffNm: "야마자키 와카나",
-        staffEnNm: "Wakana Yamazaki",
         staffRoleGroup: "출연",
         staffRole: "모리 란 목소리",
         staffId: "00138673"),
     Staff(
         staffNm: "카미야 아키라",
-        staffEnNm: "Kamiya Akira",
         staffRoleGroup: "출연",
         staffRole: "모리 코고로 목소리",
         staffId: "00180053"),
     Staff(
         staffNm: "오가타 켄이치",
-        staffEnNm: "Ogata Kenichi",
         staffRoleGroup: "출연",
         staffRole: "아가사 히로시 목소리",
         staffId: "00138137"),
-    Staff(
-        staffNm: "오카다 테루키요",
-        staffEnNm: "Terukiyo Okada",
-        staffRoleGroup: "편집",
-        staffId: "00119414"),
-    Staff(
-        staffNm: "오오노 카츠오",
-        staffEnNm: "Ohno Katsuo",
-        staffRoleGroup: "음악",
-        staffId: "00127054"),
-    Staff(
-        staffNm: "시부타니 유키히로",
-        staffEnNm: "Yukihiro Shibutani",
-        staffRoleGroup: "미술",
-        staffId: "00124690"),
+    Staff(staffNm: "오카다 테루키요", staffRoleGroup: "편집", staffId: "00119414"),
+    Staff(staffNm: "오오노 카츠오", staffRoleGroup: "음악", staffId: "00127054"),
+    Staff(staffNm: "시부타니 유키히로", staffRoleGroup: "미술", staffId: "00124690"),
     Staff(
       staffNm: "TMS Entertainment",
       staffRoleGroup: "제작사",
@@ -241,15 +157,11 @@ Video dummyVideo = Video(
     ),
     Staff(
       staffNm: "CJ ENM",
-      staffEnNm: "CJ ENM",
       staffRoleGroup: "배급사",
     ),
     Staff(
       staffNm: "CJ ENM",
-      staffEnNm: "CJ ENM",
       staffRoleGroup: "수입사",
     )
   ],
-  regDate: "20070704",
-  modDate: "20240904",
 );
