@@ -35,7 +35,7 @@ TextTheme textTheme() {
 AppBarTheme appBarTheme() {
   return AppBarTheme(
     centerTitle: false, //타이틀 중앙 여부
-    color: Colors.white, //타이틀 색상
+    color: baseBackgroundColor, //타이틀 색상
     elevation: 0.0,
     iconTheme: IconThemeData(color: Colors.black), //아이콘 색상
     titleTextStyle: TextStyle(
@@ -52,8 +52,8 @@ AppBarTheme appBarTheme() {
 // 바텀네비게이션바 테마 설정
 BottomNavigationBarThemeData bottomNavigationBarTheme() {
   return BottomNavigationBarThemeData(
-    selectedItemColor: Colors.black, // 선택된 아이템 색상
-    unselectedItemColor: Colors.grey, // 선택되지 않은 아이템 색상
+    selectedItemColor: iconThemeColor[800], // 선택된 아이템 색상
+    unselectedItemColor: iconThemeColor, // 선택되지 않은 아이템 색상
     showUnselectedLabels: true, // 선택 안된 라벨 표시 여부 설정
   );
 }
@@ -70,9 +70,44 @@ ThemeData mTheme() {
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: Colors.orange,
     ),
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: baseBackgroundColor,
     textTheme: textTheme(),
     appBarTheme: appBarTheme(),
     bottomNavigationBarTheme: bottomNavigationBarTheme(),
   );
 }
+
+const int _baseColorValue = 0xFFF8FBFF;
+const int _primaryColorValue = 0xFFA4DDED;
+
+const MaterialColor baseBackgroundColor = MaterialColor(
+  _baseColorValue,
+  <int, Color>{
+    50: Color(0xFFFCFEFF), // 거의 하얀색
+    100: Color(0xFFF9FDFF), // 아주 연한 하늘색
+    200: Color(0xFFF6FBFF), // 조금 더 진한 연한 색
+    300: Color(0xFFF3FAFF), // 기본 배경보다 조금 더 진함
+    400: Color(0xFFF0F8FF), // 더 선명한 배경용
+    500: Color(_baseColorValue), // 기본 베이스 색상
+    600: Color(0xFFEAF3F9), // 약간 어두운 배경 대체 색
+    700: Color(0xFFDDEDF4), // 어두운 톤의 배경
+    800: Color(0xFFCFDDEC), // 더 어두운 대체 색상
+    900: Color(0xFFB9CBDD), // 가장 어두운 배경 대체 색
+  },
+);
+
+const MaterialColor iconThemeColor = MaterialColor(
+  _primaryColorValue,
+  <int, Color>{
+    50: Color(0xFFEAF7FD), // 매우 연한 파란색
+    100: Color(0xFFD2EFFB), // 연한 파란색
+    200: Color(0xFFB7E5F8), // 조금 더 진한 연한 파란색
+    300: Color(0xFF9BD9F4), // 중간 밝기의 파란색
+    400: Color(0xFF86D1F1), // 기본보다 약간 더 진한 파란색
+    500: Color(_primaryColorValue), // 기본 색상
+    600: Color(0xFF8CC9E0), // 약간 어두운 톤
+    700: Color(0xFF72BFD9), // 더 어두운 톤
+    800: Color(0xFF58B5D2), // 더 진한 파란색
+    900: Color(0xFF2C9CBF), // 가장 어두운 파란색
+  },
+);
