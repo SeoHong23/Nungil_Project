@@ -186,8 +186,10 @@ class _PasswordState extends State<Password> {
                         width: 1.0,
                       ),
                     ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: hasError ? Colors.red : Colors.black,
+                      ),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                       vertical: 12,
@@ -271,8 +273,10 @@ class _PasswordState extends State<Password> {
                         width: 1.0,
                       ),
                     ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: isPasswordMatch ? Colors.red : Colors.black,
+                      ),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                       vertical: 12,

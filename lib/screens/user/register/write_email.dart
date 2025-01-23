@@ -129,8 +129,10 @@ class _WriteEmailState extends State<WriteEmail> {
                             width: 1.0,
                           ),
                         ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: hasError ? Colors.red : Colors.black,
+                          ),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                           vertical: 12,
