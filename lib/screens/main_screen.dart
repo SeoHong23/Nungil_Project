@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nungil/models/Video.dart';
 import 'package:nungil/screens/home/home_page.dart';
 import 'package:nungil/screens/list/list_page.dart';
 import 'package:nungil/screens/ranking/ranking_page.dart';
 import 'package:nungil/screens/user/user_page.dart';
+import 'package:nungil/screens/video_detail/video_detail_page.dart';
 
 /*
 2025-01-21 강중원 - 생성
@@ -42,6 +44,7 @@ class _MainScreenState extends State<MainScreen> {
             RankingPage(),
             ListPage(),
             UserPage(),
+            VideoDetailPage(item: dummyVideo)
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -68,6 +71,10 @@ class _MainScreenState extends State<MainScreen> {
             BottomNavigationBarItem(
               label: '유저',
               icon: Icon(FontAwesomeIcons.solidUser),
+            ),
+            BottomNavigationBarItem(
+              label: '_상세화면',
+              icon: Icon(FontAwesomeIcons.film),
             ),
           ],
         ),
