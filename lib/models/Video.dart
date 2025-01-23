@@ -23,10 +23,10 @@ class Staff {
 }
 
 class Video {
-  String movieId; // 국내 해외 구분
+  String? commCodes; // 외부코드
   String title; // 영화명
-  String titleEng; // 영문제명
-  String titleOrg; // 원제명
+  String? titleEng; // 영문제명
+  String? titleOrg; // 원제명
   String titleEtc; // 기타제명(제명 검색을 위해 관리되는 제명 모음)
   String prodYear; // 제작연도
   double score; // 평점
@@ -34,7 +34,7 @@ class Video {
   String company; // 제작사
   List<Plot> plots; // 줄거리
   String runtime; // 상영시간
-  String rating; // 심의등급
+  String? rating; // 심의등급
   String genre; // 장르
   String type; // 유형구분
   String use; // 용도구분
@@ -42,12 +42,13 @@ class Video {
   List<String> posters; // 포스터
   List<String> stlls; // 스틸이미지
   List<Staff> staffs; // 제작진(감독, 각본, 출연진, 스태프 순서)
+  int review;
 
   Video({
-    required this.movieId,
+    this.commCodes,
     required this.title,
-    required this.titleEng,
-    required this.titleOrg,
+    this.titleEng,
+    this.titleOrg,
     required this.titleEtc,
     required this.prodYear,
     this.score = 5.0,
@@ -55,19 +56,19 @@ class Video {
     required this.company,
     required this.plots,
     required this.runtime,
-    required this.rating,
+    this.rating,
     required this.genre,
     required this.type,
     required this.use,
     required this.repRlsDate,
     required this.posters,
-    required this.stlls,
+    this.stlls = const[],
     required this.staffs,
+    this.review = 0,
   });
 }
 
 Video dummyVideo = Video(
-  movieId: "F",
   title: "명탐정 코난 : 시한장치의 마천루",
   titleEng: "Detective Conan: The Time-Bombed Skyscraper",
   titleOrg: "名探偵コナン 時計じかけの摩天楼",
