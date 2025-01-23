@@ -41,6 +41,7 @@ dependencies:
   font_awesome_flutter: ^10.5.0
   # flutter_launcher_icons 앱 아이콘 변경 라이브러리
   flutter_launcher_icons: ^0.14.3
+  logger: ^2.5.0
 
 dev_dependencies:
   flutter_test:

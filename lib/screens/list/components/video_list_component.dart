@@ -16,6 +16,14 @@ class VideoListComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.4),
+            spreadRadius: 0,
+            blurRadius: 5.0,
+            offset: Offset(0, 1),
+          ),
+        ],
         color: baseBackgroundColor[600],
         borderRadius: BorderRadius.circular(10),
       ),
