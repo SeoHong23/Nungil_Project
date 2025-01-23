@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'email_login/email_login.dart';
 import 'term/term.dart';
 
 class UserPage extends StatelessWidget {
@@ -119,8 +120,12 @@ class UserPage extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      // 이메일 로그인 클릭 이벤트
-                      print("이메일 로그인 클릭");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EmailLogin(), // Term 화면
+                        ),
+                      );
                     },
                     child: Text(
                       '이메일 로그인    ',
