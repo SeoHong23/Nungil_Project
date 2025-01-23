@@ -28,7 +28,10 @@ TextTheme textTheme() {
     // 두꺼운 제목 스타일
     // 상세보기 제목에 사용됨
     titleLarge: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 16.0, color: DefaultColors.black, fontWeight: FontWeight.bold),
+        fontFamily: 'GmarketSans',
+        fontSize: 16.0,
+        color: DefaultColors.black,
+        fontWeight: FontWeight.bold),
 
     // 중간 크기의 제목 스타일
     titleMedium: TextStyle(
@@ -60,7 +63,7 @@ AppBarTheme appBarTheme() {
         fontSize: 16, // 폰트 사이즈
         fontWeight: FontWeight.bold, // 굵기
         color: DefaultColors.black // 앱바 제목 텍스트 색상
-    ),
+        ),
   );
 }
 
@@ -126,7 +129,6 @@ const MaterialColor iconThemeColor = MaterialColor(
   },
 );
 
-
 class DefaultColors {
-  static const Color black = Color(0xFF212121);  // 아주 짙은 회색(글자색)
+  static const Color black = Color(0xFF212121); // 아주 짙은 회색(글자색)
 }
