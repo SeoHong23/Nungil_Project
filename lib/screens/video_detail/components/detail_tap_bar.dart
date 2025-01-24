@@ -18,10 +18,6 @@ class _DetailTapBarState extends State<DetailTapBar>
   @override
   void initState() {
     super.initState();
-    print('프로필 탭 내부 클래스 init 호출');
-
-    // length는 탭의 개수를 의미한다.
-    // vsync는 자연스러운 애니메이션 전환을 위해서 TivkerProvider를 이용한다.
     _tabController = TabController(length: 3, vsync: this);
   }
 
@@ -29,12 +25,21 @@ class _DetailTapBarState extends State<DetailTapBar>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildTabBar(widget.item),
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [baseBackgroundColor, Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: _buildTabBar(widget.item),
+        ),
       ],
     );
   }
 
-  Widget _buildTabBar(Video item) {
+  TabBar _buildTabBar(Video item) {
     return TabBar(
       controller: _tabController,
       tabs: [
@@ -49,31 +54,17 @@ class _DetailTapBarState extends State<DetailTapBar>
         )
       ],
       indicatorColor: iconThemeColor.shade700,
-      labelColor: iconThemeColor.shade800,
-      overlayColor: WidgetStatePropertyAll(iconThemeColor.shade50),
-      unselectedLabelColor: iconThemeColor.shade200,
+      labelColor: iconThemeColor.shade900,
+      overlayColor: WidgetStatePropertyAll(iconThemeColor.shade200),
+      unselectedLabelColor: iconThemeColor.shade300,
     );
   } // end of _buildTabBar
 
-  Widget _buildTabBarView(Video item) {
+  TabBarView _buildTabBarView(Video item) {
     return TabBarView(
       controller: _tabController,
       children: [
-        Container(
-          width: double.infinity,
-          height: 400,
-          child: Text("작품정보"),
-        ),
-        Container(
-          width: double.infinity,
-          height: 400,
-          child: Text("리뷰"),
-        ),
-        Container(
-          width: double.infinity,
-          height: 400,
-          child: Text("영상/이미지"),
-        ),
+
       ],
     );
   }
