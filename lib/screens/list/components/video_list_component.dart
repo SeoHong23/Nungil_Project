@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nungil/theme/common_theme.dart';
 
+/// 2025-01-23 강중원 - 생성
+/// 2025-01-24 강중원 - 임시 모델로 불러오도록 설정
+
 class VideoListComponent extends StatelessWidget {
   final String imgUrl;
   final String name;
@@ -24,7 +27,7 @@ class VideoListComponent extends StatelessWidget {
             offset: Offset(0, 1),
           ),
         ],
-        color: baseBackgroundColor[600],
+        color: baseBackgroundColor[100],
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -49,7 +52,32 @@ class VideoListComponent extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("${rate}%"),
+                  Builder(
+                    builder: (context) {
+                      if (rate > 70) {
+                        return Text(
+                          "${rate}%",
+                          style: TextStyle(
+                              color: DefaultColors.green,
+                              fontWeight: FontWeight.bold),
+                        );
+                      } else if (rate > 40) {
+                        return Text(
+                          "${rate}%",
+                          style: TextStyle(
+                              color: DefaultColors.yellow,
+                              fontWeight: FontWeight.bold),
+                        );
+                      } else {
+                        return Text(
+                          "${rate}%",
+                          style: TextStyle(
+                              color: DefaultColors.red,
+                              fontWeight: FontWeight.bold),
+                        );
+                      }
+                    },
+                  ),
                   InkWell(
                     onTap: () {
                       // 버튼 클릭 시 실행될 동작
