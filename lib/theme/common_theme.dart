@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 /// 2025-01-21 생성 - 강중원
 /// 2025-01-21 textTheme().labelSmall 추가 - 김주경
 /// 2025-01-22 titleLarge/labelMedium 추가, iconThemeColor 수정 - 김주경
+/// 2025-01-24 텍스트용 색상 추가(green, red)
 
 //텍스트 테마
 TextTheme textTheme() {
@@ -75,6 +76,8 @@ BottomNavigationBarThemeData bottomNavigationBarTheme() {
     selectedItemColor: iconThemeColor[800], // 선택된 아이템 색상
     unselectedItemColor: iconThemeColor[300], // 선택되지 않은 아이템 색상
     showUnselectedLabels: true, // 선택 안된 라벨 표시 여부 설정
+    backgroundColor: baseBackgroundColor,
+    elevation: 0.0,
   );
 }
 
@@ -131,4 +134,11 @@ const MaterialColor iconThemeColor = MaterialColor(
 
 class DefaultColors {
   static const Color black = Color(0xFF212121); // 아주 짙은 회색(글자색)
+  static const Color green = Color(0xFF0ca678); // 눈이 편한 초록색 (글자색)
+  static const Color yellow = Color(0xFFf7b233); // 약한 경고용 노란색 (글자색)
+  static const Color red = Color(0xFFf03e3e); // 경고용 붉은색 (글자색)
+}
+
+class CustomTextStyle {
+  static const TextStyle bigLogo = TextStyle(fontSize: 50);
 }
