@@ -67,15 +67,13 @@ class _VideoDetailPageState extends State<VideoDetailPage>
           SliverAppBar(
             toolbarHeight: 50.0,
             pinned: true,
-            expandedHeight: 350.0,
+            expandedHeight: 300.0,
             elevation: 0,
             scrolledUnderElevation: 0,
             backgroundColor: Colors.transparent,
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
-                children: [
-                  _buildDetailTop(widget.item,context)
-                ],
+                children: [_buildDetailTop(widget.item)],
               ),
             ),
           ),
@@ -86,11 +84,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   }
 }
 
-_buildDetailTop(Video item, BuildContext context) {
-  double screenWidth = MediaQuery.of(context).size.width > 600
-      ? 600
-      : MediaQuery.of(context).size.width;
-
+_buildDetailTop(Video item) {
   return Container(
     child: Stack(
       children: [
@@ -104,33 +98,56 @@ _buildDetailTop(Video item, BuildContext context) {
           ),
         ),
         // 그라데이션
-        Container(
-          width: double.infinity,
-          height: 351,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                baseBackgroundColor,
-                baseBackgroundColor,
-                baseBackgroundColor.withOpacity(0.7),
-                baseBackgroundColor.withOpacity(0.3),
-                Colors.transparent,
-              ],
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-            ),
+        Positioned(
+          left: -10,
+          right: -10,
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 351,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      baseBackgroundColor,
+                      baseBackgroundColor,
+                      baseBackgroundColor.withOpacity(0.7),
+                      baseBackgroundColor.withOpacity(0.3),
+                      Colors.transparent,
+                    ],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                  ),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                height: 351,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      baseBackgroundColor,
+                      baseBackgroundColor.withOpacity(0.5),
+                    ],
+                    stops: [0.05,0.1],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.center,
+                  ),
+                ),
+              )
+            ],
           ),
         ),
         Positioned(
-          top: 130,
           left: 0,
           right: 0,
+          bottom: 0,
           child: Column(
             children: [
               // 포스터 썸네일
               Image.network(
                 item.posters[0],
-                width: 70,
+                width: 100,
               ),
               const SizedBox(
                 height: 10,
@@ -158,16 +175,28 @@ _buildDetailTop(Video item, BuildContext context) {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildReactionButton(
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: _buildReactionButton(
                       mIcon: FontAwesomeIcons.faceSmile,
                       color: Colors.green,
                       label: "좋아요",
-                      width: screenWidth / 2.0 - 10),
-                  _buildReactionButton(
-                      mIcon: FontAwesomeIcons.faceAngry,
-                      color: Colors.red,
-                      label: "별로예요",
-                      width: screenWidth / 2.0 - 10),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                      child: _buildReactionButton(
+                    mIcon: FontAwesomeIcons.faceAngry,
+                    color: Colors.red,
+                    label: "별로예요",
+                  )),
+                  const SizedBox(
+                    width: 10,
+                  ),
                 ],
               )
             ],
@@ -183,13 +212,11 @@ _buildReactionButton({
   required IconData mIcon,
   required String label,
   required Color color,
-  required double width,
 }) {
   return ElevatedButton.icon(
     onPressed: () {},
     style: ButtonStyle(
-      minimumSize: WidgetStatePropertyAll(Size(width, 35)),
-      backgroundColor: WidgetStatePropertyAll(Colors.white),
+      backgroundColor: WidgetStatePropertyAll(baseBackgroundColor.shade50),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4.0),
