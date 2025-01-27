@@ -2,69 +2,87 @@ import 'package:flutter/material.dart';
 import 'package:nungil/models/Video.dart';
 import 'package:nungil/theme/common_theme.dart';
 
-class DetailTapBar extends StatefulWidget {
-  const DetailTapBar({required this.item, super.key});
+class DetailTap extends StatelessWidget {
+  const DetailTap({required this.controller, required this.item, super.key});
 
+  final TabController controller;
   final Video item;
 
   @override
-  State<DetailTapBar> createState() => _DetailTapBarState();
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 3,
+      child: Column(
+        children: [
+          DetailTapBar(controller: controller, item: item),
+          Expanded(child: _TabBarView(controller: controller, item: item),),
+        ],
+      ),
+    );
+  }
 }
 
-class _DetailTapBarState extends State<DetailTapBar>
-    with TickerProviderStateMixin {
-  TabController? _tabController;
+class DetailTapBar extends StatelessWidget {
+  const DetailTapBar({required this.controller, required this.item, super.key});
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-  }
+  final TabController controller;
+  final Video item;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [baseBackgroundColor, Colors.white],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-          child: _buildTabBar(widget.item),
-        ),
-      ],
-    );
-  }
-
-  TabBar _buildTabBar(Video item) {
     return TabBar(
-      controller: _tabController,
+      controller: controller,
       tabs: [
-        Tab(
-          child: Text("작품정보"),
-        ),
-        Tab(
-          child: Text("리뷰 ${item.review}"),
-        ),
-        Tab(
-          child: Text("영상/이미지 ${item.stlls.length}"),
-        )
+        Tab(child: Text("작품정보")),
+        Tab(child: Text("리뷰 ${item.reviewCnt}")),
+        Tab(child: Text("영상/이미지 ${item.stlls.length}"))
       ],
       indicatorColor: iconThemeColor.shade700,
       labelColor: iconThemeColor.shade900,
       overlayColor: WidgetStatePropertyAll(iconThemeColor.shade200),
       unselectedLabelColor: iconThemeColor.shade300,
     );
-  } // end of _buildTabBar
+  }
+}
 
-  TabBarView _buildTabBarView(Video item) {
+class _TabBarView extends StatelessWidget {
+  const _TabBarView({required this.controller, required this.item, super.key});
+
+  final TabController controller;
+  final Video item;
+
+  @override
+  Widget build(BuildContext context) {
     return TabBarView(
-      controller: _tabController,
+      controller: controller,
       children: [
-
+        ListView(
+          children: [
+            Container(
+              height: 2000,
+              width: double.infinity,
+              color: Colors.red,
+            ),
+          ],
+        ),
+        ListView(
+          children: [
+            Container(
+              height: 2000,
+              width: double.infinity,
+              color: Colors.yellow,
+            ),
+          ],
+        ),
+        ListView(
+          children: [
+            Container(
+              height: 2000,
+              width: double.infinity,
+              color: Colors.grey,
+            ),
+          ],
+        )
       ],
     );
   }
