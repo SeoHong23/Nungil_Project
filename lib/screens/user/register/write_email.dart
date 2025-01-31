@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'password.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class WriteEmail extends StatefulWidget {
   const WriteEmail({super.key});
@@ -12,6 +13,7 @@ class WriteEmail extends StatefulWidget {
 class _WriteEmailState extends State<WriteEmail> {
   bool hasError = false; // 이메일 형식 오류 표시 여부
   bool isButtonEnabled = false; // 이메일 형식이 올바를 때만 버튼 활성화
+  bool emailExistsError = false; // 이메일 중복 여부 표시
   final TextEditingController _controller = TextEditingController();
 
   // 이메일 유효성 검사
@@ -60,11 +62,42 @@ class _WriteEmailState extends State<WriteEmail> {
     });
   }
 
+  // 이메일 중복 체크 API 호출
+  Future<void> checkEmailExists(String email) async {
+    final url = Uri.parse(
+        'http://10.0.2.2:8080/check-email?email=$email'); // 실제 서버 URL로 변경하세요.
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        // 이메일 중복 여부 확인
+        final isEmailExist = jsonDecode(response.body);
+
+        setState(() {
+          emailExistsError = isEmailExist; // 중복되면 true로 설정
+        });
+      } else {
+        // 서버 에러 처리
+        setState(() {
+          emailExistsError = false; // 예외 처리
+        });
+      }
+    } catch (e) {
+      // 네트워크 오류 처리
+      setState(() {
+        emailExistsError = false;
+      });
+      print('Error: $e');
+    }
+  }
+
   // 텍스트 필드의 텍스트를 지우는 함수
   void clearText() {
     setState(() {
       _controller.clear();
       hasError = false; // 텍스트를 지우면 오류 없앰
+      emailExistsError = false; // 중복 이메일 오류 없앰
       updateButtonState(); // 텍스트 지운 후 버튼 상태 갱신
     });
   }
@@ -116,6 +149,7 @@ class _WriteEmailState extends State<WriteEmail> {
                         updateButtonState(); // 이메일이 바뀔 때마다 버튼 상태 갱신
                         hasError =
                             !isValidEmail(_controller.text); // 이메일 유효성 검사
+                        emailExistsError = false; // 이메일 입력 중에는 중복 에러 초기화
                       },
                       decoration: InputDecoration(
                         hintText: '이메일 주소 입력',
@@ -149,11 +183,24 @@ class _WriteEmailState extends State<WriteEmail> {
                   ),
                 ),
                 const SizedBox(height: 8),
+                // 이메일 형식 오류 메시지
                 if (hasError)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       '이메일 형식이 올바르지 않습니다.',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                // 이메일 중복 오류 메시지
+                if (emailExistsError)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      '이미 가입된 이메일입니다. 이메일 로그인을 시도해주세요.',
                       style: TextStyle(
                         color: Colors.red,
                         fontSize: 12,
@@ -199,14 +246,18 @@ class _WriteEmailState extends State<WriteEmail> {
                     width: 350,
                     child: ElevatedButton(
                       onPressed: isButtonEnabled
-                          ? () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const Password(), // 이동할 페이지 지정
-                                ),
-                              );
+                          ? () async {
+                              // 이메일 중복 확인
+                              await checkEmailExists(_controller.text);
+                              if (!emailExistsError) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Password(
+                                        email: _controller.text), // 이메일 값을 전달
+                                  ),
+                                );
+                              }
                             }
                           : null,
                       style: ElevatedButton.styleFrom(
@@ -228,7 +279,7 @@ class _WriteEmailState extends State<WriteEmail> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 30),
               ],
             ),
           ),
