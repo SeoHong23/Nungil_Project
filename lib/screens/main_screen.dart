@@ -45,55 +45,55 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        color: baseBackgroundColor,
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: 700,
-            ),
-            child: Scaffold(
-              body: PageView(
-                controller: _pageController,
-                onPageChanged: (value) => changePages(value),
-                children: [
-                  HomePage(),
-                  RankingPage(),
-                  ListPage(),
-                  UserPage(),
-                  VideoDetailPage(item: dummyVideo)
-                ],
+      child: Scaffold(
+        body: Container(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: 700,
               ),
-              bottomNavigationBar: BottomNavigationBar(
-                type: BottomNavigationBarType.fixed,
-                currentIndex: _selectedIndex,
-                onTap: (index) {
-                  changePages(index);
-
-                  _pageController.jumpToPage(_selectedIndex);
-                },
-                items: [
-                  BottomNavigationBarItem(
-                    label: '홈',
-                    icon: Icon(CupertinoIcons.house_fill),
-                  ),
-                  BottomNavigationBarItem(
-                    label: ' 랭킹',
-                    icon: Icon(FontAwesomeIcons.rankingStar),
-                  ),
-                  BottomNavigationBarItem(
-                    label: '리스트',
-                    icon: Icon(CupertinoIcons.square_list_fill),
-                  ),
-                  BottomNavigationBarItem(
-                    label: '유저',
-                    icon: Icon(FontAwesomeIcons.solidUser),
-                  ),
-                  BottomNavigationBarItem(
-                    label: '_상세화면',
-                    icon: Icon(FontAwesomeIcons.film),
-                  ),
-                ],
+              child: Scaffold(
+                body: PageView(
+                  controller: _pageController,
+                  onPageChanged: (value) => changePages(value),
+                  children: [
+                    HomePage(),
+                    RankingPage(),
+                    ListPage(),
+                    UserPage(),
+                    VideoDetailPage(item: dummyVideo)
+                  ],
+                ),
+                bottomNavigationBar: BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
+                  currentIndex: _selectedIndex,
+                  onTap: (index) {
+                    changePages(index);
+                    _pageController.jumpToPage(_selectedIndex);
+                  },
+                  items: [
+                    BottomNavigationBarItem(
+                      label: '홈',
+                      icon: Icon(CupertinoIcons.house_fill),
+                    ),
+                    BottomNavigationBarItem(
+                      label: ' 랭킹',
+                      icon: Icon(FontAwesomeIcons.rankingStar),
+                    ),
+                    BottomNavigationBarItem(
+                      label: '리스트',
+                      icon: Icon(CupertinoIcons.square_list_fill),
+                    ),
+                    BottomNavigationBarItem(
+                      label: '유저',
+                      icon: Icon(FontAwesomeIcons.solidUser),
+                    ),
+                    BottomNavigationBarItem(
+                      label: '_상세화면',
+                      icon: Icon(FontAwesomeIcons.film),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

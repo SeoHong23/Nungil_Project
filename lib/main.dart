@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/screens/main_screen.dart';
 import 'package:nungil/theme/common_theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -15,7 +20,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'nungil',
       debugShowCheckedModeBanner: false,
+      darkTheme: dTheme(),
       theme: mTheme(),
+      themeMode: ThemeMode.light,
       home: MainScreen(),
     );
   }
