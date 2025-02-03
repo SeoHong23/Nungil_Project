@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'user_info.dart';
 
 class Password extends StatefulWidget {
-  const Password({super.key});
+  final String email;
+  const Password({Key? key, required this.email}) : super(key: key);
 
   @override
   State<Password> createState() => _PasswordState();
@@ -334,8 +335,12 @@ class _PasswordState extends State<Password> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const UserInfo(), // 이동할 페이지 지정
+                                  builder: (context) => UserInfo(
+                                    email:
+                                        widget.email, // Password 페이지에서 받은 이메일
+                                    password:
+                                        _controller1.text, // 첫 번째 비밀번호 입력값
+                                  ),
                                 ),
                               );
                             }

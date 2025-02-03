@@ -1,12 +1,18 @@
+import 'dart:convert';
 import 'dart:math';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
 
 import '../../main_screen.dart';
 
 class UserInfo extends StatefulWidget {
-  const UserInfo({super.key});
+  final String email;
+  final String password;
+  const UserInfo({Key? key, required this.email, required this.password})
+      : super(key: key);
 
   @override
   State<UserInfo> createState() => _UserInfoState();
@@ -116,6 +122,43 @@ class _UserInfoState extends State<UserInfo> {
   int? _selectedYear;
 
   List<int> years = List.generate(2012 - 1950, (index) => 1950 + index);
+
+  Future<void> _submitForm() async {
+    if (!isButtonEnabled) return;
+
+    final nickname = _nicknameController.text;
+    final gender = isFemaleSelected ? 'FEMALE' : 'MALE';
+    final birthYear = _selectedYear;
+
+    print('전송할 데이터: ${gender}, ${birthYear}, ${nickname}');
+    print('Email: ${widget.email}');
+    print('Password: ${widget.password}');
+
+    try {
+      // HTTP POST 요청
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:8080/register'), // 포트 번호를 8080으로 변경
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'nickname': nickname,
+          'gender': gender,
+          'birthYear': birthYear,
+          'email': widget.email,
+          'password': widget.password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print('회원가입 성공!');
+        // 이후 페이지로 이동하는 로직 추가
+      } else {
+        print('서버 오류: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('에러 발생: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -356,6 +399,7 @@ class _UserInfoState extends State<UserInfo> {
                     child: ElevatedButton(
                       onPressed: isButtonEnabled
                           ? () {
+                              _submitForm();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

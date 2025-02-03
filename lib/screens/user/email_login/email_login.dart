@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../main_screen.dart';
+
 class EmailLogin extends StatefulWidget {
   const EmailLogin({super.key});
 
@@ -15,6 +17,7 @@ class _EmailLoginState extends State<EmailLogin> {
   bool isPasswordVisible = false;
   String emailErrorMessage = '';
   String passwordErrorMessage = '';
+  bool isButtonEnabled = false;
 
   bool isValidEmail(String email) {
     final RegExp regex =
@@ -40,6 +43,7 @@ class _EmailLoginState extends State<EmailLogin> {
         emailErrorMessage = '';
       });
     }
+    updateButtonState();
   }
 
   void validatePassword() {
@@ -60,6 +64,7 @@ class _EmailLoginState extends State<EmailLogin> {
         passwordErrorMessage = '';
       });
     }
+    updateButtonState();
   }
 
   void clearEmailField() {
@@ -73,6 +78,15 @@ class _EmailLoginState extends State<EmailLogin> {
     setState(() {
       passwordController.clear();
       passwordHasError = false;
+    });
+  }
+
+  void updateButtonState() {
+    setState(() {
+      isButtonEnabled = !emailHasError &&
+          !passwordHasError &&
+          emailController.text.isNotEmpty &&
+          passwordController.text.isNotEmpty;
     });
   }
 
@@ -212,6 +226,68 @@ class _EmailLoginState extends State<EmailLogin> {
                     ),
                   ),
                 ),
+              const Spacer(),
+
+              // 버튼
+              Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: 350,
+                      child: ElevatedButton(
+                        onPressed: isButtonEnabled
+                            ? () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const MainScreen(), // 이동할 페이지 지정
+                                  ),
+                                );
+                              }
+                            : null,
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          backgroundColor: isButtonEnabled
+                              ? const Color(0xFF0066CC) // 활성화 색상
+                              : const Color(0xFF5F92D0), // 비활성화 색상
+                          foregroundColor: isButtonEnabled
+                              ? Colors.white // 활성화된 상태에서 텍스트는 흰색
+                              : Colors.white70, // 비활성화된 상태에서 텍스트는 약간 어두운 흰색
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                        child: const Text(
+                          '로그인',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16), // 버튼 사이의 간격
+                    SizedBox(
+                      width: 350,
+                      child: TextButton(
+                        onPressed: () {
+                          // 여기에 두 번째 버튼의 동작을 정의하세요
+                          print('두 번째 버튼 클릭됨');
+                        },
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          foregroundColor: Colors.grey, // 텍스트 색상: 파란색
+                          textStyle: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                        child: const Text('비밀번호 재설정'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
             ],
           ),
         ),

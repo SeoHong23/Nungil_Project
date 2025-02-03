@@ -59,7 +59,9 @@ class UserPage extends StatelessWidget {
                             child: Text(
                               '카카오로 시작하기',
                               style: TextStyle(
+                                fontSize: 15,
                                 color: Colors.black, // 글자 색상 설정
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -75,7 +77,7 @@ class UserPage extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                     backgroundColor: Color(0xFF00D070),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
@@ -104,7 +106,9 @@ class UserPage extends StatelessWidget {
                             child: Text(
                               '네이버로 시작하기',
                               style: TextStyle(
+                                fontSize: 15,
                                 color: Colors.white, // 글자 색상 설정
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),

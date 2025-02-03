@@ -42,7 +42,7 @@ class Video {
   List<String> posters; // 포스터
   List<String> stlls; // 스틸이미지
   List<Staff> staffs; // 제작진(감독, 각본, 출연진, 스태프 순서)
-  int review;
+  int reviewCnt;
 
   Video({
     this.commCodes,
@@ -64,7 +64,7 @@ class Video {
     required this.posters,
     this.stlls = const[],
     required this.staffs,
-    this.review = 0,
+    this.reviewCnt = 0,
   });
 }
 
@@ -90,20 +90,20 @@ Video dummyVideo = Video(
   use: "극장용",
   repRlsDate: "20241002",
   posters: [
-    "http://file.koreafilm.or.kr/poster/99/18/56/DPF030009_01.jpg",
-    "http://file.koreafilm.or.kr/poster/00/03/08/DPF009370_01.JPG"
+    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DPF030009_01",
+    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DPF009370_01"
   ],
   stlls: [
-    "http://file.koreafilm.or.kr/still/copy/00/67/86/DST865540_01.jpg",
-    "http://file.koreafilm.or.kr/still/copy/00/67/86/DST865539_01.jpg",
-    "http://file.koreafilm.or.kr/still/copy/00/67/86/DST865544_01.jpg",
-    "http://file.koreafilm.or.kr/still/copy/00/68/17/DST868681_01.jpg",
-    "http://file.koreafilm.or.kr/still/copy/00/68/17/DST868682_01.jpg",
-    "http://file.koreafilm.or.kr/still/copy/00/68/17/DST868683_01.jpg",
-    "http://file.koreafilm.or.kr/still/copy/00/68/06/DST867664_01.jpg",
-    "http://file.koreafilm.or.kr/still/copy/00/68/06/DST867665_01.jpg",
-    "http://file.koreafilm.or.kr/still/copy/00/68/06/DST867666_01.jpg",
-    "http://file.koreafilm.or.kr/still/copy/00/68/06/DST867667_01.jpg",
+    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST865540_01",
+    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST865539_01",
+    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST865544_01",
+    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST868681_01",
+    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST868682_01",
+    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST868683_01",
+    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST867664_01",
+    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST867665_01",
+    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST867666_01",
+    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST867667_01",
   ],
   staffs: [
     Staff(staffNm: "코다마 켄지", staffRoleGroup: "감독", staffId: "00094033"),
