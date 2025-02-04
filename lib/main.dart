@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+
+import 'package:nungil/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/screens/main_screen.dart';
 import 'package:nungil/theme/common_theme.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ProviderScope(
-      child: MyApp(),
+
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+      ],
+      child: const MyApp(),
+
     ),
   );
 }

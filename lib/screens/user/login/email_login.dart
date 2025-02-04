@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:nungil/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../main_screen.dart';
+import 'login_view.dart';
 
 class EmailLogin extends StatefulWidget {
   const EmailLogin({super.key});
@@ -88,6 +93,41 @@ class _EmailLoginState extends State<EmailLogin> {
           emailController.text.isNotEmpty &&
           passwordController.text.isNotEmpty;
     });
+  }
+
+  Future<void> loginUser() async {
+    final email = emailController.text;
+    final password = passwordController.text;
+    // 서버 URL 입력
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:8080/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    print('Response body: ${email}'); // 응답 본문을 확인
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      final nickname = responseData['nickname'] ?? 'Unknown';
+      final String email = responseData['email'];
+      Provider.of<AuthProvider>(context, listen: false).login(email, nickname);
+      // 로그인 성공
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainScreen(),
+        ),
+      );
+    } else {
+      // 로그인 실패
+      final errorMessage = json.decode(response.body)['message'];
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(errorMessage)));
+    }
   }
 
   @override
@@ -237,13 +277,7 @@ class _EmailLoginState extends State<EmailLogin> {
                       child: ElevatedButton(
                         onPressed: isButtonEnabled
                             ? () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const MainScreen(), // 이동할 페이지 지정
-                                  ),
-                                );
+                                loginUser(); // 로그인 함수 호출
                               }
                             : null,
                         style: ElevatedButton.styleFrom(
