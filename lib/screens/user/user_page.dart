@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:nungil/screens/user/login/email_login.dart';
 
-import 'email_login/email_login.dart';
 import 'term/term.dart';
 
 class UserPage extends StatelessWidget {

@@ -2,30 +2,35 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nungil/models/Video.dart';
+import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/screens/home/home_page.dart';
 import 'package:nungil/screens/list/list_page.dart';
 import 'package:nungil/screens/ranking/ranking_page.dart';
+import 'package:nungil/screens/user/login/login_view.dart';
 import 'package:nungil/screens/user/user_page.dart';
 import 'package:nungil/screens/video_detail/video_detail_page.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/theme/common_theme.dart';
 
-/*
-2025-01-21 강중원 - 생성
-2025-01-21 강중원 - 스택페이지에서 페이지뷰 형식으로 바꿈
-
- */
-
-class MainScreen extends StatefulWidget {
+class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  ConsumerState<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends ConsumerState<MainScreen> {
   final PageController _pageController = PageController();
 
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // 로그인 상태를 확인합니다.
+    ref.read(authProvider.notifier).checkLoginStatus();
+  }
 
   List<Widget> _screens = [
     HomePage(),
@@ -44,6 +49,10 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 로그인 여부를 확인합니다.
+    final isLoggedIn =
+        ref.watch(authProvider.select((state) => state.isAuthenticated));
+
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -60,8 +69,8 @@ class _MainScreenState extends State<MainScreen> {
                     HomePage(),
                     RankingPage(),
                     ListPage(),
-                    UserPage(),
-                    VideoDetailPage(item: dummyVideo)
+                    isLoggedIn ? LoginView() : UserPage(),
+                    VideoDetailPage(item: dummyVideo),
                   ],
                 ),
                 bottomNavigationBar: BottomNavigationBar(
@@ -89,7 +98,7 @@ class _MainScreenState extends State<MainScreen> {
                       icon: Icon(FontAwesomeIcons.solidUser),
                     ),
                     BottomNavigationBarItem(
-                      label: '_상세화면',
+                      label: '상세화면',
                       icon: Icon(FontAwesomeIcons.film),
                     ),
                   ],

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/screens/main_screen.dart';
 import 'package:nungil/theme/common_theme.dart';
 
 void main() {
   runApp(
-    ProviderScope(
+    const ProviderScope(
       child: MyApp(),
     ),
   );
@@ -14,7 +15,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       darkTheme: dTheme(),
       theme: mTheme(),
       themeMode: ThemeMode.light,
-      home: MainScreen(),
+      home: const MainScreen(),
     );
   }
 }

@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../main_screen.dart';
+import 'login_view.dart';
+import 'package:nungil/providers/auth_provider.dart';
 
-class EmailLogin extends StatefulWidget {
+class EmailLogin extends ConsumerStatefulWidget {
   const EmailLogin({super.key});
 
   @override
-  State<EmailLogin> createState() => _EmailLoginState();
+  ConsumerState<EmailLogin> createState() => _EmailLoginState();
 }
 
-class _EmailLoginState extends State<EmailLogin> {
+class _EmailLoginState extends ConsumerState<EmailLogin> {
   bool emailHasError = false;
   bool passwordHasError = false;
   TextEditingController emailController = TextEditingController();
@@ -88,6 +92,42 @@ class _EmailLoginState extends State<EmailLogin> {
           emailController.text.isNotEmpty &&
           passwordController.text.isNotEmpty;
     });
+  }
+
+  Future<void> loginUser() async {
+    final email = emailController.text;
+    final password = passwordController.text;
+    // 서버 URL 입력
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:8080/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    print('Response body: ${email}'); // 응답 본문을 확인
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      final nickname = responseData['nickname'] ?? 'Unknown';
+      final String email = responseData['email'];
+      // 여기서 AuthNotifier 사용
+      ref.read(authProvider.notifier).login(email, nickname);
+      // 로그인 성공
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainScreen(),
+        ),
+      );
+    } else {
+      // 로그인 실패
+      final errorMessage = json.decode(response.body)['message'];
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(errorMessage)));
+    }
   }
 
   @override
@@ -226,9 +266,8 @@ class _EmailLoginState extends State<EmailLogin> {
                     ),
                   ),
                 ),
-              const Spacer(),
+              const Spacer(), // 버튼
 
-              // 버튼
               Center(
                 child: Column(
                   children: [
@@ -237,13 +276,7 @@ class _EmailLoginState extends State<EmailLogin> {
                       child: ElevatedButton(
                         onPressed: isButtonEnabled
                             ? () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const MainScreen(), // 이동할 페이지 지정
-                                  ),
-                                );
+                                loginUser(); // 로그인 함수 호출
                               }
                             : null,
                         style: ElevatedButton.styleFrom(
