@@ -3,6 +3,7 @@ import 'package:nungil/models/list/video_list_tmp.dart';
 
 import '../../../theme/common_theme.dart';
 import '../../common_components/rate_builder.dart';
+import '../../common_components/ranking_list_component.dart';
 
 class RankingBodyComponent extends StatefulWidget {
   const RankingBodyComponent({super.key});
@@ -136,52 +137,10 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
                           // 리스트 영역
                           Column(
                             children: List.generate(
-                              10,
-                              (index) => index == 0
-                                  ? Container()
-                                  : Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0),
-                                      child: Container(
-                                        height: 60,
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              width: 20,
-                                              child: Text(
-                                                '${index + 1}',
-                                                style: TextStyle(
-                                                  fontStyle: FontStyle.italic,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ), // 등수
-                                            const SizedBox(width: 8),
-                                            Image.asset(
-                                              videoListTmp[index %
-                                                      videoListTmp.length]
-                                                  .imgUrl,
-                                              fit: BoxFit.cover,
-                                              width: 40, // 이미지 크기 지정
-                                              height: 40,
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Expanded(
-                                              child: Text(
-                                                videoListTmp[index %
-                                                        videoListTmp.length]
-                                                    .name,
-                                              ),
-                                            ),
-                                            RateBuilder(
-                                                rate: videoListTmp[index %
-                                                        videoListTmp.length]
-                                                    .rate),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                            ),
+                                10,
+                                (index) => index == 0
+                                    ? Container()
+                                    : RankingListComponent(index: index)),
                           ),
                         ],
                       ),

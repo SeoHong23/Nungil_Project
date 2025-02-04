@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/screens/main_screen.dart';
 import 'package:nungil/theme/common_theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'nungil',
       debugShowCheckedModeBanner: false,
+      darkTheme: dTheme(),
       theme: mTheme(),
-      home: MainScreen(),
+      themeMode: ThemeMode.light,
+      home: const MainScreen(),
     );
   }
 }

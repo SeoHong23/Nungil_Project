@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 /// 2025-01-21 textTheme().labelSmall 추가 - 김주경
 /// 2025-01-22 titleLarge/labelMedium 추가, iconThemeColor 수정 - 김주경
 /// 2025-01-24 텍스트용 색상 추가(green, red)
+/// 2025-01-25 다크테마 설정 추가
 
 //텍스트 테마
 TextTheme textTheme() {
@@ -25,6 +26,8 @@ TextTheme textTheme() {
     // 부제목, 작은 본문 텍스트 스타일
     bodyMedium: TextStyle(
         fontFamily: 'GmarketSans', fontSize: 14.0, color: DefaultColors.black),
+    bodySmall: TextStyle(
+        fontFamily: 'GmarketSans', fontSize: 12.0, color: DefaultColors.black),
 
     // 두꺼운 제목 스타일
     // 상세보기 제목에 사용됨
@@ -91,6 +94,22 @@ ThemeData mTheme() {
       primarySwatch: iconThemeColor,
     ),
     scaffoldBackgroundColor: baseBackgroundColor,
+    textTheme: textTheme(),
+    appBarTheme: appBarTheme(),
+    bottomNavigationBarTheme: bottomNavigationBarTheme(),
+  );
+}
+
+//--------------------------------------------
+
+// 전체 Dark ThemeData 설정
+ThemeData dTheme() {
+  return ThemeData(
+    // 우리가 직접 지정 함
+    colorScheme: ColorScheme.fromSwatch(
+      primarySwatch: iconThemeColor,
+    ),
+    scaffoldBackgroundColor: Colors.black,
     textTheme: textTheme(),
     appBarTheme: appBarTheme(),
     bottomNavigationBarTheme: bottomNavigationBarTheme(),
