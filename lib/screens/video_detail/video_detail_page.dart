@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nungil/models/Video.dart';
-import 'package:nungil/screens/video_detail/components/detail_tap_bar.dart';
+import 'package:nungil/screens/video_detail/components/detail_tap_imgs.dart';
+import 'package:nungil/screens/video_detail/components/detail_tap_info.dart';
+import 'package:nungil/screens/video_detail/components/detail_tap_review.dart';
+import 'package:nungil/screens/video_detail/components/detail_top.dart';
 import 'package:nungil/theme/common_theme.dart';
 
 class VideoDetailPage extends StatefulWidget {
@@ -17,16 +20,34 @@ class VideoDetailPage extends StatefulWidget {
 class _VideoDetailPageState extends State<VideoDetailPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final ScrollController _scrollController = ScrollController();
+  double _opacity = 0.0; // 초기 투명도
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _scrollController.addListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    const double maxOffset = 100.0;
+    double offset = _scrollController.offset;
+
+    // 투명도는 0에서 1로 선형 변화
+    double newOpacity = (offset / maxOffset).clamp(0.0, 1.0);
+
+    if (newOpacity != _opacity) {
+      setState(() {
+        _opacity = newOpacity;
+      });
+    }
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -34,13 +55,23 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
+        backgroundColor: baseBackgroundColor.withOpacity(_opacity),
+        title: Opacity(
+          opacity: _opacity,
+          child: Text(
+            widget.item.title,
+            style: TextStyle(
+                color: iconThemeColor.shade700,
+                fontWeight: FontWeight.w500,
+                fontSize: 14.0),
+          ),
+        ),
+        centerTitle: true,
         leading: IconButton(
           onPressed: () {},
           icon: Icon(
             CupertinoIcons.left_chevron,
-            color: iconThemeColor.shade900,
+            color: iconThemeColor.shade700,
           ),
         ),
         actions: [
@@ -48,152 +79,122 @@ class _VideoDetailPageState extends State<VideoDetailPage>
             onPressed: () {},
             icon: Icon(
               CupertinoIcons.search,
-              color: iconThemeColor.shade900,
+              color: iconThemeColor.shade700,
             ),
           ),
           IconButton(
             onPressed: () {},
             icon: Icon(
               Icons.more_vert_outlined,
-              color: iconThemeColor.shade900,
+              color: iconThemeColor.shade700,
             ),
           ),
         ],
       ),
       extendBodyBehindAppBar: true,
-      body: NestedScrollView(
-        headerSliverBuilder: (context, _) => [
-          SliverAppBar(
-            toolbarHeight: 50.0,
-            pinned: true,
-            expandedHeight: 350.0,
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            backgroundColor: Colors.transparent,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                children: [_buildDetailTop(widget.item, context)],
+      body: MediaQuery.removePadding(
+        context: context,
+        removeTop: true, // 상단 패딩 제거
+        child: NestedScrollView(
+          controller: _scrollController,
+          physics: const ClampingScrollPhysics(), // 스크롤 문제 해결
+          floatHeaderSlivers: true, // 헤더가 자연스럽게 떠 있도록 설정
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+        
+            // DetailTop을 SliverPersistentHeader로 변경
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _DetailTopDelegate(widget.item),
+            ),
+        
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _StickyTabBarDelegate(
+                TabBar(
+                  controller: _tabController,
+                  tabs: [
+                    Tab(child: Text("작품정보")),
+                    Tab(child: Text("리뷰 ${widget.item.reviewCnt}")),
+                    Tab(child: Text("영상/이미지 ${widget.item.stlls.length}"))
+                  ],
+                  indicatorColor: iconThemeColor.shade700,
+                  labelColor: iconThemeColor.shade900,
+                  overlayColor: WidgetStatePropertyAll(iconThemeColor.shade200),
+                  unselectedLabelColor: iconThemeColor.shade300,
+                  indicatorPadding: EdgeInsets.only(bottom: -1.5),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                ),
               ),
+            )
+          ],
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+            child: TabBarView(
+              controller: _tabController,
+              physics: const NeverScrollableScrollPhysics(), // 스크롤 충돌 방지
+              children: [
+                DetailTapInfo(item: widget.item),
+                DetailTapReview(item: widget.item),
+                DetailTapImgs(
+                  item: widget.item,
+                )
+              ],
             ),
           ),
-        ],
-        body: DetailTap(controller: _tabController, item: widget.item),
+        ),
       ),
     );
   }
 }
 
-_buildDetailTop(Video item, BuildContext context) {
-  double screenWidth = MediaQuery.of(context).size.width > 600
-      ? 600
-      : MediaQuery.of(context).size.width;
+// SliverPersistentHeader로 탭바를 고정하는 델리게이트
+class _StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
+  final TabBar tabBar;
 
-  return Container(
-    child: Stack(
-      children: [
-        // 배경 이미지 - 스틸컷 리스트 중 택 1
-        SizedBox(
-          height: 350,
-          width: double.infinity,
-          child: Image.network(
-            item.stlls[0],
-            fit: BoxFit.cover,
-          ),
-        ),
-        // 그라데이션
-        Container(
-          width: double.infinity,
-          height: 351,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                baseBackgroundColor,
-                baseBackgroundColor,
-                baseBackgroundColor.withOpacity(0.7),
-                baseBackgroundColor.withOpacity(0.3),
-                Colors.transparent,
-              ],
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-            ),
-          ),
-        ),
-        Positioned(
-          top: 130,
-          left: 0,
-          right: 0,
-          child: Column(
-            children: [
-              // 포스터 썸네일
-              Image.network(
-                item.posters[0],
-                width: 70,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              // 영화 제목
-              Text(item.title, style: textTheme().titleLarge),
-              // 영문 제목 - 제작 연도
-              Text('${item.titleEng} · ${item.prodYear}',
-                  style: textTheme().labelSmall),
-              const SizedBox(
-                height: 4.0,
-              ),
-              // 평점
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(CupertinoIcons.star_fill,
-                      size: 12, color: Colors.orangeAccent),
-                  const SizedBox(width: 4.0),
-                  Text("${item.score}", style: textTheme().labelMedium)
-                ],
-              ),
-              // 버튼 영역
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildReactionButton(
-                      mIcon: FontAwesomeIcons.faceSmile,
-                      color: Colors.green,
-                      label: "좋아요",
-                      width: screenWidth / 2.0 - 10),
-                  _buildReactionButton(
-                      mIcon: FontAwesomeIcons.faceAngry,
-                      color: Colors.red,
-                      label: "별로예요",
-                      width: screenWidth / 2.0 - 10),
-                ],
-              )
-            ],
-          ),
-        )
-      ],
-    ),
-  );
+  _StickyTabBarDelegate(this.tabBar);
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: tabBar,
+      decoration: BoxDecoration(
+          color: baseBackgroundColor,
+          border: Border(
+              bottom: BorderSide(
+                  color: iconThemeColor.shade700.withOpacity(0.3),
+                  width: 1.0))),
+    );
+  }
+
+  @override
+  double get maxExtent => tabBar.preferredSize.height;
+
+  @override
+  double get minExtent => tabBar.preferredSize.height;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
 }
 
-// 버튼
-_buildReactionButton({
-  required IconData mIcon,
-  required String label,
-  required Color color,
-  required double width,
-}) {
-  return ElevatedButton.icon(
-    onPressed: () {},
-    style: ButtonStyle(
-      minimumSize: WidgetStatePropertyAll(Size(width, 35)),
-      backgroundColor: WidgetStatePropertyAll(Colors.white),
-      shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4.0),
-            side: BorderSide(width: 0.5, color: baseBackgroundColor.shade900)),
-      ),
-    ),
-    icon: Icon(mIcon, color: color, size: 14),
-    label: Text(label, style: textTheme().labelMedium),
-  );
+class _DetailTopDelegate extends SliverPersistentHeaderDelegate {
+  final Video item;
+
+  _DetailTopDelegate(this.item);
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return DetailTop(item: item);
+  }
+
+  @override
+  double get maxExtent => 350; // DetailTop 높이에 맞게 조절
+  @override
+  double get minExtent => 50; // 스크롤 시 사라지도록 설정
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => true;
 }
+
