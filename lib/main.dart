@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/screens/main_screen.dart';
 import 'package:nungil/theme/common_theme.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -2,11 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nungil/models/Video.dart';
+import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/screens/home/home_page.dart';
 import 'package:nungil/screens/list/list_page.dart';
 import 'package:nungil/screens/ranking/ranking_page.dart';
+import 'package:nungil/screens/user/login/login_view.dart';
 import 'package:nungil/screens/user/user_page.dart';
 import 'package:nungil/screens/video_detail/video_detail_page.dart';
+import 'package:provider/provider.dart';
 
 /*
 2025-01-21 강중원 - 생성
@@ -26,6 +29,12 @@ class _MainScreenState extends State<MainScreen> {
 
   int _selectedIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<AuthProvider>(context, listen: false).checkLoginStatus();
+  }
+
   void changePages(int index) {
     setState(() {
       _selectedIndex = index;
@@ -34,6 +43,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn = Provider.of<AuthProvider>(context).isLoggedIn;
+
     return SafeArea(
       child: Scaffold(
         body: PageView(
@@ -43,7 +54,7 @@ class _MainScreenState extends State<MainScreen> {
             HomePage(),
             RankingPage(),
             ListPage(),
-            UserPage(),
+            isLoggedIn ? LoginView() : UserPage(),
             VideoDetailPage(item: dummyVideo)
           ],
         ),
