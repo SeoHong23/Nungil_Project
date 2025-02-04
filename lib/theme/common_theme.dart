@@ -44,11 +44,11 @@ TextTheme textTheme() {
     // 작은 글자 스타일
     // 버튼?에 써도 될듯?
     labelMedium: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 10.0, color: DefaultColors.black),
+        fontFamily: 'GmarketSans', fontSize: 12.0, color: DefaultColors.black),
     // 상당히 작은 글자 스타일
     // 상세보기 부제/연도에 사용함
     labelSmall: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 8.0, color: DefaultColors.black),
+        fontFamily: 'GmarketSans', fontSize: 10.0, color: DefaultColors.black),
   );
 }
 
@@ -157,6 +157,8 @@ class DefaultColors {
   static const Color yellow = Color(0xFFf7b233); // 약한 경고용 노란색 (글자색)
   static const Color red = Color(0xFFf03e3e); // 경고용 붉은색 (글자색)
   static const Color grey = Color(0xff979797); // 경고용 붉은색 (글자색)
+  static const Color navy = Color(0xFF3E5185); // 경고용 붉은색 (글자색)
+  static const Color lightNavy = Color(0xFF788CC8); // 경고용 붉은색 (글자색)
 }
 
 class CustomTextStyle {
@@ -166,4 +168,10 @@ class CustomTextStyle {
     fontSize: 20,
     fontWeight: FontWeight.bold,
   );
+  static const TextStyle font = TextStyle(fontFamily: 'GmarketSans');
+  static const TextStyle pretendard = TextStyle(fontFamily: 'Pretendard');
+  static const TextStyle mediumNavy = TextStyle(fontFamily: 'Pretendard',fontSize: 15, color: DefaultColors.navy, height: 1.6,fontWeight: FontWeight.w400, wordSpacing: 0.6);
+  static const TextStyle mediumLightNavy = TextStyle(fontFamily: 'Pretendard',fontSize: 15, color: DefaultColors.lightNavy, height: 1.6,fontWeight: FontWeight.w400);
+  static const TextStyle smallNavy = TextStyle(fontFamily: 'Pretendard',fontSize: 14, color: DefaultColors.navy,height: 1.8);
+  static const TextStyle smallLightNavy = TextStyle(fontFamily: 'Pretendard',fontSize: 14, color: DefaultColors.lightNavy,height: 1.8);
 }

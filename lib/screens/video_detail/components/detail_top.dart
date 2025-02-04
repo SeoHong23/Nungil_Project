@@ -30,12 +30,11 @@ class DetailTop extends StatelessWidget {
           ),
           // 그라데이션
           Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
+            bottom: -1,
+            left: -1,
+            right: -1,
+            top: -1,
             child: Container(
-              width: double.infinity,
-              height: 350, // 그라데이션 영역 크기 지정
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -59,9 +58,12 @@ class DetailTop extends StatelessWidget {
             child: Column(
               children: [
                 // 포스터 썸네일
-                Image.network(
-                  item.posters[0],
-                  width: 100, // 포스터 크기 고정
+                ClipRRect(
+                  child: Image.network(
+                    item.posters[0],
+                    width: 100, // 포스터 크기 고정
+                  ),
+                  borderRadius: BorderRadius.circular(5.0),
                 ),
                 const SizedBox(
                   height: 10,
