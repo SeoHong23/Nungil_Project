@@ -10,32 +10,26 @@ import 'package:nungil/screens/user/login/login_view.dart';
 import 'package:nungil/screens/user/user_page.dart';
 import 'package:nungil/screens/video_detail/video_detail_page.dart';
 
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/theme/common_theme.dart';
 
-/*
-2025-01-21 강중원 - 생성
-2025-01-21 강중원 - 스택페이지에서 페이지뷰 형식으로 바꿈
-
- */
-
-class MainScreen extends StatefulWidget {
+class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  ConsumerState<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends ConsumerState<MainScreen> {
   final PageController _pageController = PageController();
 
   int _selectedIndex = 0;
 
-
   @override
   void initState() {
     super.initState();
-    Provider.of<AuthProvider>(context, listen: false).checkLoginStatus();
+    // 로그인 상태를 확인합니다.
+    ref.read(authProvider.notifier).checkLoginStatus();
   }
 
   List<Widget> _screens = [
@@ -44,7 +38,6 @@ class _MainScreenState extends State<MainScreen> {
     ListPage(),
     UserPage(),
   ];
-
 
   void changePages(int index) {
     setState(
@@ -56,11 +49,12 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoggedIn = Provider.of<AuthProvider>(context).isLoggedIn;
+    // 로그인 여부를 확인합니다.
+    final isLoggedIn =
+        ref.watch(authProvider.select((state) => state.isAuthenticated));
 
     return SafeArea(
       child: Scaffold(
-
         body: Container(
           child: Center(
             child: ConstrainedBox(
@@ -76,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
                     RankingPage(),
                     ListPage(),
                     isLoggedIn ? LoginView() : UserPage(),
-                    VideoDetailPage(item: dummyVideo)
+                    VideoDetailPage(item: dummyVideo),
                   ],
                 ),
                 bottomNavigationBar: BottomNavigationBar(
@@ -104,7 +98,7 @@ class _MainScreenState extends State<MainScreen> {
                       icon: Icon(FontAwesomeIcons.solidUser),
                     ),
                     BottomNavigationBarItem(
-                      label: '_상세화면',
+                      label: '상세화면',
                       icon: Icon(FontAwesomeIcons.film),
                     ),
                   ],
