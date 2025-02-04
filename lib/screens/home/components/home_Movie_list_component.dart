@@ -60,7 +60,7 @@ class _HomeMovieListComponentState extends State<HomeMovieListComponent> {
                   padding: const EdgeInsets.only(right: 16),
                   child: Container(
                     width: 170,
-                    height: 300,
+                    height: 310,
                     child: VideoListComponent(
                       imgUrl: videoList[index].poster ?? '', // null 체크
                       name: videoList[index].title ?? '제목 없음',
