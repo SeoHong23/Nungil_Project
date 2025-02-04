@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nungil/models/Video.dart';
-import 'package:nungil/screens/video_detail/components/detail_app_bar.dart';
 import 'package:nungil/screens/video_detail/components/detail_tap_bar.dart';
 import 'package:nungil/theme/common_theme.dart';
 
@@ -73,9 +72,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
             backgroundColor: Colors.transparent,
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
-                children: [
-                  _buildDetailTop(widget.item,context)
-                ],
+                children: [_buildDetailTop(widget.item, context)],
               ),
             ),
           ),
