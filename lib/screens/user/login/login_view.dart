@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:nungil/providers/auth_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/screens/main_screen.dart';
-import 'package:provider/provider.dart';
+import 'package:nungil/providers/auth_provider.dart';
 
-class LoginView extends StatefulWidget {
+class LoginView extends ConsumerWidget {
   const LoginView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
-}
-
-class _LoginViewState extends State<LoginView> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // AuthProvider에서 로그인된 사용자 정보를 가져옵니다.
-    final userEmail = Provider.of<AuthProvider>(context).userEmail;
-    final nickName = Provider.of<AuthProvider>(context).nickname;
+    final userEmail =
+        ref.watch(authProvider.select((state) => state.user?.email));
+    final nickName =
+        ref.watch(authProvider.select((state) => state.user?.nickname));
 
     return SafeArea(
       child: Scaffold(
@@ -27,11 +24,9 @@ class _LoginViewState extends State<LoginView> {
               icon: Icon(Icons.logout), // 로그아웃 아이콘
               onPressed: () async {
                 // 로그아웃 처리
-                await Provider.of<AuthProvider>(context, listen: false)
-                    .logout();
+                await ref.read(authProvider.notifier).logout();
 
-                await Provider.of<AuthProvider>(context, listen: false)
-                    .checkLoginStatus();
+                await ref.read(authProvider.notifier).checkLoginStatus();
                 // 로그아웃 후 MainScreen으로 돌아가기
                 Navigator.pushReplacement(
                   context,

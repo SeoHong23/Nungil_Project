@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:nungil/providers/auth_provider.dart';
-import 'package:provider/provider.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../main_screen.dart';
 import 'login_view.dart';
+import 'package:nungil/providers/auth_provider.dart';
 
-class EmailLogin extends StatefulWidget {
+class EmailLogin extends ConsumerStatefulWidget {
   const EmailLogin({super.key});
 
   @override
-  State<EmailLogin> createState() => _EmailLoginState();
+  ConsumerState<EmailLogin> createState() => _EmailLoginState();
 }
 
-class _EmailLoginState extends State<EmailLogin> {
+class _EmailLoginState extends ConsumerState<EmailLogin> {
   bool emailHasError = false;
   bool passwordHasError = false;
   TextEditingController emailController = TextEditingController();
@@ -114,7 +113,8 @@ class _EmailLoginState extends State<EmailLogin> {
       final responseData = json.decode(response.body);
       final nickname = responseData['nickname'] ?? 'Unknown';
       final String email = responseData['email'];
-      Provider.of<AuthProvider>(context, listen: false).login(email, nickname);
+      // 여기서 AuthNotifier 사용
+      ref.read(authProvider.notifier).login(email, nickname);
       // 로그인 성공
       Navigator.pushReplacement(
         context,
@@ -266,9 +266,8 @@ class _EmailLoginState extends State<EmailLogin> {
                     ),
                   ),
                 ),
-              const Spacer(),
+              const Spacer(), // 버튼
 
-              // 버튼
               Center(
                 child: Column(
                   children: [

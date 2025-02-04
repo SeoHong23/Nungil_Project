@@ -1,29 +1,35 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// User 모델
 class User {
   final String email;
   final String nickname;
   User({required this.email, required this.nickname});
 }
 
-class AuthProvider with ChangeNotifier {
-  bool _isLoggedIn = false;
-  String? _userEmail;
-  String? _nickname;
-  User? _user; // User 객체를 저장할 변수
+// AuthState 데이터 모델 (로그인 상태 저장)
+class AuthState {
+  final bool isAuthenticated;
+  final User? user;
 
-  bool get isLoggedIn => _isLoggedIn;
-  User? get user => _user; // user getter 추가
-  String? get userEmail => _userEmail;
-  String? get nickname => _nickname;
+  AuthState({required this.isAuthenticated, this.user});
+
+  AuthState copyWith({bool? isAuthenticated, User? user}) {
+    return AuthState(
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+      user: user ?? this.user,
+    );
+  }
+}
+
+// StateNotifier를 사용하는 AuthProvider
+class AuthNotifier extends StateNotifier<AuthState> {
+  AuthNotifier() : super(AuthState(isAuthenticated: false));
 
   Future<void> login(String email, String nickname) async {
-    _isLoggedIn = true;
-    _userEmail = email;
-    _nickname = nickname;
-    _user = User(email: email, nickname: nickname);
-    notifyListeners();
+    final user = User(email: email, nickname: nickname);
+    state = AuthState(isAuthenticated: true, user: user);
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLoggedIn', true);
@@ -32,23 +38,26 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> logout() async {
-    _isLoggedIn = false;
-    _user = null; // 로그아웃 시 user 정보 삭제
-    _nickname = null;
-    notifyListeners();
+    state = AuthState(isAuthenticated: false, user: null);
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); // SharedPreferences 초기화
+    await prefs.clear();
   }
 
   Future<void> checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
-    _isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    final userEmail = prefs.getString('userEmail') ?? '';
-    final nickname = prefs.getString('nickname') ?? '';
-    if (_isLoggedIn) {
-      _user = User(email: userEmail, nickname: nickname); // User 객체 복원
+    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    final email = prefs.getString('userEmail');
+    final nickname = prefs.getString('nickname');
+
+    if (isLoggedIn && email != null && nickname != null) {
+      state = AuthState(
+          isAuthenticated: true, user: User(email: email, nickname: nickname));
     }
-    notifyListeners();
   }
 }
+
+// Provider 선언
+final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
+  return AuthNotifier();
+});
