@@ -156,12 +156,18 @@ class DefaultColors {
   static const Color green = Color(0xFF0ca678); // 눈이 편한 초록색 (글자색)
   static const Color yellow = Color(0xFFf7b233); // 약한 경고용 노란색 (글자색)
   static const Color red = Color(0xFFf03e3e); // 경고용 붉은색 (글자색)
+  static const Color grey = Color(0xff979797); // 경고용 붉은색 (글자색)
   static const Color navy = Color(0xFF3E5185); // 경고용 붉은색 (글자색)
   static const Color lightNavy = Color(0xFF788CC8); // 경고용 붉은색 (글자색)
 }
 
 class CustomTextStyle {
   static const TextStyle bigLogo = TextStyle(fontSize: 50);
+  static const TextStyle ranking = TextStyle(
+    fontStyle: FontStyle.italic,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+  );
   static const TextStyle font = TextStyle(fontFamily: 'GmarketSans');
   static const TextStyle pretendard = TextStyle(fontFamily: 'Pretendard');
   static const TextStyle mediumNavy = TextStyle(fontFamily: 'Pretendard',fontSize: 15, color: DefaultColors.navy, height: 1.6,fontWeight: FontWeight.w400, wordSpacing: 0.6);

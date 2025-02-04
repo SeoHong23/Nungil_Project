@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nungil/theme/common_theme.dart';
 
+import '../../common_components/poster_image_component.dart';
+
 /// 2025-01-23 강중원 - 생성
 /// 2025-01-24 강중원 - 임시 모델로 불러오도록 설정
 
@@ -41,16 +43,7 @@ class VideoListComponent extends StatelessWidget {
             ),
             clipBehavior: Clip.hardEdge, // 둥근 모서리를 Clip 효과로 적용
             child: imgUrl.isNotEmpty
-                ? Image.network(
-                    imgUrl,
-                    fit: BoxFit.cover, // 비율에 맞게 채움
-                    errorBuilder: (context, error, stackTrace) {
-                      return SvgPicture.asset(
-                        'assets/images/app.svg', // 기본 이미지
-                        fit: BoxFit.cover,
-                      );
-                    },
-                  )
+                ? PosterImageComponent(ImgURL: imgUrl)
                 : SvgPicture.asset(
                     'assets/images/app.svg', // 기본 이미지
                     fit: BoxFit.cover,

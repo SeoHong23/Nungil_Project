@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nungil/models/list/video_list_tmp.dart';
-
+import 'package:flutter_svg/svg.dart';
+import '../../../data/repository/video_list_repository.dart';
+import '../../../models/ranking/video_rank_model.dart';
 import '../../../theme/common_theme.dart';
 import '../../common_components/rate_builder.dart';
 import '../../common_components/ranking_list_component.dart';
@@ -13,145 +14,189 @@ class RankingBodyComponent extends StatefulWidget {
 }
 
 class _RankingBodyComponentState extends State<RankingBodyComponent> {
+  List<VideoRankModel> videoList = [];
+  bool isLoading = true;
+  String selectedCategory = "일일"; // ✅ 기본 선택값
+
+  @override
+  void initState() {
+    super.initState();
+    fetchVideos(); // ✅ 초기 데이터는 "일별" 데이터 가져오기
+  }
+
+  /// ✅ **선택된 카테고리에 따라 데이터 불러오기**
+  Future<void> fetchVideos() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final repository = VideoListRepository();
+      List<VideoRankModel> videos = selectedCategory == "일일"
+          ? await repository.fetchRanksDaily()
+          : await repository.fetchRanksWeekly();
+
+      setState(() {
+        videoList = videos;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error fetching videos: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 700),
-          child: Container(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0), // 아이템 간 간격
-                        child: Container(
-                          padding: EdgeInsets.all(5.0),
-                          decoration: BoxDecoration(
-                            color: baseBackgroundColor[400],
-                            borderRadius: BorderRadius.circular(5), // 모서리 둥글게
-                          ),
-                          child: Text(
-                            '일일',
-                            style: const TextStyle(fontSize: 15),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0), // 아이템 간 간격
-                        child: Container(
-                          padding: EdgeInsets.all(5.0),
-                          decoration: BoxDecoration(
-                            color: baseBackgroundColor[400],
-                            borderRadius: BorderRadius.circular(5), // 모서리 둥글게
-                          ),
-                          child: Text(
-                            '주간별',
-                            style: const TextStyle(fontSize: 15),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0), // 아이템 간 간격
-                        child: Container(
-                          padding: EdgeInsets.all(5.0),
-                          decoration: BoxDecoration(
-                            color: baseBackgroundColor[400],
-                            borderRadius: BorderRadius.circular(5), // 모서리 둥글게
-                          ),
-                          child: Text(
-                            '월별',
-                            style: const TextStyle(fontSize: 15),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Container(// 광고?
-
-                      ),
-                  Text("오늘의 박스오피스 랭킹"),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: Column(
-                        children: [
-                          // 배경 이미지와 그라데이션
-                          Stack(
-                            children: [
-                              Image.asset(
-                                'assets/images/tmp/gloryBack.webp',
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: 300,
-                              ),
-                              Container(
-                                width: double.infinity,
-                                height: 300, // 이미지와 동일한 높이로 설정
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      baseBackgroundColor,
-                                      baseBackgroundColor,
-                                      baseBackgroundColor.withOpacity(0.2),
-                                      baseBackgroundColor.withOpacity(0.1),
-                                      Colors.transparent,
-                                    ],
-                                    begin: Alignment.bottomCenter,
-                                    end: Alignment.topCenter,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '1',
-                                      style: CustomTextStyle.bigLogo,
-                                    ),
-                                    Text(
-                                      videoListTmp[0].name,
-                                      style: CustomTextStyle.bigLogo,
-                                    ),
-                                  ],
-                                ),
-                                top: 150,
-                                left: 20,
-                              ),
-                              Positioned(
-                                right: 20,
-                                bottom: 20,
-                                child: RateBuilder(rate: videoListTmp[0].rate),
-                              ),
-                            ],
-                          ),
-
-                          // 리스트 영역
-                          Column(
-                            children: List.generate(
-                                10,
-                                (index) => index == 0
-                                    ? Container()
-                                    : RankingListComponent(index: index)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 700),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _rankingCategoryButtons(), // ✅ 카테고리 버튼
+              const SizedBox(height: 16),
+              Text(selectedCategory == "일일" ? "오늘의 박스오피스 랭킹" : "금주의 박스오피스 랭킹",
+                  style: textTheme().titleLarge),
+              const SizedBox(height: 16),
+              Expanded(
+                child: isLoading
+                    ? Center(child: CircularProgressIndicator()) // ✅ 로딩 UI 개선
+                    : videoList.isEmpty
+                        ? Center(child: Text("데이터가 없습니다.")) // ✅ 빈 데이터 처리
+                        : _buildRankingContent(),
               ),
-            ),
+            ],
           ),
         ),
       ),
+    );
+  }
+
+  /// ✅ **카테고리 버튼 UI (일일/주간 선택 가능)**
+  Widget _rankingCategoryButtons() {
+    List<String> categories = ["일일", "주간별"];
+
+    return Row(
+      children: categories.map((category) {
+        bool isSelected = category == selectedCategory; // ✅ 현재 선택된 카테고리 확인
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              selectedCategory = category; // ✅ 선택된 카테고리 업데이트
+            });
+            fetchVideos(); // ✅ 카테고리 변경 시 데이터 새로 불러오기
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Container(
+              padding: EdgeInsets.all(5.0),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? baseBackgroundColor[800]
+                    : baseBackgroundColor[700], // ✅ 선택 여부에 따른 색상 변경
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Text(
+                category,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: isSelected
+                      ? FontWeight.bold
+                      : FontWeight.normal, // ✅ 선택된 경우 볼드 처리
+                  color: isSelected
+                      ? iconThemeColor[800]
+                      : iconThemeColor[300], // ✅ 선택된 경우 텍스트 색상 변경
+                ),
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  /// ✅ **랭킹 데이터 리스트 렌더링**
+  Widget _buildRankingContent() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        children: [
+          _buildTopRanking(), // ✅ 1위 영화 UI
+          ...List.generate(
+            videoList.length - 1,
+            (index) => RankingListComponent(
+              index: index + 1,
+              video: videoList[index + 1],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// ✅ **1위 영화 강조 UI**
+  Widget _buildTopRanking() {
+    final topVideo = videoList[0];
+
+    return Stack(
+      children: [
+        topVideo.poster.isNotEmpty
+            ? Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                clipBehavior: Clip.hardEdge, // 둥근 모서리를 Clip 효과로 적용
+                child: Image.network(
+                  topVideo.poster,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: 290,
+                ),
+              )
+            : SvgPicture.asset(
+                'assets/images/app.svg', // 기본 이미지
+                fit: BoxFit.cover,
+                height: 290,
+              ),
+        Container(
+          width: double.infinity,
+          height: 300,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                baseBackgroundColor,
+                baseBackgroundColor,
+                baseBackgroundColor.withOpacity(0.2),
+                baseBackgroundColor.withOpacity(0.1),
+                Colors.transparent,
+              ],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            ),
+          ),
+        ),
+        Positioned(
+          top: 150,
+          left: 10,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('1', style: CustomTextStyle.bigLogo),
+              Text(topVideo.title, style: CustomTextStyle.bigLogo),
+            ],
+          ),
+        ),
+        Positioned(
+          right: 20,
+          bottom: 20,
+          child: RateBuilder(rate: 80),
+        ),
+      ],
     );
   }
 }
