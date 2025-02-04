@@ -61,9 +61,9 @@ class _VideoDetailPageState extends State<VideoDetailPage>
           child: Text(
             widget.item.title,
             style: TextStyle(
-                color: iconThemeColor.shade700,
+                color: iconThemeColor.shade800,
                 fontWeight: FontWeight.w500,
-                fontSize: 14.0),
+                fontSize: 16.0),
           ),
         ),
         centerTitle: true,
@@ -71,7 +71,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
           onPressed: () {},
           icon: Icon(
             CupertinoIcons.left_chevron,
-            color: iconThemeColor.shade700,
+            color: iconThemeColor,
           ),
         ),
         actions: [
@@ -79,14 +79,14 @@ class _VideoDetailPageState extends State<VideoDetailPage>
             onPressed: () {},
             icon: Icon(
               CupertinoIcons.search,
-              color: iconThemeColor.shade700,
+              color: iconThemeColor,
             ),
           ),
           IconButton(
             onPressed: () {},
             icon: Icon(
               Icons.more_vert_outlined,
-              color: iconThemeColor.shade700,
+              color: iconThemeColor,
             ),
           ),
         ],
@@ -113,9 +113,9 @@ class _VideoDetailPageState extends State<VideoDetailPage>
                 TabBar(
                   controller: _tabController,
                   tabs: [
-                    Tab(child: Text("작품정보")),
-                    Tab(child: Text("리뷰 ${widget.item.reviewCnt}")),
-                    Tab(child: Text("영상/이미지 ${widget.item.stlls.length}"))
+                    const Tab(child: Text("작품정보", style: CustomTextStyle.pretendard)),
+                    Tab(child: Text("리뷰 ${widget.item.reviewCnt}", style: CustomTextStyle.pretendard)),
+                    Tab(child: Text("영상/이미지 ${widget.item.stlls.length}", style: CustomTextStyle.pretendard))
                   ],
                   indicatorColor: iconThemeColor.shade700,
                   labelColor: iconThemeColor.shade900,
@@ -128,7 +128,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
             )
           ],
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
             child: TabBarView(
               controller: _tabController,
               physics: const NeverScrollableScrollPhysics(), // 스크롤 충돌 방지

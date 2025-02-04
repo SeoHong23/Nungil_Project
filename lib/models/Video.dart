@@ -23,7 +23,7 @@ class Staff {
 }
 
 class Video {
-  String? commCodes; // 외부코드
+  String? commCode; // 외부코드
   String title; // 영화명
   String? titleEng; // 영문제명
   String? titleOrg; // 원제명
@@ -38,14 +38,14 @@ class Video {
   List<String> genre; // 장르
   String type; // 유형구분
   String use; // 용도구분
-  String repRlsDate; // 대표 개봉일
+  String releaseDate; // 대표 개봉일
   List<String> posters; // 포스터
   List<String> stlls; // 스틸이미지
   List<Staff> staffs; // 제작진(감독, 각본, 출연진, 스태프 순서)
   int reviewCnt;
 
   Video({
-    this.commCodes,
+    this.commCode,
     required this.title,
     this.titleEng,
     this.titleOrg,
@@ -60,109 +60,101 @@ class Video {
     required this.genre,
     required this.type,
     required this.use,
-    required this.repRlsDate,
+    required this.releaseDate,
     required this.posters,
-    this.stlls = const[],
+    this.stlls = const [],
     required this.staffs,
     this.reviewCnt = 0,
   });
 }
 
 Video dummyVideo = Video(
-  title: "명탐정 코난 : 시한장치의 마천루",
-  titleEng: "Detective Conan: The Time-Bombed Skyscraper",
-  titleOrg: "名探偵コナン 時計じかけの摩天楼",
-  titleEtc:
-      "명탐정코난:시한장치의마천루^명탐정 코난 : 시한장치의 마천루^名探偵コナン 時計じかけの摩天楼^Detective Conan the Movie: The Time-Bombed Skyscraper, Detective Conan: The Time Bombed Skyscraper, 명탐정코난시한장치의마천루, 명탐정 코난 시한장치의 마천루, 명탐정 코난: 시한장치의 마천...",
-  prodYear: "1997",
-  nation: "일본",
-  company: ["TMS Entertainment","소학관(쇼각칸)","요미우리TV","토호","도쿄무비신사"],
+  commCode: "20224666",
+  title: " 파일럿",
+  titleEng: "Pilot",
+  titleOrg: "",
+  titleEtc: "파일럿^Pilot",
+  prodYear: "2023",
+  nation: "대한민국",
+  company: ["쇼트케이크", "㈜무비락"],
+  runtime: "111",
   plots: [
     Plot(
-        plotLang: "한국어",
-        plotText:
-            "검은 조직에 의해 초등학생 코난의 몸으로 작아진 고등학생 명탐정 쿠도 신이치. 천재 건축가 모리야 테이지 교수에게 가든 파티의 초대를 받았지만, 코난인 상태로는 참석할 수 없어 대리인을 부탁하려 소꿉친구 모리 란에게 목소리 변조기를 사용해 신이치로서 전화를 건다. 하지만 란이 신이치의 생일 전날인 5월 3일 밤 10시, 심야 영화를 보자고 조건을 걸어 난처해지고 만다. 약속 당일, 뉴스에서 화약 도난 사건을 보던 코난이자 신이치에게 수상한 협박 전화가 걸려 오고 의문의 남자가 도심 전체를 표적으로 한 연쇄 폭탄 테러를 예고한다. 자신에게 도전장을 내민 연쇄 폭탄 테러임을 알아챈 신이치는 범인과의 숨 막히는 대결 중, 베이카 시티 빌딩에 있는 란이 타깃이 되어 위험에 처했음을 깨닫는데…")
+      plotLang: "한국어",
+      plotText:
+          "최고의 비행 실력을 갖춘 스타 파일럿이자 뜨거운 인기로 유명 TV쇼에도 출연할 만큼 고공행진 하던 한정우는 순간의 잘못으로 하루아침에 모든 것을 잃고 실직까지 하게 된다. 블랙 리스트에 오른 그를 다시 받아줄 항공사는 어느 곳도 없었고 궁지에 몰린 한정우는 여동생의 신분으로 완벽히 변신, 마침내 재취업에 성공한다. 그러나 기쁨도 잠시! 또다시 예상치 못한 난관에 부딪히게 되는데… 인생 순항을 꿈꾸던 그의 삶은 무사히 이륙할 수 있을까?",
+    )
   ],
-  runtime: "94",
   rating: "12세이상관람가",
-  genre: ["미스터리", "스릴러", "범죄",],
-  type: "애니메이션",
+  genre: [
+    "코메디",
+  ],
+  type: "극영화",
   use: "극장용",
-  repRlsDate: "20241002",
+  releaseDate: "20240731",
   posters: [
-    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DPF030009_01",
-    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DPF009370_01"
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DPK021958_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DPK022517_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DPK022518_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DPK022519_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DPK022158_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DPK022541_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DPK022516_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DPK022360_01",
   ],
   stlls: [
-    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST865540_01",
-    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST865539_01",
-    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST865544_01",
-    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST868681_01",
-    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST868682_01",
-    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST868683_01",
-    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST867664_01",
-    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST867665_01",
-    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST867666_01",
-    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST867667_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST852176_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST850071_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST850072_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST850073_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST850074_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST851646_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST851648_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST851649_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST851650_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST850470_01",
   ],
   staffs: [
-    Staff(staffNm: "코다마 켄지", staffRoleGroup: "감독", staffId: "00094033"),
-    Staff(staffNm: "코우치 카즈나리", staffRoleGroup: "각본", staffId: "00145445"),
+    Staff(staffNm: "김한결", staffRoleGroup: "감독", staffId: "00149989"),
+    Staff(staffNm: "조유진", staffRoleGroup: "각본", staffId: "00230296"),
+    Staff(staffNm: "김한결", staffRoleGroup: "각색", staffId: "00149989"),
+    Staff(staffNm: "한준희", staffRoleGroup: "각색", staffId: "00045870"),
     Staff(
-        staffNm: "타카야마 미나미",
+        staffNm: "조정석",
         staffRoleGroup: "출연",
-        staffRole: "에도가와 코난 목소리",
-        staffId: "00103910"),
+        staffRole: "한정우",
+        staffId: "00161318"),
     Staff(
-        staffNm: "야마구치 캇페이",
+        staffNm: "이주명",
         staffRoleGroup: "출연",
-        staffRole: "쿠도 신이치 목소리",
-        staffId: "00092835"),
+        staffRole: "윤슬기",
+        staffId: "00231186"),
     Staff(
-        staffNm: "야마자키 와카나",
+        staffNm: "한선화",
         staffRoleGroup: "출연",
-        staffRole: "모리 란 목소리",
-        staffId: "00138673"),
+        staffRole: "한정미",
+        staffId: "00218719"),
     Staff(
-        staffNm: "카미야 아키라",
+        staffNm: "신승호",
         staffRoleGroup: "출연",
-        staffRole: "모리 코고로 목소리",
-        staffId: "00180053"),
+        staffRole: "서현석",
+        staffId: "00216020"),
     Staff(
-        staffNm: "오가타 켄이치",
+        staffNm: "오민애",
         staffRoleGroup: "출연",
-        staffRole: "아가사 히로시 목소리",
-        staffId: "00138137"),
-    Staff(staffNm: "오카다 테루키요", staffRoleGroup: "편집", staffId: "00119414"),
-    Staff(staffNm: "오오노 카츠오", staffRoleGroup: "음악", staffId: "00127054"),
-    Staff(staffNm: "시부타니 유키히로", staffRoleGroup: "미술", staffId: "00124690"),
+        staffRole: "안자",
+        staffId: "00024874"),
     Staff(
-      staffNm: "TMS Entertainment",
-      staffRoleGroup: "제작사",
-    ),
-    Staff(
-      staffNm: "소학관(쇼각칸)",
-      staffRoleGroup: "제작사",
-    ),
-    Staff(
-      staffNm: "요미우리TV",
-      staffRoleGroup: "제작사",
-    ),
-    Staff(
-      staffNm: "토호",
-      staffRoleGroup: "제작사",
-    ),
-    Staff(
-      staffNm: "도쿄무비신사",
-      staffRoleGroup: "제작사",
-    ),
-    Staff(
-      staffNm: "CJ ENM",
-      staffRoleGroup: "배급사",
-    ),
-    Staff(
-      staffNm: "CJ ENM",
-      staffRoleGroup: "수입사",
-    )
+        staffNm: "윤수혁",
+        staffRoleGroup: "출연",
+        staffRole: "응급실 의사",
+        staffId: "00228115"),
+    Staff(staffNm: "김명진", staffRoleGroup: "제작자", staffId: "00146287"),
+    Staff(staffNm: "김재중", staffRoleGroup: "제작자", staffId: "00044187"),
+    Staff(staffNm: "중소벤처기업부", staffRoleGroup: "투자사", staffRole: "투자지원"),
+    Staff(staffNm: "한국벤처투자", staffRoleGroup: "투자사", staffRole: "투자지원"),
+    Staff(staffNm: "문화체육관광부", staffRoleGroup: "투자사", staffRole: "투자지원"),
+    Staff(staffNm: "영화진흥위원회", staffRoleGroup: "투자사", staffRole: "투자지원"),
+    Staff(staffNm: "롯데컬처웍스㈜롯데엔터테인먼트", staffRoleGroup: "배급사"),
   ],
 );
