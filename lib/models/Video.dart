@@ -31,11 +31,11 @@ class Video {
   String prodYear; // 제작연도
   double score; // 평점
   String nation; // 국가
-  String company; // 제작사
+  List<String> company; // 제작사
   List<Plot> plots; // 줄거리
   String runtime; // 상영시간
   String? rating; // 심의등급
-  String genre; // 장르
+  List<String> genre; // 장르
   String type; // 유형구분
   String use; // 용도구분
   String repRlsDate; // 대표 개봉일
@@ -76,34 +76,34 @@ Video dummyVideo = Video(
       "명탐정코난:시한장치의마천루^명탐정 코난 : 시한장치의 마천루^名探偵コナン 時計じかけの摩天楼^Detective Conan the Movie: The Time-Bombed Skyscraper, Detective Conan: The Time Bombed Skyscraper, 명탐정코난시한장치의마천루, 명탐정 코난 시한장치의 마천루, 명탐정 코난: 시한장치의 마천...",
   prodYear: "1997",
   nation: "일본",
-  company: "TMS Entertainment,소학관(쇼각칸),요미우리TV,토호,도쿄무비신사",
+  company: ["TMS Entertainment","소학관(쇼각칸)","요미우리TV","토호","도쿄무비신사"],
   plots: [
     Plot(
         plotLang: "한국어",
         plotText:
-            "“5월 3일 토요일 밤 10시! 베이카 시네마 로비에서 만나는 거다! 잊지 마!”검은 조직에 의해 초등학생 코난의 몸으로 작아진 고등학생 명탐정 쿠도 신이치.천재 건축가 모리야 테이지 교수에게 가든 파티의 초대를 받았지만, 코난인 상태로는 참석할 수 없어 대리인을 부탁하려 소꿉친구 모리 란에게 목소리 변조기를 사용해 신이치로서 전화를 건다.하지만 란이 신이치의 생일 전날인 5월 3일 밤 10시, 심야 영화를 보자고 조건을 걸어 난처해지고 만다.약속 당일, 뉴스에서 화약 도난 사건을 보던 코난이자 신이치에게 수상한 협박 전화가 걸려 오고 의문의 남자가 도심 전체를 표적으로 한 연쇄 폭탄 테러를 예고한다.자신에게 도전장을 내민 연쇄 폭탄 테러임을 알아챈 신이치는 범인과의 숨 막히는 대결 중, 베이카 시티 빌딩에 있는 란이 타깃이 되어 위험에 처했음을 깨닫는데…‘명탐정 코난’, 전무후무 레전드 애니메이션의 ‘시작’!진실은 언제나 하나!")
+            "검은 조직에 의해 초등학생 코난의 몸으로 작아진 고등학생 명탐정 쿠도 신이치. 천재 건축가 모리야 테이지 교수에게 가든 파티의 초대를 받았지만, 코난인 상태로는 참석할 수 없어 대리인을 부탁하려 소꿉친구 모리 란에게 목소리 변조기를 사용해 신이치로서 전화를 건다. 하지만 란이 신이치의 생일 전날인 5월 3일 밤 10시, 심야 영화를 보자고 조건을 걸어 난처해지고 만다. 약속 당일, 뉴스에서 화약 도난 사건을 보던 코난이자 신이치에게 수상한 협박 전화가 걸려 오고 의문의 남자가 도심 전체를 표적으로 한 연쇄 폭탄 테러를 예고한다. 자신에게 도전장을 내민 연쇄 폭탄 테러임을 알아챈 신이치는 범인과의 숨 막히는 대결 중, 베이카 시티 빌딩에 있는 란이 타깃이 되어 위험에 처했음을 깨닫는데…")
   ],
   runtime: "94",
   rating: "12세이상관람가",
-  genre: "미스터리,스릴러,범죄",
+  genre: ["미스터리", "스릴러", "범죄",],
   type: "애니메이션",
   use: "극장용",
   repRlsDate: "20241002",
   posters: [
-    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DPF030009_01",
-    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DPF009370_01"
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DPF030009_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DPF009370_01"
   ],
   stlls: [
-    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST865540_01",
-    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST865539_01",
-    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST865544_01",
-    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST868681_01",
-    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST868682_01",
-    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST868683_01",
-    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST867664_01",
-    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST867665_01",
-    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST867666_01",
-    "https://nungil-file-server.s3.ap-northeast-2.amazonaws.com/images/DST867667_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST865540_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST865539_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST865544_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST868681_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST868682_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST868683_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST867664_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST867665_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST867666_01",
+    "https://s3.ap-northeast-2.amazonaws.com/nungil.file.server/images/DST867667_01",
   ],
   staffs: [
     Staff(staffNm: "코다마 켄지", staffRoleGroup: "감독", staffId: "00094033"),
