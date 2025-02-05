@@ -128,21 +128,21 @@ class _UserInfoState extends State<UserInfo> {
 
     final nickname = _nicknameController.text;
     final gender = isFemaleSelected ? 'FEMALE' : 'MALE';
-    final birthYear = _selectedYear;
+    final birthDate = _selectedYear;
 
-    print('전송할 데이터: ${gender}, ${birthYear}, ${nickname}');
+    print('전송할 데이터: ${gender}, ${birthDate}, ${nickname}');
     print('Email: ${widget.email}');
     print('Password: ${widget.password}');
 
     try {
       // HTTP POST 요청
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8080/register'), // 포트 번호를 8080으로 변경
+        Uri.parse('http://13.239.238.92:8080/register'), // 포트 번호를 8080으로 변경
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'nickname': nickname,
           'gender': gender,
-          'birthYear': birthYear,
+          'birthDate': birthDate,
           'email': widget.email,
           'password': widget.password,
         }),
