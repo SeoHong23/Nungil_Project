@@ -174,4 +174,5 @@ class CustomTextStyle {
   static const TextStyle mediumLightNavy = TextStyle(fontFamily: 'Pretendard',fontSize: 15, color: DefaultColors.lightNavy, height: 1.6,fontWeight: FontWeight.w400);
   static const TextStyle smallNavy = TextStyle(fontFamily: 'Pretendard',fontSize: 14, color: DefaultColors.navy,height: 1.8);
   static const TextStyle smallLightNavy = TextStyle(fontFamily: 'Pretendard',fontSize: 14, color: DefaultColors.lightNavy,height: 1.8);
+  static const TextStyle xSmallNavy = TextStyle(fontFamily: 'Pretendard',fontSize: 12, color: DefaultColors.navy,height: 1.8);
 }

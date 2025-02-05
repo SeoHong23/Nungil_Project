@@ -191,7 +191,7 @@ class _DetailTopDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 350; // DetailTop 높이에 맞게 조절
+  double get maxExtent => 420; // DetailTop 높이에 맞게 조절
   @override
   double get minExtent => 50; // 스크롤 시 사라지도록 설정
   @override
