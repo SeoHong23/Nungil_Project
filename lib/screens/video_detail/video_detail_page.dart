@@ -127,22 +127,22 @@ class _VideoDetailPageState extends State<VideoDetailPage>
               ),
             )
           ],
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
-            child: TabBarView(
-              controller: _tabController,
-              physics: const NeverScrollableScrollPhysics(), // 스크롤 충돌 방지
-              children: [
-                DetailTapInfo(item: widget.item),
-                DetailTapReview(item: widget.item),
-                DetailTapImgs(
-                  item: widget.item,
-                )
-              ],
-            ),
+          body: TabBarView(
+            controller: _tabController,
+            children: [
+              _buildTabContent(DetailTapInfo(item: widget.item)),
+              _buildTabContent(DetailTapReview(item: widget.item)),
+              _buildTabContent(DetailTapImgs(item: widget.item)),
+            ],
           ),
         ),
       ),
+    );
+  }
+  Widget _buildTabContent(Widget content) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 32.0),
+      child: content,
     );
   }
 }
