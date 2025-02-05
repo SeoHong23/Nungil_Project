@@ -228,7 +228,7 @@ _buildMoreActionButton({
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(mIcon, color: DefaultColors.navy, size: 17),
-        Text(label, style: CustomTextStyle.smallNavy),
+        Text(label, style: CustomTextStyle.xSmallNavy),
       ],
     ),
   );
