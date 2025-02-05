@@ -34,8 +34,8 @@ class DetailTop extends StatelessWidget {
             bottom: -1,
             left: -1,
             right: -1,
-            top: -1,
             child: Container(
+              height: 422,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -45,7 +45,7 @@ class DetailTop extends StatelessWidget {
                     baseBackgroundColor.withOpacity(0.7),
                     baseBackgroundColor,
                   ],
-                  stops: [0, 0.18, 0.35, 0.5, 0.8],
+                  stops: [0, 0.18, 0.32, 0.45, 0.8],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -81,8 +81,8 @@ class DetailTop extends StatelessWidget {
                         // 영화 제목
                         Text(item.title, style: textTheme().titleLarge),
                         // 영문 제목 - 제작 연도
-                        Text(' ${item.titleEng} · ${item.prodYear}',
-                            style: textTheme().labelSmall),
+                        Text('${item.titleEng} · ${item.prodYear}',
+                            style: textTheme().labelMedium),
                         const SizedBox(height: 4.0),
                         // 평점
                         Row(
@@ -90,9 +90,9 @@ class DetailTop extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Icon(CupertinoIcons.star_fill,
-                                size: 12, color: Colors.orangeAccent),
+                                size: 14, color: Colors.orangeAccent),
                             const SizedBox(width: 4.0),
-                            Text("${item.score}", style: textTheme().labelSmall)
+                            Text("${item.score}", style: textTheme().labelMedium)
                           ],
                         ),
                       ],
@@ -173,11 +173,12 @@ class DetailTop extends StatelessWidget {
                   child: Container(
                     height: 40,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: baseBackgroundColor.shade900,width: 0.5),
+                      borderRadius: BorderRadius.circular(4.0),
+                      color: baseBackgroundColor.shade800
                     ),
                     child: Center(
-                      child: Text("광고",style: textTheme().labelSmall,),
+                      child: Text("광고",style: CustomTextStyle.smallLightNavy,),
                     ),
                   ),
                 ),

@@ -33,7 +33,7 @@ TextTheme textTheme() {
     // 상세보기 제목에 사용됨
     titleLarge: TextStyle(
         fontFamily: 'GmarketSans',
-        fontSize: 16.0,
+        fontSize: 20.0,
         color: DefaultColors.black,
         fontWeight: FontWeight.bold),
 
@@ -44,11 +44,11 @@ TextTheme textTheme() {
     // 작은 글자 스타일
     // 버튼?에 써도 될듯?
     labelMedium: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 12.0, color: DefaultColors.black),
+        fontFamily: 'GmarketSans', fontSize: 13.0, color: DefaultColors.black),
     // 상당히 작은 글자 스타일
     // 상세보기 부제/연도에 사용함
     labelSmall: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 10.0, color: DefaultColors.black),
+        fontFamily: 'GmarketSans', fontSize: 12.0, color: DefaultColors.black),
   );
 }
 
