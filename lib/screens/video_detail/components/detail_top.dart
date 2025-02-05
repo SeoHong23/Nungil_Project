@@ -55,7 +55,7 @@ class DetailTop extends StatelessWidget {
           Positioned(
             left: 0,
             right: 0,
-            top: 140,
+            bottom: 0,
             child: Column(
               children: [
                 Row(
