@@ -26,48 +26,14 @@ class UserPage extends StatelessWidget {
               ),
               SizedBox(height: 30),
               SizedBox(
-                width: 350,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Color(0xFFF8E300),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding:
-                            const EdgeInsets.only(left: 10.0), // 이미지 주변에 여백 추가
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF8E300), // 이미지 배경색 설정
-                          borderRadius: BorderRadius.circular(6), // 배경의 둥근 모서리
-                        ),
-                        child: Image.asset(
-                          'assets/images/login_icons/kakao_bubble.png',
-                          width: 23,
-                          height: 23,
-                        ),
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 20.0),
-                            child: Text(
-                              '카카오로 시작하기',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.black, // 글자 색상 설정
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                width: 350, // 기존 버튼과 동일한 크기 유지
+                child: GestureDetector(
+                  onTap: () {
+                    // 여기에 카카오 로그인 기능 추가
+                  },
+                  child: Image.asset(
+                    'assets/images/login_icons/kakao_login_medium_wide.png',
+                    fit: BoxFit.cover, // 이미지가 버튼 크기에 맞게 조정됨
                   ),
                 ),
               ),

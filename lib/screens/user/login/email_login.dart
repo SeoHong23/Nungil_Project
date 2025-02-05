@@ -99,31 +99,36 @@ class _EmailLoginState extends ConsumerState<EmailLogin> {
     final password = passwordController.text;
     // 서버 URL 입력
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:8080/login'),
+      Uri.parse('http://13.239.238.92:8080/login'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'email': email,
         'password': password,
       }),
     );
-
-    print('Response body: ${email}'); // 응답 본문을 확인
+    print('Response headers: ${response.headers}');
+    print('Response body: ${response.body}'); // 응답 본문을 확인
 
     if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      final nickname = responseData['nickname'] ?? 'Unknown';
-      final String email = responseData['email'];
-      // 여기서 AuthNotifier 사용
-      ref.read(authProvider.notifier).login(email, nickname);
-      // 로그인 성공
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MainScreen(),
-        ),
-      );
+      try {
+        final responseData = json.decode(response.body); // JSON 디코딩
+        final nickname = responseData['nickname'] ?? 'Unknown';
+        final String email = responseData['email'];
+
+        ref.read(authProvider.notifier).login(email, nickname);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainScreen(),
+          ),
+        );
+      } catch (e) {
+        print('JSON decoding error: $e');
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Invalid response format')));
+      }
     } else {
-      // 로그인 실패
       final errorMessage = json.decode(response.body)['message'];
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(errorMessage)));

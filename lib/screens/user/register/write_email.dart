@@ -65,7 +65,7 @@ class _WriteEmailState extends State<WriteEmail> {
   // 이메일 중복 체크 API 호출
   Future<void> checkEmailExists(String email) async {
     final url = Uri.parse(
-        'http://10.0.2.2:8080/check-email?email=$email'); // 실제 서버 URL로 변경하세요.
+        'http://13.239.238.92:8080/check-email?email=$email'); // 실제 서버 URL로 변경하세요.
 
     try {
       final response = await http.get(url);
