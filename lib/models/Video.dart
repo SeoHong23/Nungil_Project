@@ -73,12 +73,12 @@ class Video {
 Video dummyVideo = Video(
   id: "679c58824fd75204ab7f9f52",
   commCode: "20224666",
-  title: " 파일럿",
+  title: "파일럿",
   titleEng: "Pilot",
   titleOrg: "",
   titleEtc: "파일럿^Pilot",
   prodYear: "2023",
-  nation: "대한민국",
+  nation: "한국",
   company: ["쇼트케이크", "㈜무비락"],
   runtime: "111",
   plots: [
@@ -88,9 +88,9 @@ Video dummyVideo = Video(
           "최고의 비행 실력을 갖춘 스타 파일럿이자 뜨거운 인기로 유명 TV쇼에도 출연할 만큼 고공행진 하던 한정우는 순간의 잘못으로 하루아침에 모든 것을 잃고 실직까지 하게 된다. 블랙 리스트에 오른 그를 다시 받아줄 항공사는 어느 곳도 없었고 궁지에 몰린 한정우는 여동생의 신분으로 완벽히 변신, 마침내 재취업에 성공한다. 그러나 기쁨도 잠시! 또다시 예상치 못한 난관에 부딪히게 되는데… 인생 순항을 꿈꾸던 그의 삶은 무사히 이륙할 수 있을까?",
     )
   ],
-  rating: "12세이상관람가",
+  rating: "12세 이상 관람가",
   genre: [
-    "코메디",
+    "코미디",
   ],
   type: "극영화",
   use: "극장용",

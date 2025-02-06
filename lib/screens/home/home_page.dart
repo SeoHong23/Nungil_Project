@@ -4,7 +4,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'components/home_body_component.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.toggleTheme});
+
+  final VoidCallback toggleTheme; // 🔥 임시 테마 변경 함수
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,9 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              toggleTheme();
+            },
             icon: const Icon(FontAwesomeIcons.share),
           ),
           IconButton(
