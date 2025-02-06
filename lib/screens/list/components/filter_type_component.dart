@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nungil/theme/common_theme.dart';
 import '../../../models/list/list_filter_type.dart';
 
 class FilterTypeComponent extends StatefulWidget {
@@ -101,7 +102,7 @@ class _FilterTypeComponentState extends State<FilterTypeComponent> {
                   child: Container(
                     padding: EdgeInsets.all(5.0),
                     decoration: BoxDecoration(
-                      color: Colors.blueGrey[300],
+                      color: iconThemeColor[800],
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Row(
@@ -134,7 +135,7 @@ class _FilterTypeComponentState extends State<FilterTypeComponent> {
                   child: Container(
                     padding: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
-                      color: Colors.blueGrey[200],
+                      color: iconThemeColor[300],
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Row(

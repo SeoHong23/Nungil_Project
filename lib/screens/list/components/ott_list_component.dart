@@ -39,7 +39,7 @@ class _OttListComponentState extends State<OttListComponent> {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).scaffoldBackgroundColor,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Center(

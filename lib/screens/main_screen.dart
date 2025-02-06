@@ -14,7 +14,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/theme/common_theme.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
-  const MainScreen({super.key});
+  const MainScreen({super.key, this.toggleTheme});
+
+  final VoidCallback? toggleTheme; // 🔥 임시 테마 변경 함수
 
   @override
   ConsumerState<MainScreen> createState() => _MainScreenState();
@@ -33,7 +35,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   }
 
   List<Widget> _screens = [
-    HomePage(),
+    // HomePage(),
     RankingPage(),
     ListPage(),
     UserPage(),
@@ -66,7 +68,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   controller: _pageController,
                   onPageChanged: (value) => changePages(value),
                   children: [
-                    HomePage(),
+                    HomePage(toggleTheme: widget.toggleTheme!),
                     RankingPage(),
                     ListPage(),
                     isLoggedIn ? LoginView() : UserPage(),

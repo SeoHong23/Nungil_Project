@@ -31,7 +31,7 @@ class VideoListComponent extends StatelessWidget {
             offset: Offset(0, 1),
           ),
         ],
-        color: baseBackgroundColor[100],
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
