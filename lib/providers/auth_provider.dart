@@ -4,9 +4,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 // User 모델
 class User {
   final int userId;
-  final String email;
   final String nickname;
-  User({required this.userId, required this.email, required this.nickname});
+  final String email;
+
+  User({required this.userId, required this.nickname, required this.email});
 }
 
 // AuthState 데이터 모델 (로그인 상태 저장)
@@ -28,8 +29,12 @@ class AuthState {
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier() : super(AuthState(isAuthenticated: false));
 
-  Future<void> login(int userId, String email, String nickname) async {
-    final user = User(userId: userId, email: email, nickname: nickname);
+  Future<void> login(int userId, String nickname, String email) async {
+    final user = User(
+      userId: userId,
+      nickname: nickname,
+      email: email,
+    );
     state = AuthState(isAuthenticated: true, user: user);
 
     final prefs = await SharedPreferences.getInstance();
@@ -42,9 +47,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    final userId = prefs.getInt('userId'); // userId 가져오기
-    final email = prefs.getString('userEmail');
+    final userId = prefs.getInt('userId'); // userId 가져오기ㅂㅈ
     final nickname = prefs.getString('nickname');
+    final email = prefs.getString('userEmail');
 
     if (isLoggedIn && userId != null && email != null && nickname != null) {
       state = AuthState(
