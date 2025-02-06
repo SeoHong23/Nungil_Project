@@ -61,7 +61,7 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
               _rankingCategoryButtons(), // ✅ 카테고리 버튼
               const SizedBox(height: 16),
               Text(selectedCategory == "일일" ? "오늘의 박스오피스 랭킹" : "금주의 박스오피스 랭킹",
-                  style: textTheme().titleLarge),
+                  style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 16),
               Expanded(
                 child: isLoading
@@ -169,10 +169,10 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                baseBackgroundColor,
-                baseBackgroundColor,
-                baseBackgroundColor.withOpacity(0.2),
-                baseBackgroundColor.withOpacity(0.1),
+                Theme.of(context).scaffoldBackgroundColor,
+                Theme.of(context).scaffoldBackgroundColor,
+                Theme.of(context).scaffoldBackgroundColor.withOpacity(0.2),
+                Theme.of(context).scaffoldBackgroundColor.withOpacity(0.1),
                 Colors.transparent,
               ],
               begin: Alignment.bottomCenter,

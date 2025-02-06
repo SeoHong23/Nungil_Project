@@ -52,13 +52,55 @@ TextTheme textTheme() {
   );
 }
 
+// 다크 테마 텍스트
+TextTheme textThemeDark() {
+  return const TextTheme(
+    // 가장 큰 제목 스타일
+    displayLarge: TextStyle(
+        fontFamily: 'GmarketSans', fontSize: 18.0, color: DefaultColors.white),
+    // 중간 크기의 제목 스타일
+    displayMedium: TextStyle(
+        fontFamily: 'GmarketSans', fontSize: 16.0, color: DefaultColors.white),
+
+    // 본문 텍스트 스타일 (기사, 설명)
+    bodyLarge: TextStyle(
+        fontFamily: 'GmarketSans', fontSize: 16.0, color: DefaultColors.white),
+    // 부제목, 작은 본문 텍스트 스타일
+    bodyMedium: TextStyle(
+        fontFamily: 'GmarketSans', fontSize: 14.0, color: DefaultColors.white),
+    bodySmall: TextStyle(
+        fontFamily: 'GmarketSans', fontSize: 12.0, color: DefaultColors.white),
+
+    // 두꺼운 제목 스타일
+    // 상세보기 제목에 사용됨
+    titleLarge: TextStyle(
+        fontFamily: 'GmarketSans',
+        fontSize: 20.0,
+        color: DefaultColors.white,
+        fontWeight: FontWeight.bold),
+
+    // 중간 크기의 제목 스타일
+    titleMedium: TextStyle(
+        fontFamily: 'GmarketSans', fontSize: 15.0, color: DefaultColors.white),
+
+    // 작은 글자 스타일
+    // 버튼?에 써도 될듯?
+    labelMedium: TextStyle(
+        fontFamily: 'GmarketSans', fontSize: 13.0, color: DefaultColors.white),
+    // 상당히 작은 글자 스타일
+    // 상세보기 부제/연도에 사용함
+    labelSmall: TextStyle(
+        fontFamily: 'GmarketSans', fontSize: 12.0, color: DefaultColors.white),
+  );
+}
+
 //--------------------------------------------
 
 // AppBar 테마 설정
 AppBarTheme appBarTheme() {
   return AppBarTheme(
     centerTitle: false, //타이틀 중앙 여부
-    color: baseBackgroundColor, //타이틀 색상
+    backgroundColor: baseBackgroundColor, //타이틀 색상
     elevation: 0.0,
     scrolledUnderElevation: 0,
     iconTheme: IconThemeData(color: DefaultColors.black), //아이콘 색상
@@ -67,6 +109,23 @@ AppBarTheme appBarTheme() {
         fontSize: 16, // 폰트 사이즈
         fontWeight: FontWeight.bold, // 굵기
         color: DefaultColors.black // 앱바 제목 텍스트 색상
+        ),
+  );
+}
+
+// DarkAppBar 테마 설정
+AppBarTheme appBarThemeDark() {
+  return AppBarTheme(
+    centerTitle: true, //타이틀 중앙 여부
+    backgroundColor: baseBackgroundColorDark, //타이틀 색상
+    elevation: 0.0,
+    scrolledUnderElevation: 0,
+    iconTheme: IconThemeData(color: iconThemeColorDark[300]), //아이콘 색상
+    titleTextStyle: TextStyle(
+        fontFamily: 'GmarketSans',
+        fontSize: 16, // 폰트 사이즈
+        fontWeight: FontWeight.bold, // 굵기
+        color: iconThemeColorDark[300] // 앱바 제목 텍스트 색상
         ),
   );
 }
@@ -84,6 +143,17 @@ BottomNavigationBarThemeData bottomNavigationBarTheme() {
   );
 }
 
+// 바텀네비게이션바 다크 테마 설정
+BottomNavigationBarThemeData bottomNavigationBarThemeDark() {
+  return BottomNavigationBarThemeData(
+    selectedItemColor: iconThemeColorDark[100], // 선택된 아이템 색상
+    unselectedItemColor: iconThemeColorDark[400], // 선택되지 않은 아이템 색상
+    showUnselectedLabels: true, // 선택 안된 라벨 표시 여부 설정
+    backgroundColor: baseBackgroundColorDark,
+    elevation: 0.0,
+  );
+}
+
 //--------------------------------------------
 
 // 전체 ThemeData 설정
@@ -93,6 +163,7 @@ ThemeData mTheme() {
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: iconThemeColor,
     ),
+    cardColor: baseBackgroundColor[100],
     scaffoldBackgroundColor: baseBackgroundColor,
     textTheme: textTheme(),
     appBarTheme: appBarTheme(),
@@ -107,12 +178,13 @@ ThemeData dTheme() {
   return ThemeData(
     // 우리가 직접 지정 함
     colorScheme: ColorScheme.fromSwatch(
-      primarySwatch: iconThemeColor,
+      primarySwatch: iconThemeColorDark,
     ),
-    scaffoldBackgroundColor: Colors.black,
-    textTheme: textTheme(),
-    appBarTheme: appBarTheme(),
-    bottomNavigationBarTheme: bottomNavigationBarTheme(),
+    cardColor: baseBackgroundColorDark[200],
+    scaffoldBackgroundColor: baseBackgroundColorDark,
+    textTheme: textThemeDark(),
+    appBarTheme: appBarThemeDark(),
+    bottomNavigationBarTheme: bottomNavigationBarThemeDark(),
   );
 }
 
@@ -135,6 +207,25 @@ const MaterialColor baseBackgroundColor = MaterialColor(
   },
 );
 
+const int _baseColorValueDark = 0xFF272A2F;
+const int _primaryColorValueDark = 0xFF505C6E;
+// 다크 테마 배경 색상
+const MaterialColor baseBackgroundColorDark = MaterialColor(
+  _baseColorValueDark,
+  <int, Color>{
+    50: Color(0xFF1A1D23), // 거의 블랙에 가까운 딥 네이비
+    100: Color(0xFF22252C), // 어두운 네이비
+    200: Color(0xFF2A2E36), // 다크 그레이 블루
+    300: Color(0xFF333842), // 약간 밝은 톤의 배경
+    400: Color(0xFF3D424D), // 중간 정도의 어두운 톤
+    500: Color(_baseColorValueDark), // 기본 베이스 색상 (메인 다크 컬러)
+    600: Color(0xFF49505D), // 약간 더 밝은 대체 색
+    700: Color(0xFF5A6575), // 중간 어두운 톤
+    800: Color(0xFF6B7788), // 부드러운 다크 블루
+    900: Color(0xFF8899A8), // 가장 밝은 다크 테마 색상
+  },
+);
+
 const MaterialColor iconThemeColor = MaterialColor(
   _primaryColorValue,
   <int, Color>{
@@ -151,14 +242,32 @@ const MaterialColor iconThemeColor = MaterialColor(
   },
 );
 
+// 다크 테마 아이콘
+const MaterialColor iconThemeColorDark = MaterialColor(
+  _primaryColorValueDark,
+  <int, Color>{
+    50: Color(0xFFB0B8C6), // 가장 밝은 톤 (연한 블루 그레이)
+    100: Color(0xFF99A2B3), // 밝은 톤의 블루 그레이
+    200: Color(0xFF828D9F), // 중간 밝기 (채도가 낮은 블루)
+    300: Color(0xFF6B778A), // 기본보다 살짝 밝은 컬러
+    400: Color(0xFF5A6677), // 네이비 블루 느낌
+    500: Color(_primaryColorValueDark), // 기본 색상 (차분한 블루 계열)
+    600: Color(0xFF475265), // 어두운 블루 그레이
+    700: Color(0xFF373F4D), // 더 어두운 블루 톤
+    800: Color(0xFF272D3A), // 딥 네이비 계열
+    900: Color(0xFF181E27), // 거의 블랙에 가까운 다크 블루
+  },
+);
+
 class DefaultColors {
   static const Color black = Color(0xFF212121); // 아주 짙은 회색(글자색)
+  static const Color white = Color(0xFFF1F1F1); // 아주 밝은 회색(글자색)
   static const Color green = Color(0xFF0ca678); // 눈이 편한 초록색 (글자색)
   static const Color yellow = Color(0xFFf7b233); // 약한 경고용 노란색 (글자색)
   static const Color red = Color(0xFFf03e3e); // 경고용 붉은색 (글자색)
-  static const Color grey = Color(0xff979797); // 경고용 붉은색 (글자색)
-  static const Color navy = Color(0xFF3E5185); // 경고용 붉은색 (글자색)
-  static const Color lightNavy = Color(0xFF788CC8); // 경고용 붉은색 (글자색)
+  static const Color grey = Color(0xff979797); // 회색 (글자색)
+  static const Color navy = Color(0xFF3E5185); // 남색 (버튼색)
+  static const Color lightNavy = Color(0xFF788CC8); // 밝은 남색 (버튼색)
 }
 
 class CustomTextStyle {
@@ -170,9 +279,32 @@ class CustomTextStyle {
   );
   static const TextStyle font = TextStyle(fontFamily: 'GmarketSans');
   static const TextStyle pretendard = TextStyle(fontFamily: 'Pretendard');
-  static const TextStyle mediumNavy = TextStyle(fontFamily: 'Pretendard',fontSize: 15, color: DefaultColors.navy, height: 1.6,fontWeight: FontWeight.w400, wordSpacing: 0.6);
-  static const TextStyle mediumLightNavy = TextStyle(fontFamily: 'Pretendard',fontSize: 15, color: DefaultColors.lightNavy, height: 1.6,fontWeight: FontWeight.w400);
-  static const TextStyle smallNavy = TextStyle(fontFamily: 'Pretendard',fontSize: 14, color: DefaultColors.navy,height: 1.8);
-  static const TextStyle smallLightNavy = TextStyle(fontFamily: 'Pretendard',fontSize: 14, color: DefaultColors.lightNavy,height: 1.8);
-  static const TextStyle xSmallNavy = TextStyle(fontFamily: 'Pretendard',fontSize: 12, color: DefaultColors.navy,height: 1.8);
+  static const TextStyle mediumNavy = TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 15,
+      color: DefaultColors.navy,
+      height: 1.6,
+      fontWeight: FontWeight.w400,
+      wordSpacing: 0.6);
+  static const TextStyle mediumLightNavy = TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 15,
+      color: DefaultColors.lightNavy,
+      height: 1.6,
+      fontWeight: FontWeight.w400);
+  static const TextStyle smallNavy = TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 14,
+      color: DefaultColors.navy,
+      height: 1.8);
+  static const TextStyle smallLightNavy = TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 14,
+      color: DefaultColors.lightNavy,
+      height: 1.8);
+  static const TextStyle xSmallNavy = TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 12,
+      color: DefaultColors.navy,
+      height: 1.8);
 }

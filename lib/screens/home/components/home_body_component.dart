@@ -33,7 +33,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
             TextField(
               decoration: InputDecoration(
                 prefixIcon: Icon(FontAwesomeIcons.magnifyingGlass),
-                fillColor: baseBackgroundColor[100], // 채우기 색
+                fillColor: Theme.of(context).cardColor, // 채우기 색
                 filled: true, // 채우기 유무 default = false
                 labelStyle: TextStyle(),
               ),
@@ -65,7 +65,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
             // 최신 리뷰
             Text(
               "최신 리뷰",
-              style: textTheme().titleLarge,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,

@@ -47,7 +47,7 @@ class _HomeMovieListComponentState extends State<HomeMovieListComponent> {
       children: [
         Text(
           widget.title,
-          style: textTheme().titleLarge,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
