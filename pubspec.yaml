@@ -55,6 +55,8 @@ dependencies:
   pull_to_refresh: ^2.0.0
 
 
+  cached_network_image: ^3.2.1 # 이미지 캐싱처리
+
 
 dev_dependencies:
   flutter_test:
