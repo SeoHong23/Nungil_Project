@@ -107,8 +107,8 @@ class _DetailTopState extends ConsumerState<DetailTop> {
             bottom: -1,
             left: -1,
             right: -1,
+            top: -1,
             child: Container(
-              height: 422,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -118,7 +118,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                     baseBackgroundColor.withOpacity(0.7),
                     baseBackgroundColor,
                   ],
-                  stops: [0, 0.18, 0.32, 0.45, 0.8],
+                  stops: [0, 0.18, 0.35, 0.5, 0.8],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -154,11 +154,9 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                         // 영화 제목
                         Text(widget.item.title, style: textTheme().titleLarge),
                         // 영문 제목 - 제작 연도
-
                         Text(
                             ' ${widget.item.titleEng} · ${widget.item.prodYear}',
                             style: textTheme().labelSmall),
-
                         const SizedBox(height: 4.0),
                         // 평점
                         Row(
@@ -166,12 +164,10 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Icon(CupertinoIcons.star_fill,
-                                size: 14, color: Colors.orangeAccent),
+                                size: 12, color: Colors.orangeAccent),
                             const SizedBox(width: 4.0),
-
                             Text("${widget.item.score}",
                                 style: textTheme().labelSmall)
-
                           ],
                         ),
                       ],
@@ -259,14 +255,14 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                   child: Container(
                     height: 40,
                     decoration: BoxDecoration(
-                      border: Border.all(color: baseBackgroundColor.shade900,width: 0.5),
-                      borderRadius: BorderRadius.circular(4.0),
-                      color: baseBackgroundColor.shade800
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: Center(
-
-                      child: Text("광고",style: CustomTextStyle.smallLightNavy,),
-
+                      child: Text(
+                        "광고",
+                        style: textTheme().labelSmall,
+                      ),
                     ),
                   ),
                 ),
