@@ -1,14 +1,87 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nungil/models/Video.dart';
+import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/theme/common_theme.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:provider/provider.dart';
 
 // 상단부
-class DetailTop extends StatelessWidget {
+class DetailTop extends ConsumerStatefulWidget {
   final Video item;
 
   const DetailTop({required this.item, super.key});
+
+  @override
+  _DetailTopState createState() => _DetailTopState();
+}
+
+class _DetailTopState extends ConsumerState<DetailTop> {
+  bool isLiked = false;
+  bool disLiked = false;
+  Future<void> _toggleLike(WidgetRef ref) async {
+    final String? videoId = widget.item.id; // Video 모델의 ID 사용
+    final userId = ref.read(userIdProvider);
+
+    if (userId == null) {
+      print("Please log in first");
+      return;
+    }
+    final String url = isLiked
+        ? "http://13.239.238.92:8080/$videoId/unlike?userId=$userId" // unlike API 호출
+        : "http://13.239.238.92:8080/$videoId/like?userId=$userId"; // like API 호출
+
+    try {
+      final response = isLiked
+          ? await http.delete(Uri.parse(url)) // unlike일 때 DELETE 요청
+          : await http.post(Uri.parse(url)); // like일 때 POST 요청
+
+      if (response.statusCode == 200) {
+        setState(() {
+          isLiked = !isLiked; // 상태 토글
+        });
+        print(isLiked ? "Liked successfully" : "Unliked successfully");
+      } else {
+        print("Failed to toggle like: ${response.body}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  Future<void> _toggleDisLike(WidgetRef ref) async {
+    final String? videoId = widget.item.id; // Video 모델의 ID 사용
+    final userId = ref.read(userIdProvider);
+
+    if (userId == null) {
+      print("Please log in first");
+      return;
+    }
+    final String url = disLiked
+        ? "http://13.239.238.92:8080/$videoId/undislike?userId=$userId" // unlike API 호출
+        : "http://13.239.238.92:8080/$videoId/dislike?userId=$userId"; // like API 호출
+
+    try {
+      final response = disLiked
+          ? await http.delete(Uri.parse(url)) // unlike일 때 DELETE 요청
+          : await http.post(Uri.parse(url)); // like일 때 POST 요청
+
+      if (response.statusCode == 200) {
+        setState(() {
+          disLiked = !disLiked; // 상태 토글
+        });
+        print(disLiked ? "disLiked successfully" : "Undisliked successfully");
+      } else {
+        print("Failed to toggle like: ${response.body}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +97,7 @@ class DetailTop extends StatelessWidget {
               height: 400,
               width: double.infinity,
               child: Image.network(
-                item.stlls[0],
+                widget.item.stlls[0],
                 fit: BoxFit.cover,
               ),
             ),
@@ -68,7 +141,7 @@ class DetailTop extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(5.0),
                       child: Image.network(
-                        item.posters[0],
+                        widget.item.posters[0],
                         height: 120, // 포스터 크기 고정
                       ),
                     ),
@@ -79,9 +152,10 @@ class DetailTop extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // 영화 제목
-                        Text(item.title, style: textTheme().titleLarge),
+                        Text(widget.item.title, style: textTheme().titleLarge),
                         // 영문 제목 - 제작 연도
-                        Text(' ${item.titleEng} · ${item.prodYear}',
+                        Text(
+                            ' ${widget.item.titleEng} · ${widget.item.prodYear}',
                             style: textTheme().labelSmall),
                         const SizedBox(height: 4.0),
                         // 평점
@@ -92,7 +166,8 @@ class DetailTop extends StatelessWidget {
                             Icon(CupertinoIcons.star_fill,
                                 size: 12, color: Colors.orangeAccent),
                             const SizedBox(width: 4.0),
-                            Text("${item.score}", style: textTheme().labelSmall)
+                            Text("${widget.item.score}",
+                                style: textTheme().labelSmall)
                           ],
                         ),
                       ],
@@ -112,22 +187,29 @@ class DetailTop extends StatelessWidget {
                     ),
                     Expanded(
                       child: _buildReactionButton(
-                          mIcon: FontAwesomeIcons.faceSmile,
-                          color: Colors.green,
-                          label: "좋아요",
-                          // TODO : 좋아요 기능 구현
-                          onPressed: () {}),
+                        mIcon: isLiked
+                            ? FontAwesomeIcons.solidFaceSmile
+                            : FontAwesomeIcons.faceSmile,
+                        color: Colors.green,
+                        label: "좋아요",
+                        // TODO : 좋아요 기능 구현
+                        onPressed: () => _toggleLike(ref), // API 호출 추가
+                      ),
                     ),
                     const SizedBox(
                       width: 10,
                     ),
                     Expanded(
-                        child: _buildReactionButton(
-                            mIcon: FontAwesomeIcons.faceAngry,
-                            color: Colors.red,
-                            label: "별로예요",
-                            // TODO : 별로예요 기능 구현
-                            onPressed: () {})),
+                      child: _buildReactionButton(
+                        mIcon: disLiked
+                            ? FontAwesomeIcons.solidFaceAngry
+                            : FontAwesomeIcons.faceAngry,
+                        color: Colors.red,
+                        label: "별로예요",
+                        // TODO : 별로예요 기능 구현
+                        onPressed: () => _toggleDisLike(ref),
+                      ),
+                    ),
                     const SizedBox(
                       width: 10,
                     ),
@@ -177,7 +259,10 @@ class DetailTop extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Center(
-                      child: Text("광고",style: textTheme().labelSmall,),
+                      child: Text(
+                        "광고",
+                        style: textTheme().labelSmall,
+                      ),
                     ),
                   ),
                 ),

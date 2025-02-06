@@ -3,9 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // User 모델
 class User {
+  final int userId;
   final String email;
   final String nickname;
-  User({required this.email, required this.nickname});
+  User({required this.userId, required this.email, required this.nickname});
 }
 
 // AuthState 데이터 모델 (로그인 상태 저장)
@@ -27,14 +28,30 @@ class AuthState {
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier() : super(AuthState(isAuthenticated: false));
 
-  Future<void> login(String email, String nickname) async {
-    final user = User(email: email, nickname: nickname);
+  Future<void> login(int userId, String email, String nickname) async {
+    final user = User(userId: userId, email: email, nickname: nickname);
     state = AuthState(isAuthenticated: true, user: user);
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLoggedIn', true);
+    await prefs.setInt('userId', userId); // userId 저장
     await prefs.setString('userEmail', email);
     await prefs.setString('nickname', nickname);
+  }
+
+  Future<void> checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    final userId = prefs.getInt('userId'); // userId 가져오기
+    final email = prefs.getString('userEmail');
+    final nickname = prefs.getString('nickname');
+
+    if (isLoggedIn && userId != null && email != null && nickname != null) {
+      state = AuthState(
+        isAuthenticated: true,
+        user: User(userId: userId, email: email, nickname: nickname),
+      );
+    }
   }
 
   Future<void> logout() async {
@@ -43,21 +60,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }
-
-  Future<void> checkLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    final email = prefs.getString('userEmail');
-    final nickname = prefs.getString('nickname');
-
-    if (isLoggedIn && email != null && nickname != null) {
-      state = AuthState(
-          isAuthenticated: true, user: User(email: email, nickname: nickname));
-    }
-  }
 }
 
 // Provider 선언
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   return AuthNotifier();
+});
+
+final userIdProvider = Provider<int?>((ref) {
+  final authState = ref.watch(authProvider);
+  return authState.isAuthenticated ? authState.user?.userId : null;
 });
