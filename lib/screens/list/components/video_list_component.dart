@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nungil/theme/common_theme.dart';
 
 import '../../common_components/poster_image_component.dart';
+import '../../common_components/rate_builder.dart';
 
 /// 2025-01-23 강중원 - 생성
 /// 2025-01-24 강중원 - 임시 모델로 불러오도록 설정
@@ -65,31 +66,8 @@ class VideoListComponent extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Builder(
-                    builder: (context) {
-                      if (rate > 70) {
-                        return Text(
-                          "${rate}%",
-                          style: TextStyle(
-                              color: DefaultColors.green,
-                              fontWeight: FontWeight.bold),
-                        );
-                      } else if (rate > 40) {
-                        return Text(
-                          "${rate}%",
-                          style: TextStyle(
-                              color: DefaultColors.yellow,
-                              fontWeight: FontWeight.bold),
-                        );
-                      } else {
-                        return Text(
-                          "${rate}%",
-                          style: TextStyle(
-                              color: DefaultColors.red,
-                              fontWeight: FontWeight.bold),
-                        );
-                      }
-                    },
+                  RateBuilder(
+                    rate: rate,
                   ),
                   InkWell(
                     onTap: () {
