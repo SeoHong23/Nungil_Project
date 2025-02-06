@@ -114,8 +114,9 @@ class _EmailLoginState extends ConsumerState<EmailLogin> {
         final responseData = json.decode(response.body); // JSON 디코딩
         final nickname = responseData['nickname'] ?? 'Unknown';
         final String email = responseData['email'];
+        final int userId = responseData['userId'];
 
-        ref.read(authProvider.notifier).login(email, nickname);
+        ref.read(authProvider.notifier).login(userId, nickname, email);
 
         Navigator.pushReplacement(
           context,

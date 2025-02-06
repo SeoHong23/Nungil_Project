@@ -23,6 +23,7 @@ class Staff {
 }
 
 class Video {
+  String? id;
   String? commCode; // 외부코드
   String title; // 영화명
   String? titleEng; // 영문제명
@@ -45,6 +46,7 @@ class Video {
   int reviewCnt;
 
   Video({
+    this.id,
     this.commCode,
     required this.title,
     this.titleEng,
@@ -69,6 +71,7 @@ class Video {
 }
 
 Video dummyVideo = Video(
+  id: "679c58824fd75204ab7f9f52",
   commCode: "20224666",
   title: "파일럿",
   titleEng: "Pilot",
