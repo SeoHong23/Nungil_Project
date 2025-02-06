@@ -20,7 +20,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _isDarkMode = true; // 다크 모드 여부
+  bool _isDarkMode = false; // 다크 모드 여부
 
   void _toggleTheme() {
     setState(() {
