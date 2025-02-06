@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/data/gvm/video_list_GVM.dart';
 import 'package:nungil/models/list/video_list_tmp.dart';
+import 'package:nungil/util/logger.dart';
 
 import 'video_list_component.dart';
 
 class VideoListContainerComponent extends ConsumerStatefulWidget {
-  const VideoListContainerComponent({super.key});
+  final Map<String, Set<String>> selectedFilters;
+  const VideoListContainerComponent({
+    required this.selectedFilters,
+    super.key,
+  });
 
   @override
   ConsumerState<VideoListContainerComponent> createState() =>
@@ -21,17 +26,35 @@ class _VideoListContainerComponentState
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    Future.microtask(() {
+      _fetchVideos();
+    });
+  }
 
-    // 최초 10개 로드
-    Future.microtask(
-        () => ref.read(videoNotifierProvider.notifier).fetchMoreVideos());
+  @override
+  void didUpdateWidget(covariant VideoListContainerComponent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedFilters != oldWidget.selectedFilters) {
+      _fetchVideos();
+    }
+  }
+
+  /// ✅ **필터 적용된 데이터 불러오기**
+  void _fetchVideos() {
+    if (widget.selectedFilters.isNotEmpty) {
+      ref
+          .read(videoNotifierProvider.notifier)
+          .fetchMoreVideosWithFilter(widget.selectedFilters);
+    } else {
+      ref.read(videoNotifierProvider.notifier).fetchMoreVideos();
+    }
   }
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       // 끝에 도달하면 추가 데이터 요청
-      ref.read(videoNotifierProvider.notifier).fetchMoreVideos();
+      _fetchVideos();
     }
   }
 
