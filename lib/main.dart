@@ -12,18 +12,29 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isDarkMode = false; // 다크 모드 여부
+
+  void _toggleTheme() {
+    setState(() {
+      _isDarkMode = !_isDarkMode;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'nungil',
       debugShowCheckedModeBanner: false,
-      darkTheme: dTheme(),
-      theme: mTheme(),
-      themeMode: ThemeMode.light,
-      home: const MainScreen(),
+      theme: _isDarkMode ? dTheme() : mTheme(), // 다크/라이트 테마 적용
+      home: MainScreen(toggleTheme: _toggleTheme),
     );
   }
 }

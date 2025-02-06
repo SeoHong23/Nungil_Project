@@ -29,7 +29,7 @@ class HomeReviewComponent extends StatelessWidget {
             ),
           ],
           borderRadius: BorderRadius.circular(10),
-          color: baseBackgroundColor[100],
+          color: Theme.of(context).cardColor,
         ),
         width: 200,
         height: 125,
@@ -38,7 +38,7 @@ class HomeReviewComponent extends StatelessWidget {
           children: [
             Text(
               mName,
-              style: textTheme().bodySmall,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 3),
             Expanded(child: Text(contents)),

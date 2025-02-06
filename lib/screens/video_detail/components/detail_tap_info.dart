@@ -3,145 +3,128 @@ import 'package:flutter/material.dart';
 import 'package:nungil/models/Video.dart';
 import 'package:nungil/theme/common_theme.dart';
 
-class DetailTapInfo extends StatefulWidget {
+class DetailTapInfo extends StatelessWidget {
   final Video item;
 
-  const DetailTapInfo({required this.item, super.key});
+  const DetailTapInfo({required this.item, Key? key}) : super(key: key);
 
   @override
-  State<DetailTapInfo> createState() => _DetailTapInfoState();
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            color: baseBackgroundColor,
+            child: ExpandableText(text: item.plots[0].plotText),
+          ),
+          const SizedBox(height: 24),
+          Divider(color: iconThemeColor.shade700.withOpacity(0.3)),
+          const SizedBox(height: 16),
+          _buildInfoTable(),
+          const SizedBox(height: 20),
+          Text('출연진', style: CustomTextStyle.mediumNavy),
+          const SizedBox(height: 10),
+          _buildStaffGrid(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoTable() {
+    return Table(
+      columnWidths: {
+        0: FractionColumnWidth(.2),
+        1: FractionColumnWidth(.3),
+        2: FractionColumnWidth(.2),
+        3: FractionColumnWidth(.3),
+      },
+      children: [
+        _buildTableRow('장르', item.genre.join(", "), '개봉일', item.releaseDate),
+        _buildTableRow('연령등급', item.rating ?? '심의 없음', '러닝타임', '${item.runtime}분'),
+        _buildTableRow('제작국가', item.nation, '제작연도', '${item.prodYear}년'),
+      ],
+    );
+  }
+
+  TableRow _buildTableRow(String label1, String value1, String label2, String value2) {
+    return TableRow(
+      children: [
+        Text(label1, style: CustomTextStyle.mediumLightNavy),
+        Text(value1, style: CustomTextStyle.mediumNavy),
+        Text(label2, style: CustomTextStyle.mediumLightNavy),
+        Text(value2, style: CustomTextStyle.mediumNavy),
+      ],
+    );
+  }
+
+  Widget _buildStaffGrid() {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(), // 내부에서 스크롤을 방지
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: 3 / 4,
+      ),
+      itemCount: item.staffs.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Column(
+          children: [
+            const CircleAvatar(
+              radius: 30,
+              child: Icon(Icons.person, size: 30),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              item.staffs[index].staffNm,
+              style: CustomTextStyle.smallNavy,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
-class _DetailTapInfoState extends State<DetailTapInfo> {
+class ExpandableText extends StatefulWidget {
+  final String text;
+
+  const ExpandableText({required this.text, super.key});
+
+  @override
+  _ExpandableTextState createState() => _ExpandableTextState();
+}
+
+class _ExpandableTextState extends State<ExpandableText> {
   bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        Container(
-          color: baseBackgroundColor,
-          child: RichText(
+    const int maxLength = 150;
+    return RichText(
+      text: TextSpan(
+        style: CustomTextStyle.smallNavy,
+        children: [
+          TextSpan(
             text: isExpanded
-                ? TextSpan(
-                    children: [
-                      TextSpan(
-                        text: widget.item.plots[0].plotText,
-                        style: CustomTextStyle.mediumNavy,
-                      ),
-                      TextSpan(
-                          text: '  접기',
-                          style: CustomTextStyle.mediumLightNavy,
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              setState(() {
-                                isExpanded = !isExpanded;
-                              });
-                            })
-                    ],
-                  )
-                : TextSpan(
-                    children: [
-                      TextSpan(
-                        text:
-                            '${widget.item.plots[0].plotText.substring(0, 150)}... ',
-                        style: CustomTextStyle.mediumNavy,
-                      ),
-                      TextSpan(
-                          text: '더보기',
-                          style: CustomTextStyle.mediumLightNavy,
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              setState(() {
-                                isExpanded = !isExpanded;
-                              });
-                            })
-                    ],
-                  ),
+                ? widget.text
+                : '${widget.text.substring(0, maxLength)}... ',
           ),
-        ),
-        const SizedBox(height: 24),
-        Container(
-          height: 1,
-          decoration:
-              BoxDecoration(color: iconThemeColor.shade700.withOpacity(0.3)),
-        ),
-        const SizedBox(height: 16),
-        Table(
-          columnWidths: {
-            0: FractionColumnWidth(.2),
-            1: FractionColumnWidth(.3),
-            2: FractionColumnWidth(.2),
-            3: FractionColumnWidth(.3),
-          },
-          children: [
-            TableRow(
-              children: [
-                Text(
-                  '장르',
-                  style: CustomTextStyle.smallLightNavy,
-                ),
-                Text(
-                  widget.item.genre.join(", "),
-                  style:CustomTextStyle.smallNavy,
-                ),
-                Text(
-                  '개봉일',
-                  style: CustomTextStyle.smallLightNavy,
-                ),
-                Text(
-                  '${widget.item.releaseDate}',
-                  style:CustomTextStyle.smallNavy,
-                ),
-              ],
-            ),
-            TableRow(
-              children: [
-                Text(
-                  '연령등급',
-                  style: CustomTextStyle.smallLightNavy,
-                ),
-                Text(
-                  widget.item.rating ?? '심의 없음',
-                  style:
-                  CustomTextStyle.smallNavy,
-                ),
-                Text(
-                  '러닝타임',
-                  style: CustomTextStyle.smallLightNavy,
-                ),
-                Text(
-                  '${widget.item.runtime}분',
-                  style:
-                  CustomTextStyle.smallNavy,
-                ),
-              ],
-            ),
-            TableRow(
-              children: [
-                Text(
-                  '제작국가',
-                  style: CustomTextStyle.smallLightNavy,
-                ),
-                Text(
-                  widget.item.nation,
-                  style:CustomTextStyle.smallNavy,
-                ),
-                Text(
-                  '제작연도',
-                  style: CustomTextStyle.smallLightNavy,
-                ),
-                Text(
-                  '${widget.item.prodYear}년',
-                  style:CustomTextStyle.smallNavy,
-                ),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Text('출연진')
-      ],
+          TextSpan(
+            text: isExpanded ? ' 접기' : ' 더보기',
+            style: CustomTextStyle.smallLightNavy,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                setState(() {
+                  isExpanded = !isExpanded;
+                });
+              },
+          ),
+        ],
+      ),
     );
   }
 }

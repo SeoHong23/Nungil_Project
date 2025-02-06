@@ -112,7 +112,7 @@ class _HomeRankingComponentState extends State<HomeRankingComponent> {
       children: [
         Text(
           title,
-          style: textTheme().titleLarge,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         SizedBox(height: 10),
         isLoading
