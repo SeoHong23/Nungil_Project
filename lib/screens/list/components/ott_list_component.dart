@@ -12,9 +12,9 @@ class OttListComponent extends StatefulWidget {
 }
 
 class _OttListComponentState extends State<OttListComponent> {
+  final Set<int> _activeIndexes = {};
   @override
   Widget build(BuildContext context) {
-    final Set<int> _activeIndexes = {};
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -39,7 +39,7 @@ class _OttListComponentState extends State<OttListComponent> {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).scaffoldBackgroundColor,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Center(
