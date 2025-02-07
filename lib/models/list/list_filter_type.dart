@@ -91,6 +91,12 @@ class FilterRepository {
       '홍콩'
     ]),
     FilterData(category: "연도", options: ["2024", "2025"]),
+    FilterData(category: "연령등급", options: [
+      "전체 관람가",
+      "12세 이상 관람가",
+      "15세 이상 관람가",
+      "청소년 관람불가",
+    ]),
   ];
 
   /// 특정 필터 카테고리의 옵션을 가져오는 메서드
