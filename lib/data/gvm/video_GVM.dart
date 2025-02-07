@@ -44,6 +44,7 @@ class VideoGVM extends Notifier<Video> {
       );
       cast.add(st);
     }
+    print(resData);
     state = Video(
       id: resData['id'],
       title: resData['title'],

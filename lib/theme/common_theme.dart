@@ -49,6 +49,7 @@ TextTheme textTheme() {
     // 상세보기 부제/연도에 사용함
     labelSmall: TextStyle(
         fontFamily: 'GmarketSans', fontSize: 12.0, color: DefaultColors.black),
+
   );
 }
 
@@ -103,12 +104,12 @@ AppBarTheme appBarTheme() {
     backgroundColor: baseBackgroundColor, //타이틀 색상
     elevation: 0.0,
     scrolledUnderElevation: 0,
-    iconTheme: IconThemeData(color: DefaultColors.black), //아이콘 색상
+    iconTheme: IconThemeData(color: iconThemeColor[700]), //아이콘 색상
     titleTextStyle: TextStyle(
         fontFamily: 'GmarketSans',
         fontSize: 16, // 폰트 사이즈
         fontWeight: FontWeight.bold, // 굵기
-        color: DefaultColors.black // 앱바 제목 텍스트 색상
+        color: iconThemeColor[700] // 앱바 제목 텍스트 색상
         ),
   );
 }
@@ -120,12 +121,12 @@ AppBarTheme appBarThemeDark() {
     backgroundColor: baseBackgroundColorDark, //타이틀 색상
     elevation: 0.0,
     scrolledUnderElevation: 0,
-    iconTheme: IconThemeData(color: iconThemeColorDark[300]), //아이콘 색상
+    iconTheme: IconThemeData(color: iconThemeColorDark[700]), //아이콘 색상
     titleTextStyle: TextStyle(
         fontFamily: 'GmarketSans',
         fontSize: 16, // 폰트 사이즈
         fontWeight: FontWeight.bold, // 굵기
-        color: iconThemeColorDark[300] // 앱바 제목 텍스트 색상
+        color: iconThemeColorDark[700] // 앱바 제목 텍스트 색상
         ),
   );
 }
@@ -146,8 +147,8 @@ BottomNavigationBarThemeData bottomNavigationBarTheme() {
 // 바텀네비게이션바 다크 테마 설정
 BottomNavigationBarThemeData bottomNavigationBarThemeDark() {
   return BottomNavigationBarThemeData(
-    selectedItemColor: iconThemeColorDark[100], // 선택된 아이템 색상
-    unselectedItemColor: iconThemeColorDark[400], // 선택되지 않은 아이템 색상
+    selectedItemColor: iconThemeColorDark[800], // 선택된 아이템 색상
+    unselectedItemColor: iconThemeColorDark[200], // 선택되지 않은 아이템 색상
     showUnselectedLabels: true, // 선택 안된 라벨 표시 여부 설정
     backgroundColor: baseBackgroundColorDark,
     elevation: 0.0,
@@ -162,6 +163,8 @@ ThemeData mTheme() {
     // 우리가 직접 지정 함
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: iconThemeColor,
+      backgroundColor: baseBackgroundColor,
+      accentColor: iconThemeColor[900]
     ),
     cardColor: baseBackgroundColor[100],
     scaffoldBackgroundColor: baseBackgroundColor,
@@ -179,6 +182,7 @@ ThemeData dTheme() {
     // 우리가 직접 지정 함
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: iconThemeColorDark,
+        accentColor: iconThemeColorDark[900]
     ),
     cardColor: baseBackgroundColorDark[200],
     scaffoldBackgroundColor: baseBackgroundColorDark,
@@ -208,7 +212,7 @@ const MaterialColor baseBackgroundColor = MaterialColor(
 );
 
 const int _baseColorValueDark = 0xFF272A2F;
-const int _primaryColorValueDark = 0xFF505C6E;
+const int _primaryColorValueDark = 0xFF788B98;
 // 다크 테마 배경 색상
 const MaterialColor baseBackgroundColorDark = MaterialColor(
   _baseColorValueDark,
@@ -246,18 +250,20 @@ const MaterialColor iconThemeColor = MaterialColor(
 const MaterialColor iconThemeColorDark = MaterialColor(
   _primaryColorValueDark,
   <int, Color>{
-    50: Color(0xFFB0B8C6), // 가장 밝은 톤 (연한 블루 그레이)
-    100: Color(0xFF99A2B3), // 밝은 톤의 블루 그레이
-    200: Color(0xFF828D9F), // 중간 밝기 (채도가 낮은 블루)
-    300: Color(0xFF6B778A), // 기본보다 살짝 밝은 컬러
-    400: Color(0xFF5A6677), // 네이비 블루 느낌
+    50: Color(0xFF4D5964), // 가장 어두운 색상 (거의 블랙에 가까운 다크 블루)
+    100: Color(0xFF5D6E79), // 딥 네이비 계열
+    200: Color(0xFF6C7B8C), // 더 어두운 블루 톤
+    300: Color(0xFF788B98), // 어두운 블루 그레이
+    400: Color(0xFF8A99A9), // 네이비 블루 느낌
     500: Color(_primaryColorValueDark), // 기본 색상 (차분한 블루 계열)
-    600: Color(0xFF475265), // 어두운 블루 그레이
-    700: Color(0xFF373F4D), // 더 어두운 블루 톤
-    800: Color(0xFF272D3A), // 딥 네이비 계열
-    900: Color(0xFF181E27), // 거의 블랙에 가까운 다크 블루
+    600: Color(0xFF8D9BAD), // 기본보다 살짝 밝은 컬러
+    700: Color(0xFF99A6B7), // 중간 밝기 (채도가 낮은 블루)
+    800: Color(0xFFB1BFD0), // 밝은 톤의 블루 그레이
+    900: Color(0xFFBCCBD9), // 가장 밝은 톤 (연한 블루 그레이)
   },
 );
+
+
 
 class DefaultColors {
   static const Color black = Color(0xFF212121); // 아주 짙은 회색(글자색)
@@ -307,4 +313,63 @@ class CustomTextStyle {
       fontSize: 12,
       color: DefaultColors.navy,
       height: 1.8);
+}
+class ColorTextStyle{
+  // 라이트 테마 색상
+  static TextStyle mediumNavy(BuildContext context) {
+    return TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 15,
+      color: Theme.of(context).colorScheme.secondary, // 테마에 맞는 색상 적용
+      height: 1.6,
+      fontWeight: FontWeight.w400,
+      wordSpacing: 0.6,
+    );
+  }
+
+  static TextStyle mediumLightNavy(BuildContext context) {
+    return TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 15,
+      color: Theme.of(context).colorScheme.primary, // 테마에 맞는 색상 적용
+      height: 1.6,
+      fontWeight: FontWeight.w400,
+    );
+  }
+
+  static TextStyle smallNavy(BuildContext context) {
+    return TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 14,
+      color: Theme.of(context).colorScheme.secondary, // 테마에 맞는 색상 적용
+      height: 1.8,
+    );
+  }
+
+  static TextStyle smallLightNavy(BuildContext context) {
+    return TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 14,
+      color: Theme.of(context).colorScheme.primary, // 테마에 맞는 색상 적용
+      height: 1.8,
+    );
+  }
+
+  static TextStyle xSmallNavy(BuildContext context) {
+    return TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 12,
+      color: Theme.of(context).colorScheme.secondary, // 테마에 맞는 색상 적용
+      height: 1.5,
+    );
+  }
+  static TextStyle xSmallLightNavy(BuildContext context) {
+    return TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 12,
+      color: Theme.of(context).colorScheme.primary, // 테마에 맞는 색상 적용
+      height: 1.3,
+      wordSpacing: -1
+    );
+  }
 }
