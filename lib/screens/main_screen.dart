@@ -72,7 +72,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                     RankingPage(),
                     ListPage(),
                     isLoggedIn ? LoginView() : UserPage(),
-                    VideoDetailPage(item: dummyVideo),
+                    VideoDetailPage(item: "679c5eec7cf2875815230726"),
                   ],
                 ),
                 bottomNavigationBar: BottomNavigationBar(
