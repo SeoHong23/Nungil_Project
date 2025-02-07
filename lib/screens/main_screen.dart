@@ -68,7 +68,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   controller: _pageController,
                   onPageChanged: (value) => changePages(value),
                   children: [
-                    HomePage(toggleTheme: widget.toggleTheme!),
+                    HomePage(toggleTheme: widget.toggleTheme ?? () => {}),
                     RankingPage(),
                     ListPage(),
                     isLoggedIn ? LoginView() : UserPage(),
