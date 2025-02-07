@@ -43,8 +43,7 @@ class VideoListComponent extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              // TODO id 값 넣어주기
-              builder: (context) => VideoDetailPage(item: dummyVideo),
+              builder: (context) => VideoDetailPage(item: id),
             ),
           );
         },
