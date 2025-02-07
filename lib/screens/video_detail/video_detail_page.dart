@@ -64,13 +64,13 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
     Video video = ref.watch(videoProvider);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: baseBackgroundColor.withOpacity(_opacity),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(_opacity),
         title: Opacity(
           opacity: _opacity,
           child: Text(
             video.title,
             style: TextStyle(
-                color: iconThemeColor.shade800,
+                color: Theme.of(context).colorScheme.secondary,
                 fontWeight: FontWeight.w500,
                 fontSize: 16.0),
           ),
@@ -127,10 +127,10 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
                     Tab(child: Text("리뷰 ${video.reviewCnt}", style: CustomTextStyle.pretendard)),
                     Tab(child: Text("영상/이미지 ${video.stlls.length}", style: CustomTextStyle.pretendard))
                   ],
-                  indicatorColor: iconThemeColor.shade700,
-                  labelColor: iconThemeColor.shade900,
-                  overlayColor: WidgetStatePropertyAll(iconThemeColor.shade200),
-                  unselectedLabelColor: iconThemeColor.shade300,
+                  indicatorColor: Theme.of(context).colorScheme.secondary,
+                  labelColor: Theme.of(context).colorScheme.secondary,
+                  overlayColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.secondary),
+                  unselectedLabelColor: Theme.of(context).colorScheme.primary,
                   indicatorPadding: EdgeInsets.only(bottom: -1.5),
                   indicatorSize: TabBarIndicatorSize.tab,
                 ),
@@ -168,14 +168,14 @@ class _StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: tabBar,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
-          color: baseBackgroundColor,
+          color: Theme.of(context).scaffoldBackgroundColor,
           border: Border(
               bottom: BorderSide(
-                  color: iconThemeColor.shade700.withOpacity(0.3),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
                   width: 1.0))),
+      child: tabBar,
     );
   }
 
