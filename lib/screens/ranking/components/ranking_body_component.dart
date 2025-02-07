@@ -36,12 +36,17 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
           ? await repository.fetchRanksDaily()
           : await repository.fetchRanksWeekly();
 
+      if (!mounted) return;
+
       setState(() {
         videoList = videos;
         isLoading = false;
       });
     } catch (e) {
       print("Error fetching videos: $e");
+
+      if (!mounted) return;
+
       setState(() {
         isLoading = false;
       });

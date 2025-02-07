@@ -183,6 +183,7 @@ ThemeData dTheme() {
     cardColor: baseBackgroundColorDark[200],
     scaffoldBackgroundColor: baseBackgroundColorDark,
     textTheme: textThemeDark(),
+    iconTheme: IconThemeData(color: iconThemeColorDark[300]),
     appBarTheme: appBarThemeDark(),
     bottomNavigationBarTheme: bottomNavigationBarThemeDark(),
   );

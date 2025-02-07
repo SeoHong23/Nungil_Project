@@ -32,10 +32,10 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
             // 검색창
             TextField(
               decoration: InputDecoration(
-                prefixIcon: Icon(FontAwesomeIcons.magnifyingGlass),
+                prefixIcon: Icon(FontAwesomeIcons.magnifyingGlass,
+                    color: Theme.of(context).iconTheme.color),
                 fillColor: Theme.of(context).cardColor, // 채우기 색
                 filled: true, // 채우기 유무 default = false
-                labelStyle: TextStyle(),
               ),
             ),
 
@@ -59,7 +59,8 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
             SizedBox(height: 16),
             // 오늘의 랜덤 추천작
             HomeMovieListComponent(
-              title: "오늘의 랜덤 추천작",
+              title: "당신을 위한 랜덤 추천작",
+              type: "Random",
             ),
             SizedBox(height: 16),
             // 최신 리뷰
@@ -85,7 +86,10 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
             ),
             SizedBox(height: 16),
             // 최신 인기작
-            HomeMovieListComponent(title: "최신 인기작"),
+            HomeMovieListComponent(
+              title: "개봉 최신작",
+              type: "Least",
+            ),
           ],
         ),
       ),
