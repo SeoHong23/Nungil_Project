@@ -8,7 +8,9 @@ import '../../list/components/video_list_component.dart';
 
 class HomeMovieListComponent extends StatefulWidget {
   final String title;
-  const HomeMovieListComponent({required this.title, super.key});
+  final String type;
+  const HomeMovieListComponent(
+      {required this.title, required this.type, super.key});
 
   @override
   State<HomeMovieListComponent> createState() => _HomeMovieListComponentState();
@@ -18,16 +20,25 @@ class _HomeMovieListComponentState extends State<HomeMovieListComponent> {
   List<VideoListModel> videoList = [];
   bool isLoading = true;
 
+  Map<String, Set<String>> filter = {};
+
   @override
   void initState() {
     super.initState();
-    fetchVideos();
+    fetchRandomVideos();
   }
 
-  Future<void> fetchVideos() async {
+  Future<void> fetchRandomVideos() async {
     try {
       final repository = VideoListRepository();
-      final videos = await repository.fetchVideos(0, 10); // page 0, size 10
+      final videos;
+      if (widget.type == 'Random') {
+        videos = await repository.fetchVideosRandom(10);
+      } else {
+        videos =
+            await repository.fetchVideosWithFilter(0, 10, filter, "DateDESC");
+      }
+      // page 0, size 10
       setState(() {
         videoList = videos;
         isLoading = false;
@@ -62,6 +73,7 @@ class _HomeMovieListComponentState extends State<HomeMovieListComponent> {
                     width: 170,
                     height: 310,
                     child: VideoListComponent(
+                      id: videoList[index].id,
                       imgUrl: videoList[index].poster ?? '', // null 체크
                       name: videoList[index].title ?? '제목 없음',
                       rate: 80.0, // 예제에서는 80.0 고정, 필요하면 API 값 사용

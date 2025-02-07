@@ -77,7 +77,9 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
         ),
         centerTitle: true,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
           icon: Icon(
             CupertinoIcons.left_chevron,
             color: iconThemeColor,
@@ -109,13 +111,12 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
           physics: const ClampingScrollPhysics(), // 스크롤 문제 해결
           floatHeaderSlivers: true, // 헤더가 자연스럽게 떠 있도록 설정
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
-        
             // DetailTop을 SliverPersistentHeader로 변경
             SliverPersistentHeader(
               pinned: true,
               delegate: _DetailTopDelegate(video),
             ),
-        
+
             SliverPersistentHeader(
               pinned: true,
               delegate: _StickyTabBarDelegate(
@@ -148,6 +149,7 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
       ),
     );
   }
+
   Widget _buildTabContent(Widget content) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 32.0),
@@ -204,6 +206,6 @@ class _DetailTopDelegate extends SliverPersistentHeaderDelegate {
   @override
   double get minExtent => 50; // 스크롤 시 사라지도록 설정
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => true;
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      true;
 }
-

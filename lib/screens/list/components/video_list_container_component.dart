@@ -8,7 +8,9 @@ import 'video_list_component.dart';
 
 class VideoListContainerComponent extends ConsumerStatefulWidget {
   final Map<String, Set<String>> selectedFilters;
+  final String sortOrder;
   const VideoListContainerComponent({
+    required this.sortOrder,
     required this.selectedFilters,
     super.key,
   });
@@ -32,6 +34,12 @@ class _VideoListContainerComponentState
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   void didUpdateWidget(covariant VideoListContainerComponent oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.selectedFilters != oldWidget.selectedFilters) {
@@ -41,13 +49,9 @@ class _VideoListContainerComponentState
 
   /// ✅ **필터 적용된 데이터 불러오기**
   void _fetchVideos() {
-    if (widget.selectedFilters.isNotEmpty) {
-      ref
-          .read(videoNotifierProvider.notifier)
-          .fetchMoreVideosWithFilter(widget.selectedFilters);
-    } else {
-      ref.read(videoNotifierProvider.notifier).fetchMoreVideos();
-    }
+    ref
+        .read(videoNotifierProvider.notifier)
+        .fetchMoreVideosWithFilter(widget.selectedFilters, widget.sortOrder);
   }
 
   void _onScroll() {
@@ -82,6 +86,7 @@ class _VideoListContainerComponentState
         itemBuilder: (context, index) {
           final video = videoList[index];
           return VideoListComponent(
+            id: video.id,
             imgUrl: video.poster,
             name: video.title,
             rate: 80.0,

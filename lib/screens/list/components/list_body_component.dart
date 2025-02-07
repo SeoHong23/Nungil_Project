@@ -16,6 +16,8 @@ class _ListBodyComponentState extends ConsumerState<ListBodyComponent> {
   bool seenVideo = false;
   Map<String, Set<String>> selectedFilters = {};
 
+  String sortOrder = "DateDESC"; // ✅ 기본 정렬: 최신순
+
   /// ✅ **필터 변경 시 비디오 데이터 다시 로드**
   void _onFilterChanged(Map<String, Set<String>> filters) {
     setState(() {
@@ -25,7 +27,25 @@ class _ListBodyComponentState extends ConsumerState<ListBodyComponent> {
     // ✅ 필터 적용 후 첫 페이지부터 다시 불러오기
     ref
         .read(videoNotifierProvider.notifier)
-        .fetchMoreVideosWithFilter(filters, reset: true);
+        .fetchMoreVideosWithFilter(filters, sortOrder, reset: true);
+  }
+
+  /// ✅ **정렬 변경 핸들러**
+  void _onSortChanged(String? newValue) {
+    if (newValue != null) {
+      setState(
+        () {
+          sortOrder = newValue;
+        },
+      );
+
+      // ✅ 정렬 옵션 변경 후 다시 비디오 목록 로드
+      ref.read(videoNotifierProvider.notifier).fetchMoreVideosWithFilter(
+            selectedFilters,
+            sortOrder,
+            reset: true,
+          );
+    }
   }
 
   @override
@@ -65,10 +85,25 @@ class _ListBodyComponentState extends ConsumerState<ListBodyComponent> {
                         )
                       ],
                     ),
-                    const Row(
+
+                    /// ✅ **정렬 Dropdown 버튼**
+                    Row(
                       children: [
-                        Text("최신순"),
-                        Icon(Icons.arrow_drop_down),
+                        const Text("정렬: "),
+                        DropdownButton<String>(
+                          value: sortOrder,
+                          items: const [
+                            DropdownMenuItem(
+                              value: "DateDESC",
+                              child: Text("최신순"),
+                            ),
+                            DropdownMenuItem(
+                              value: "DateASC",
+                              child: Text("오래된순"),
+                            ),
+                          ],
+                          onChanged: _onSortChanged, // ✅ 정렬 변경 시 실행
+                        ),
                       ],
                     ),
                   ],
@@ -77,6 +112,7 @@ class _ListBodyComponentState extends ConsumerState<ListBodyComponent> {
                 /// ✅ **비디오 리스트**
                 VideoListContainerComponent(
                   selectedFilters: selectedFilters,
+                  sortOrder: sortOrder, // ✅ 정렬 옵션 전달
                 ),
               ],
             ),
