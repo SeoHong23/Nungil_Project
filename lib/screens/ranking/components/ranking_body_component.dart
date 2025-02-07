@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:nungil/screens/video_detail/video_detail_page.dart';
 import '../../../data/repository/video_list_repository.dart';
 import '../../../models/ranking/video_rank_model.dart';
 import '../../../theme/common_theme.dart';
@@ -36,12 +37,17 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
           ? await repository.fetchRanksDaily()
           : await repository.fetchRanksWeekly();
 
+      if (!mounted) return;
+
       setState(() {
         videoList = videos;
         isLoading = false;
       });
     } catch (e) {
       print("Error fetching videos: $e");
+
+      if (!mounted) return;
+
       setState(() {
         isLoading = false;
       });
@@ -143,60 +149,70 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
   Widget _buildTopRanking() {
     final topVideo = videoList[0];
 
-    return Stack(
-      children: [
-        topVideo.poster.isNotEmpty
-            ? Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                clipBehavior: Clip.hardEdge, // 둥근 모서리를 Clip 효과로 적용
-                child: Image.network(
-                  topVideo.poster,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VideoDetailPage(item: videoList[0].id),
+          ),
+        );
+      },
+      child: Stack(
+        children: [
+          topVideo.poster.isNotEmpty
+              ? Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  clipBehavior: Clip.hardEdge, // 둥근 모서리를 Clip 효과로 적용
+                  child: Image.network(
+                    topVideo.poster,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: 290,
+                  ),
+                )
+              : SvgPicture.asset(
+                  'assets/images/app.svg', // 기본 이미지
                   fit: BoxFit.cover,
-                  width: double.infinity,
                   height: 290,
                 ),
-              )
-            : SvgPicture.asset(
-                'assets/images/app.svg', // 기본 이미지
-                fit: BoxFit.cover,
-                height: 290,
+          Container(
+            width: double.infinity,
+            height: 300,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Theme.of(context).scaffoldBackgroundColor,
+                  Theme.of(context).scaffoldBackgroundColor,
+                  Theme.of(context).scaffoldBackgroundColor.withOpacity(0.2),
+                  Theme.of(context).scaffoldBackgroundColor.withOpacity(0.1),
+                  Colors.transparent,
+                ],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
               ),
-        Container(
-          width: double.infinity,
-          height: 300,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Theme.of(context).scaffoldBackgroundColor,
-                Theme.of(context).scaffoldBackgroundColor,
-                Theme.of(context).scaffoldBackgroundColor.withOpacity(0.2),
-                Theme.of(context).scaffoldBackgroundColor.withOpacity(0.1),
-                Colors.transparent,
-              ],
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
             ),
           ),
-        ),
-        Positioned(
-          top: 150,
-          left: 10,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('1', style: CustomTextStyle.bigLogo),
-              Text(topVideo.title, style: CustomTextStyle.bigLogo),
-            ],
+          Positioned(
+            top: 150,
+            left: 10,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('1', style: CustomTextStyle.bigLogo),
+                Text(topVideo.title, style: CustomTextStyle.bigLogo),
+              ],
+            ),
           ),
-        ),
-        Positioned(
-          right: 20,
-          bottom: 20,
-          child: RateBuilder(rate: 80),
-        ),
-      ],
+          Positioned(
+            right: 20,
+            bottom: 20,
+            child: RateBuilder(rate: 80),
+          ),
+        ],
+      ),
     );
   }
 }

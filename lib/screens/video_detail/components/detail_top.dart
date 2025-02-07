@@ -21,6 +21,13 @@ class DetailTop extends ConsumerStatefulWidget {
 class _DetailTopState extends ConsumerState<DetailTop> {
   final isLikedProvider = StateProvider<bool>((ref) => false);
   final isDisLikedProvider = StateProvider<bool>((ref) => false);
+  final isFavoritedProvider = StateProvider<bool>((ref) => false);
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavoriteStatus(); // 찜 상태 초기화
+  }
 
   Future<void> _getLikeStatus(WidgetRef ref) async {
     final String? videoId = widget.item.id;
@@ -79,7 +86,22 @@ class _DetailTopState extends ConsumerState<DetailTop> {
     final userId = ref.read(userIdProvider);
 
     if (userId == null) {
-      print("Please log in first");
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text("로그인 상태가 아닙니다"),
+            actions: <Widget>[
+              TextButton(
+                child: Text("확인"),
+                onPressed: () {
+                  Navigator.of(context).pop(); // 다이얼로그 닫기
+                },
+              ),
+            ],
+          );
+        },
+      );
       return;
     }
 
@@ -137,7 +159,22 @@ class _DetailTopState extends ConsumerState<DetailTop> {
     final userId = ref.read(userIdProvider);
 
     if (userId == null) {
-      print("Please log in first");
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text("로그인 상태가 아닙니다"),
+            actions: <Widget>[
+              TextButton(
+                child: Text("확인"),
+                onPressed: () {
+                  Navigator.of(context).pop(); // 다이얼로그 닫기
+                },
+              ),
+            ],
+          );
+        },
+      );
       return;
     }
 
@@ -180,6 +217,100 @@ class _DetailTopState extends ConsumerState<DetailTop> {
       }
     } catch (e) {
       print("Error: $e");
+    }
+  }
+
+  Future<void> _toggleFavorite(WidgetRef ref) async {
+    final String? videoId = widget.item.id; // 현재 비디오 ID
+    final userId = ref.read(userIdProvider); // 로그인한 사용자 ID 가져오기
+
+    if (userId == null) {
+      print("Please log in first");
+      return;
+    }
+
+    final isFavorited = ref.read(isFavoritedProvider.state).state;
+    final url = isFavorited
+        ? "http://13.239.238.92:8080/favorite/remove" // 찜 삭제 API URL
+        : "http://13.239.238.92:8080/favorite"; // 찜 추가 API URL
+
+    final body = json.encode({
+      'userId': userId,
+      'videoId': videoId,
+    });
+
+    try {
+      // 찜 상태에 따라 POST 또는 DELETE 요청
+      final response = isFavorited
+          ? await http.delete(
+              Uri.parse(url),
+              headers: {'Content-Type': 'application/json'},
+              body: body,
+            )
+          : await http.post(
+              Uri.parse(url),
+              headers: {'Content-Type': 'application/json'},
+              body: body,
+            );
+
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        // 응답 처리: 서버에서 반환된 값을 확인
+        final Map<String, dynamic> responseData = json.decode(response.body);
+
+        // 서버에서 반환하는 값에 따라 찜 상태 업데이트
+        final bool newFavoriteStatus = responseData['isFavorited'] ?? false;
+
+        // 찜 상태를 토글 (서버와 동기화 후 상태 갱신)
+        ref.read(isFavoritedProvider.state).state = newFavoriteStatus;
+
+        print(newFavoriteStatus
+            ? "Favorite added successfully!"
+            : "Favorite removed successfully!");
+
+        _loadFavoriteStatus();
+      } else {
+        print("Failed to toggle favorite: ${response.body}");
+      }
+    } catch (e) {
+      print("Error toggling favorite: $e");
+    }
+  }
+
+  Future<void> _loadFavoriteStatus() async {
+    final String? videoId = widget.item.id;
+    final userId = ref.read(userIdProvider);
+
+    if (userId == null) {
+      print("Please log in first");
+      return;
+    }
+
+    final url =
+        "http://13.239.238.92:8080/favorite/$videoId/like-status?userId=$userId";
+
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData =
+            json.decode(response.body); // 응답을 Map으로 파싱
+        final bool isFavorited =
+            responseData['isFavorited'] ?? false; // 'isFavorited' 값을 bool로 추출
+
+        // 상태 갱신
+        ref.read(isFavoritedProvider.state).state = isFavorited; // 상태 갱신
+
+        print("Fetched Favorite status: $isFavorited");
+
+        // UI 리프레시를 위해 setState 호출
+        setState(() {}); // UI 갱신
+      } else {
+        print("Failed to fetch favorite status: ${response.body}");
+      }
+    } catch (e) {
+      print("Error fetching favorite status: $e");
     }
   }
 
@@ -353,10 +484,13 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _buildMoreActionButton(
-                      mIcon: CupertinoIcons.bookmark_fill,
+                      mIcon: ref.watch(isFavoritedProvider)
+                          ? CupertinoIcons.bookmark_fill // 찜 상태일 때 아이콘
+                          : CupertinoIcons.bookmark, // 찜 안 된 상태일 때 아이콘
                       label: "찜하기",
-                      // TODO : 찜하기 기능 구현
-                      onPressed: () {},
+                      onPressed: () {
+                        _toggleFavorite(ref); // 찜 상태 토글
+                      },
                     ),
                     _buildMoreActionButton(
                       mIcon: Icons.remove_red_eye,
