@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nungil/data/gvm/video_GVM.dart';
 import 'package:nungil/models/Video.dart';
 import 'package:nungil/screens/video_detail/components/detail_tap_imgs.dart';
 import 'package:nungil/screens/video_detail/components/detail_tap_info.dart';
@@ -8,16 +10,16 @@ import 'package:nungil/screens/video_detail/components/detail_tap_review.dart';
 import 'package:nungil/screens/video_detail/components/detail_top.dart';
 import 'package:nungil/theme/common_theme.dart';
 
-class VideoDetailPage extends StatefulWidget {
-  final Video item;
+class VideoDetailPage extends ConsumerStatefulWidget {
+  final item;
 
   const VideoDetailPage({required this.item, super.key});
 
   @override
-  State<VideoDetailPage> createState() => _VideoDetailPageState();
+  ConsumerState<VideoDetailPage> createState() => _VideoDetailPageState();
 }
 
-class _VideoDetailPageState extends State<VideoDetailPage>
+class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final ScrollController _scrollController = ScrollController();
@@ -28,6 +30,12 @@ class _VideoDetailPageState extends State<VideoDetailPage>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _scrollController.addListener(_scrollListener);
+    _findVideo();
+  }
+
+  Future<void> _findVideo() async{
+    VideoGVM videoGVM = ref.read(videoProvider.notifier);
+    await videoGVM.findVideo(widget.item);
   }
 
   void _scrollListener() {
@@ -53,13 +61,14 @@ class _VideoDetailPageState extends State<VideoDetailPage>
 
   @override
   Widget build(BuildContext context) {
+    Video video = ref.watch(videoProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: baseBackgroundColor.withOpacity(_opacity),
         title: Opacity(
           opacity: _opacity,
           child: Text(
-            widget.item.title,
+            video.title,
             style: TextStyle(
                 color: iconThemeColor.shade800,
                 fontWeight: FontWeight.w500,
@@ -104,7 +113,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
             // DetailTop을 SliverPersistentHeader로 변경
             SliverPersistentHeader(
               pinned: true,
-              delegate: _DetailTopDelegate(widget.item),
+              delegate: _DetailTopDelegate(video),
             ),
         
             SliverPersistentHeader(
@@ -114,8 +123,8 @@ class _VideoDetailPageState extends State<VideoDetailPage>
                   controller: _tabController,
                   tabs: [
                     const Tab(child: Text("작품정보", style: CustomTextStyle.pretendard)),
-                    Tab(child: Text("리뷰 ${widget.item.reviewCnt}", style: CustomTextStyle.pretendard)),
-                    Tab(child: Text("영상/이미지 ${widget.item.stlls.length}", style: CustomTextStyle.pretendard))
+                    Tab(child: Text("리뷰 ${video.reviewCnt}", style: CustomTextStyle.pretendard)),
+                    Tab(child: Text("영상/이미지 ${video.stlls.length}", style: CustomTextStyle.pretendard))
                   ],
                   indicatorColor: iconThemeColor.shade700,
                   labelColor: iconThemeColor.shade900,
@@ -130,9 +139,9 @@ class _VideoDetailPageState extends State<VideoDetailPage>
           body: TabBarView(
             controller: _tabController,
             children: [
-              _buildTabContent(DetailTapInfo(item: widget.item)),
-              _buildTabContent(DetailTapReview(item: widget.item)),
-              _buildTabContent(DetailTapImgs(item: widget.item)),
+              _buildTabContent(DetailTapInfo(item: video)),
+              _buildTabContent(DetailTapReview(item: video)),
+              _buildTabContent(DetailTapImgs(item: video)),
             ],
           ),
         ),

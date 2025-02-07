@@ -16,7 +16,7 @@ class DetailTapInfo extends StatelessWidget {
         children: [
           Container(
             color: baseBackgroundColor,
-            child: ExpandableText(text: item.plots[0].plotText),
+            child: ExpandableText(text: item.plots),
           ),
           const SizedBox(height: 24),
           Divider(color: iconThemeColor.shade700.withOpacity(0.3)),
@@ -68,7 +68,7 @@ class DetailTapInfo extends StatelessWidget {
         mainAxisSpacing: 10,
         childAspectRatio: 3 / 4,
       ),
-      itemCount: item.staffs.length,
+      itemCount: item.cast.length,
       itemBuilder: (BuildContext context, int index) {
         return Column(
           children: [
@@ -78,7 +78,7 @@ class DetailTapInfo extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              item.staffs[index].staffNm,
+              item.cast[index].staffNm,
               style: CustomTextStyle.smallNavy,
               overflow: TextOverflow.ellipsis,
             ),
@@ -106,7 +106,7 @@ class _ExpandableTextState extends State<ExpandableText> {
     const int maxLength = 150;
     return RichText(
       text: TextSpan(
-        style: CustomTextStyle.smallNavy,
+        style: CustomTextStyle.mediumNavy,
         children: [
           TextSpan(
             text: isExpanded
@@ -115,7 +115,7 @@ class _ExpandableTextState extends State<ExpandableText> {
           ),
           TextSpan(
             text: isExpanded ? ' 접기' : ' 더보기',
-            style: CustomTextStyle.smallLightNavy,
+            style: CustomTextStyle.mediumLightNavy,
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 setState(() {
