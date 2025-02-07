@@ -152,7 +152,7 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
 
   Widget _buildTabContent(Widget content) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 32.0),
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0,top: 32.0),
       child: content,
     );
   }

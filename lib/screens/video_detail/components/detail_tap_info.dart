@@ -15,23 +15,22 @@ class DetailTapInfo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            color: baseBackgroundColor,
             child: ExpandableText(text: item.plots),
           ),
           const SizedBox(height: 24),
           Divider(color: iconThemeColor.shade700.withOpacity(0.3)),
           const SizedBox(height: 16),
-          _buildInfoTable(),
+          _buildInfoTable(context),
           const SizedBox(height: 20),
-          Text('출연진', style: CustomTextStyle.mediumNavy),
+          Text('출연진', style: ColorTextStyle.mediumNavy(context)),
           const SizedBox(height: 10),
-          _buildStaffGrid(),
+          _buildStaffGrid(context),
         ],
       ),
     );
   }
 
-  Widget _buildInfoTable() {
+  Widget _buildInfoTable(BuildContext context) {
     return Table(
       columnWidths: {
         0: FractionColumnWidth(.2),
@@ -40,51 +39,66 @@ class DetailTapInfo extends StatelessWidget {
         3: FractionColumnWidth(.3),
       },
       children: [
-        _buildTableRow('장르', item.genre.join(", "), '개봉일', item.releaseDate),
-        _buildTableRow('연령등급', item.rating ?? '심의 없음', '러닝타임', '${item.runtime}분'),
-        _buildTableRow('제작국가', item.nation, '제작연도', '${item.prodYear}년'),
+        _buildTableRow('장르', item.genre.join(", "), '개봉일', item.releaseDate, context),
+        _buildTableRow(
+            '연령등급', item.rating ?? '심의 없음', '러닝타임', '${item.runtime}분', context),
+        _buildTableRow('제작국가', item.nation, '제작연도', '${item.prodYear}년', context),
       ],
     );
   }
 
-  TableRow _buildTableRow(String label1, String value1, String label2, String value2) {
+  TableRow _buildTableRow(
+      String label1, String value1, String label2, String value2, BuildContext context) {
     return TableRow(
       children: [
-        Text(label1, style: CustomTextStyle.mediumLightNavy),
-        Text(value1, style: CustomTextStyle.mediumNavy),
-        Text(label2, style: CustomTextStyle.mediumLightNavy),
-        Text(value2, style: CustomTextStyle.mediumNavy),
+        Text(label1, style: ColorTextStyle.smallLightNavy(context)),
+        Text(value1, style: ColorTextStyle.smallNavy(context)),
+        Text(label2, style: ColorTextStyle.smallLightNavy(context)),
+        Text(value2, style: ColorTextStyle.smallNavy(context)),
       ],
     );
   }
 
-  Widget _buildStaffGrid() {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(), // 내부에서 스크롤을 방지
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        childAspectRatio: 3 / 4,
-      ),
-      itemCount: item.cast.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Column(
+  Widget _buildStaffGrid(BuildContext context) {
+    return Center(
+      child: Wrap(
+          direction: Axis.horizontal,
+          alignment: WrapAlignment.start,
+          spacing: 20,
+          runSpacing: 10,
           children: [
-            const CircleAvatar(
-              radius: 30,
-              child: Icon(Icons.person, size: 30),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              item.cast[index].staffNm,
-              style: CustomTextStyle.smallNavy,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        );
-      },
+            ...List.generate(
+                item.cast.length > 8 ? 8 : item.cast.length,
+                (index) => Column(
+                      children: [
+                        const CircleAvatar(
+                          radius: 30,
+                          child: Icon(Icons.person, size: 30),
+                        ),
+                        const SizedBox(height: 8),
+                        SizedBox(
+                          width: 50,
+                          child: Text(
+                            item.cast[index].staffNm,
+                            style: ColorTextStyle.smallNavy(context),
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Visibility(
+                          visible: item.cast[index].staffRole!="",
+                          child: SizedBox(
+                            width: 80,
+                            child: Text(
+                              '(${item.cast[index].staffRole} 역)',
+                              style: ColorTextStyle.xSmallLightNavy(context),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ))
+          ]),
     );
   }
 }
@@ -106,7 +120,7 @@ class _ExpandableTextState extends State<ExpandableText> {
     const int maxLength = 150;
     return RichText(
       text: TextSpan(
-        style: CustomTextStyle.mediumNavy,
+        style: ColorTextStyle.mediumNavy(context),
         children: [
           TextSpan(
             text: isExpanded
@@ -115,7 +129,7 @@ class _ExpandableTextState extends State<ExpandableText> {
           ),
           TextSpan(
             text: isExpanded ? ' 접기' : ' 더보기',
-            style: CustomTextStyle.mediumLightNavy,
+            style: ColorTextStyle.mediumLightNavy(context),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 setState(() {
