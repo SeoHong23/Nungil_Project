@@ -338,20 +338,22 @@ class _DetailTopState extends ConsumerState<DetailTop> {
             bottom: -1,
             left: -1,
             right: -1,
-            top: -1,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.black,
-                    Colors.transparent,
-                    baseBackgroundColor.withOpacity(0.3),
-                    baseBackgroundColor.withOpacity(0.7),
-                    baseBackgroundColor,
-                  ],
-                  stops: [0, 0.18, 0.35, 0.5, 0.8],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+            child: SizedBox(
+              height: 430,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Theme.of(context).colorScheme.secondary,
+                      Colors.transparent,
+                      Theme.of(context).scaffoldBackgroundColor.withOpacity(0.3),
+                      Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
+                      Theme.of(context).scaffoldBackgroundColor,
+                    ],
+                    stops: [0, 0.18, 0.35, 0.5, 0.8],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
                 ),
               ),
             ),
@@ -383,11 +385,11 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // 영화 제목
-                        Text(widget.item.title, style: textTheme().titleLarge),
+                        Text(widget.item.title, style: Theme.of(context).textTheme.titleLarge),
                         // 영문 제목 - 제작 연도
                         Text(
                             ' ${widget.item.titleEng} · ${widget.item.prodYear}',
-                            style: textTheme().labelSmall),
+                            style: Theme.of(context).textTheme.labelSmall),
                         const SizedBox(height: 4.0),
                         // 평점
                         Row(
@@ -398,7 +400,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                                 size: 14, color: Colors.orangeAccent),
                             const SizedBox(width: 4.0),
                             Text("${widget.item.score}",
-                                style: textTheme().labelSmall)
+                                style: Theme.of(context).textTheme.labelSmall)
                           ],
                         ),
                       ],
@@ -433,6 +435,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                               ref.watch(isLikedProvider.state).state;
 
                           return _buildReactionButton(
+                            context: context,
                             mIcon: isLiked
                                 ? FontAwesomeIcons.solidFaceSmile
                                 : FontAwesomeIcons.faceSmile,
@@ -460,10 +463,12 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                               ref.watch(isDisLikedProvider.state).state;
 
                           return _buildReactionButton(
+                            context: context,
                             mIcon: disLiked
                                 ? FontAwesomeIcons
                                     .solidFaceFrown // "dislike" 상태일 때 아이콘
-                                : FontAwesomeIcons.faceFrown, // 기본 상태일 때 아이콘
+                                : FontAwesomeIcons.faceFrown,
+                            // 기본 상태일 때 아이콘
                             color: Colors.red,
                             label: "별로예요",
                             onPressed: () =>
@@ -487,6 +492,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                       mIcon: ref.watch(isFavoritedProvider)
                           ? CupertinoIcons.bookmark_fill // 찜 상태일 때 아이콘
                           : CupertinoIcons.bookmark, // 찜 안 된 상태일 때 아이콘
+                      context: context,
                       label: "찜하기",
                       onPressed: () {
                         _toggleFavorite(ref); // 찜 상태 토글
@@ -494,18 +500,21 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                     ),
                     _buildMoreActionButton(
                       mIcon: Icons.remove_red_eye,
+                      context: context,
                       label: "보고 있어요",
                       // TODO : 보고 있어요 기능 구현
                       onPressed: () {},
                     ),
                     _buildMoreActionButton(
                       mIcon: CupertinoIcons.checkmark_alt,
+                      context: context,
                       label: "봤어요",
                       // TODO : 봤어요 기능 구현
                       onPressed: () {},
                     ),
                     _buildMoreActionButton(
                       mIcon: Icons.close,
+                      context: context,
                       label: "관심 없어요",
                       // TODO : 관심 없어요 기능 구현
                       onPressed: () {},
@@ -520,13 +529,15 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                   child: Container(
                     height: 40,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
+                      color: Theme.of(context).cardColor,
+                      border: Border.all(
+                          color: Theme.of(context).colorScheme.secondary.withOpacity(0.2)),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Center(
                       child: Text(
                         "광고",
-                        style: textTheme().labelSmall,
+                        style: Theme.of(context).textTheme.labelSmall,
                       ),
                     ),
                   ),
@@ -544,27 +555,30 @@ _buildReactionButton(
     {required IconData mIcon,
     required String label,
     required Color color,
-    required Function() onPressed}) {
+    required Function() onPressed,
+    required BuildContext context}) {
   return ElevatedButton.icon(
     onPressed: onPressed,
     style: ButtonStyle(
-      backgroundColor: WidgetStatePropertyAll(baseBackgroundColor.shade50),
+      backgroundColor:
+          WidgetStatePropertyAll(Theme.of(context).colorScheme.surface),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4.0),
-            side: BorderSide(width: 0.5, color: baseBackgroundColor.shade900)),
+            side: BorderSide(
+                width: 0.5, color: Theme.of(context).colorScheme.background)),
       ),
     ),
     icon: Icon(mIcon, color: color, size: 14),
-    label: Text(label, style: textTheme().labelMedium),
+    label: Text(label, style: Theme.of(context).textTheme.labelMedium),
   );
 }
 
-_buildMoreActionButton({
-  required IconData mIcon,
-  required String label,
-  required Function() onPressed,
-}) {
+_buildMoreActionButton(
+    {required IconData mIcon,
+    required String label,
+    required Function() onPressed,
+    required BuildContext context}) {
   return ElevatedButton(
     onPressed: onPressed,
     style: const ButtonStyle(
@@ -576,8 +590,8 @@ _buildMoreActionButton({
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(mIcon, color: DefaultColors.navy, size: 17),
-        Text(label, style: CustomTextStyle.xSmallNavy),
+        Icon(mIcon, color: Theme.of(context).colorScheme.secondary, size: 17),
+        Text(label, style: ColorTextStyle.xSmallNavy(context)),
       ],
     ),
   );

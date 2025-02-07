@@ -163,10 +163,11 @@ ThemeData mTheme() {
     // 우리가 직접 지정 함
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: iconThemeColor,
-      backgroundColor: baseBackgroundColor,
-      accentColor: iconThemeColor[900]
+      backgroundColor: baseBackgroundColor[900],
+      accentColor: iconThemeColor[900],
+      cardColor: baseBackgroundColor[50]
     ),
-    cardColor: baseBackgroundColor[100],
+    cardColor: baseBackgroundColor[600],
     scaffoldBackgroundColor: baseBackgroundColor,
     textTheme: textTheme(),
     appBarTheme: appBarTheme(),
@@ -182,7 +183,9 @@ ThemeData dTheme() {
     // 우리가 직접 지정 함
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: iconThemeColorDark,
-        accentColor: iconThemeColorDark[900]
+      accentColor: iconThemeColorDark[900],
+      backgroundColor: baseBackgroundColorDark[50],
+      cardColor: baseBackgroundColorDark[300]
     ),
     cardColor: baseBackgroundColorDark[200],
     scaffoldBackgroundColor: baseBackgroundColorDark,
