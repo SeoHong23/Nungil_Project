@@ -68,11 +68,11 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   controller: _pageController,
                   onPageChanged: (value) => changePages(value),
                   children: [
-                    HomePage(toggleTheme: widget.toggleTheme!),
+                    HomePage(toggleTheme: widget.toggleTheme ?? () => {}),
                     RankingPage(),
                     ListPage(),
                     isLoggedIn ? LoginView() : UserPage(),
-                    VideoDetailPage(item: dummyVideo),
+                    VideoDetailPage(item: "679c5eec7cf2875815230726"),
                   ],
                 ),
                 bottomNavigationBar: BottomNavigationBar(
