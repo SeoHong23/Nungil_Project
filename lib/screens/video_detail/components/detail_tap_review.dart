@@ -3,6 +3,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:nungil/models/Video.dart';
 import 'package:nungil/screens/common_components/rating_widget.dart';
+import 'package:nungil/theme/common_theme.dart';
 
 class DetailTapReview extends StatefulWidget {
   final Video item;
@@ -58,7 +59,7 @@ class _DetailTapReviewState extends State<DetailTapReview> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black87,
+                          color: DefaultColors.black,
                         ),
                       ),
                       SizedBox(height: 24),
@@ -133,6 +134,11 @@ class _DetailTapReviewState extends State<DetailTapReview> {
                                       'review': _reviewController.text,
                                       'date': DateFormat('yyyy-MM-dd HH:mm')
                                           .format(DateTime.now()),
+                                      'good':
+                                          _reviews[existingIndex]['good'] ?? 0,
+                                      'liked': _reviews[existingIndex]
+                                              ['liked'] ??
+                                          false,
                                     };
                                   } else {
                                     _reviews.add({
@@ -141,6 +147,8 @@ class _DetailTapReviewState extends State<DetailTapReview> {
                                       'review': _reviewController.text,
                                       'date': DateFormat('yyyy-MM-dd HH:mm')
                                           .format(DateTime.now()),
+                                      'good': 0,
+                                      'liked': false,
                                     });
                                   }
                                   _reviewController.clear();
@@ -176,7 +184,7 @@ class _DetailTapReviewState extends State<DetailTapReview> {
                   '모든 리뷰',
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
@@ -212,7 +220,7 @@ class _DetailTapReviewState extends State<DetailTapReview> {
                                   review['username'][0],
                                   style: TextStyle(
                                     color: Colors.black87,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
@@ -224,7 +232,7 @@ class _DetailTapReviewState extends State<DetailTapReview> {
                                     review['username'],
                                     style: TextStyle(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Text(
@@ -232,7 +240,7 @@ class _DetailTapReviewState extends State<DetailTapReview> {
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.amber,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ],
@@ -256,6 +264,40 @@ class _DetailTapReviewState extends State<DetailTapReview> {
                               height: 1.5,
                             ),
                           ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.favorite,
+                                        color: _reviews[index]['liked'] == true
+                                            ? Colors.red
+                                            : Colors.grey),
+                                    onPressed: () {
+                                      print('좋아요버튼눌림');
+                                      setState(() {
+                                        if (_reviews[index]['liked'] == true) {
+                                          _reviews[index]['good'] =
+                                              (_reviews[index]['good'] ?? 0) -
+                                                  1;
+
+                                          _reviews[index]['liked'] = false;
+                                        } else {
+                                          _reviews[index]['good'] =
+                                              (_reviews[index]['good'] ?? 0) +
+                                                  1;
+                                          _reviews[index]['liked'] = true;
+                                        }
+                                      });
+                                      print('현재 좋아요 상태: ${_reviews[index]}');
+                                    },
+                                  ),
+                                  Text('${_reviews[index]['good'] ?? 0} '),
+                                ],
+                              )
+                            ],
+                          )
                         ],
                       ),
                     );
