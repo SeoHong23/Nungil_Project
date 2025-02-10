@@ -342,10 +342,14 @@ class _DetailTopState extends ConsumerState<DetailTop> {
             child: SizedBox(
               height: 400,
               width: double.infinity,
-              child: widget.item.stlls.isNotEmpty?Image.network(
-                widget.item.stlls[0],
-                fit: BoxFit.cover,
-              ):Container(color: Theme.of(context).scaffoldBackgroundColor,),
+              child: widget.item.stlls.isNotEmpty
+                  ? Image.network(
+                      widget.item.stlls[0],
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                    ),
             ),
           ),
           // 그라데이션
@@ -407,7 +411,8 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // 영화 제목
-                            Text(widget.item.title, style: Theme.of(context).textTheme.titleLarge),
+                            Text(widget.item.title,
+                                style: Theme.of(context).textTheme.titleLarge),
                             // 영문 제목 - 제작 연도
                             Text(
                                 '${widget.item.titleEng} · ${widget.item.prodYear}',
@@ -422,7 +427,8 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                                     size: 14, color: Colors.orangeAccent),
                                 const SizedBox(width: 4.0),
                                 Text("${widget.item.score}",
-                                    style: Theme.of(context).textTheme.labelSmall)
+                                    style:
+                                        Theme.of(context).textTheme.labelSmall)
                               ],
                             ),
                           ],
@@ -555,7 +561,10 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
                       border: Border.all(
-                          color: Theme.of(context).colorScheme.secondary.withOpacity(0.2)),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .secondary
+                              .withOpacity(0.2)),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Center(
