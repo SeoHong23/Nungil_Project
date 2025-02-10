@@ -46,7 +46,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
       if (response.statusCode == 200) {
         final isLiked =
             json.decode(response.body)['isLiked']; // 'isLiked' 상태 받아오기
-
+        ref.read(isLikedProvider.state).state = isLiked;
         print("Fetched Like status: $isLiked");
       } else {
         print("Failed to fetch like status: ${response.body}");
