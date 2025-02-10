@@ -74,7 +74,7 @@ class DetailTapInfo extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 SizedBox(
-                  width: 80,
+                  width: 70,
                   child: Text(
                     item.cast[index].staffNm,
                     style: ColorTextStyle.smallNavy(context),
@@ -84,7 +84,7 @@ class DetailTapInfo extends StatelessWidget {
                 Visibility(
                   visible: item.cast[index].staffRole != "",
                   child: SizedBox(
-                    width: 80,
+                    width: 70,
                     child: Text(
                       '(${item.cast[index].staffRole} 역)',
                       style: ColorTextStyle.xSmallLightNavy(context),
@@ -276,6 +276,19 @@ class buildExpandImagesState extends State<buildExpandImages> {
                   child: Image.network(
                     widget.item.stlls[index],
                     width: 180,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
+                )),
+            ...List.generate(
+                widget.item.posters.length > 4 ? 4 : widget.item.posters.length,
+                    (index) => ClipRRect(
+                  borderRadius: BorderRadius.circular(4.0),
+                  child: Image.network(
+                    widget.item.posters[index],
+                    width: 180,
+                    height: 100,
+                    fit: BoxFit.cover,
                   ),
                 ))
           ],
