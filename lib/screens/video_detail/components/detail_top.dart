@@ -225,7 +225,22 @@ class _DetailTopState extends ConsumerState<DetailTop> {
     final userId = ref.read(userIdProvider); // 로그인한 사용자 ID 가져오기
 
     if (userId == null) {
-      print("Please log in first");
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text("로그인 상태가 아닙니다"),
+            actions: <Widget>[
+              TextButton(
+                child: Text("확인"),
+                onPressed: () {
+                  Navigator.of(context).pop(); // 다이얼로그 닫기
+                },
+              ),
+            ],
+          );
+        },
+      );
       return;
     }
 
@@ -346,8 +361,12 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                     colors: [
                       DefaultColors.black,
                       Colors.transparent,
-                      Theme.of(context).scaffoldBackgroundColor.withOpacity(0.3),
-                      Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
+                      Theme.of(context)
+                          .scaffoldBackgroundColor
+                          .withOpacity(0.3),
+                      Theme.of(context)
+                          .scaffoldBackgroundColor
+                          .withOpacity(0.7),
                       Theme.of(context).scaffoldBackgroundColor,
                     ],
                     stops: [0, 0.18, 0.35, 0.5, 0.8],
