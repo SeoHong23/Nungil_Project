@@ -58,8 +58,9 @@ dependencies:
   flutter_rating_bar: ^4.0.1 #평점 라이브러리
 
 
-
-  cached_network_image: ^3.2.1 # 이미지 캐싱처리
+  # 김주경
+  cached_network_image: ^3.2.1 # 이미지 캐싱 처리
+  shimmer: ^2.0.0 # Skeleton UI
 
 
 

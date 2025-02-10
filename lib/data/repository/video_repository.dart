@@ -1,16 +1,19 @@
-
-import 'package:dio/dio.dart';
 import 'package:nungil/util/my_http.dart';
 
-class VideoRepository{
-
+class VideoRepository {
   const VideoRepository();
 
-  Future<Map<String,dynamic>> readData(String id) async {
-      Response response = await dio.get('/api/video?id=$id');
-      Map<String,dynamic> responseBody = response.data;
-    return responseBody;
+  Future<Map<String, dynamic>> readData(String id) async {
+    final response = await dio.get('/api/video?id=$id');
+
+    if (response.statusCode == 200) {
+      if (response.data is Map<String, dynamic>) {
+        return response.data;
+      } else {
+        throw FormatException("Invalid response format: expected a map.");
+      }
+    } else {
+      throw Exception("Failed to fetch video data. Status code: ${response.statusCode}");
+    }
   }
-
-
 }

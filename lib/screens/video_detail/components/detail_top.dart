@@ -327,10 +327,10 @@ class _DetailTopState extends ConsumerState<DetailTop> {
             child: SizedBox(
               height: 400,
               width: double.infinity,
-              child: Image.network(
+              child: widget.item.stlls.isNotEmpty?Image.network(
                 widget.item.stlls[0],
                 fit: BoxFit.cover,
-              ),
+              ):Container(color: Theme.of(context).scaffoldBackgroundColor,),
             ),
           ),
           // 그라데이션
@@ -344,7 +344,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Theme.of(context).colorScheme.secondary,
+                      DefaultColors.black,
                       Colors.transparent,
                       Theme.of(context).scaffoldBackgroundColor.withOpacity(0.3),
                       Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
@@ -364,48 +364,53 @@ class _DetailTopState extends ConsumerState<DetailTop> {
             bottom: 0,
             child: Column(
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    // 포스터 썸네일
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(5.0),
-                      child: Image.network(
-                        widget.item.posters[0],
-                        height: 120, // 포스터 크기 고정
+                SizedBox(
+                  width: double.infinity,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const SizedBox(
+                        width: 10,
                       ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // 영화 제목
-                        Text(widget.item.title, style: Theme.of(context).textTheme.titleLarge),
-                        // 영문 제목 - 제작 연도
-                        Text(
-                            ' ${widget.item.titleEng} · ${widget.item.prodYear}',
-                            style: Theme.of(context).textTheme.labelSmall),
-                        const SizedBox(height: 4.0),
-                        // 평점
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                      // 포스터 썸네일
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(5.0),
+                        child: Image.network(
+                          widget.item.posters[0],
+                          height: 120, // 포스터 크기 고정
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(CupertinoIcons.star_fill,
-                                size: 14, color: Colors.orangeAccent),
-                            const SizedBox(width: 4.0),
-                            Text("${widget.item.score}",
-                                style: Theme.of(context).textTheme.labelSmall)
+                            // 영화 제목
+                            Text(widget.item.title, style: Theme.of(context).textTheme.titleLarge),
+                            // 영문 제목 - 제작 연도
+                            Text(
+                                '${widget.item.titleEng} · ${widget.item.prodYear}',
+                                style: Theme.of(context).textTheme.labelSmall),
+                            const SizedBox(height: 4.0),
+                            // 평점
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(CupertinoIcons.star_fill,
+                                    size: 14, color: Colors.orangeAccent),
+                                const SizedBox(width: 4.0),
+                                Text("${widget.item.score}",
+                                    style: Theme.of(context).textTheme.labelSmall)
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(
                   height: 4,
