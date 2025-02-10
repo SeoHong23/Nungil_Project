@@ -46,7 +46,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
       if (response.statusCode == 200) {
         final isLiked =
             json.decode(response.body)['isLiked']; // 'isLiked' 상태 받아오기
-        ref.read(isLikedProvider.state).state = isLiked;
+
         print("Fetched Like status: $isLiked");
       } else {
         print("Failed to fetch like status: ${response.body}");
@@ -346,8 +346,12 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                     colors: [
                       Theme.of(context).colorScheme.secondary,
                       Colors.transparent,
-                      Theme.of(context).scaffoldBackgroundColor.withOpacity(0.3),
-                      Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
+                      Theme.of(context)
+                          .scaffoldBackgroundColor
+                          .withOpacity(0.3),
+                      Theme.of(context)
+                          .scaffoldBackgroundColor
+                          .withOpacity(0.7),
                       Theme.of(context).scaffoldBackgroundColor,
                     ],
                     stops: [0, 0.18, 0.35, 0.5, 0.8],
@@ -385,7 +389,8 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // 영화 제목
-                        Text(widget.item.title, style: Theme.of(context).textTheme.titleLarge),
+                        Text(widget.item.title,
+                            style: Theme.of(context).textTheme.titleLarge),
                         // 영문 제목 - 제작 연도
                         Text(
                             ' ${widget.item.titleEng} · ${widget.item.prodYear}',
@@ -531,7 +536,10 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
                       border: Border.all(
-                          color: Theme.of(context).colorScheme.secondary.withOpacity(0.2)),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .secondary
+                              .withOpacity(0.2)),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Center(
