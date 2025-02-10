@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:nungil/data/gvm/video_GVM.dart';
 import 'package:nungil/models/Video.dart';
 import 'package:nungil/screens/video_detail/components/detail_tap_imgs.dart';
@@ -11,7 +11,7 @@ import 'package:nungil/screens/video_detail/components/detail_top.dart';
 import 'package:nungil/theme/common_theme.dart';
 
 class VideoDetailPage extends ConsumerStatefulWidget {
-  final item;
+  final String item;
 
   const VideoDetailPage({required this.item, super.key});
 
@@ -30,12 +30,11 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _scrollController.addListener(_scrollListener);
-    _findVideo();
+    _loadVideo();
   }
 
-  Future<void> _findVideo() async{
-    VideoGVM videoGVM = ref.read(videoProvider.notifier);
-    await videoGVM.findVideo(widget.item);
+  Future<void> _loadVideo() async{
+    await ref.read(videoProvider.notifier).findVideo(widget.item);
   }
 
   void _scrollListener() {
@@ -61,89 +60,101 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    Video video = ref.watch(videoProvider);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(_opacity),
-        title: Opacity(
-          opacity: _opacity,
-          child: Text(
-            video.title,
-            style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontWeight: FontWeight.w500,
-                fontSize: 16.0),
+    final video = ref.watch(videoProvider);
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(_opacity),
+          title: Opacity(
+            opacity: _opacity,
+            child: video.title.isEmpty?
+                Shimmer.fromColors(baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    height: 24,
+                    width: 200,
+                    color: Colors.grey,
+                  ),
+                )
+                :
+            Text(
+              video.title,
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0),
+            ),
           ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            CupertinoIcons.left_chevron,
-            color: iconThemeColor,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              CupertinoIcons.search,
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              CupertinoIcons.left_chevron,
               color: iconThemeColor,
             ),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.more_vert_outlined,
-              color: iconThemeColor,
-            ),
-          ),
-        ],
-      ),
-      extendBodyBehindAppBar: true,
-      body: MediaQuery.removePadding(
-        context: context,
-        removeTop: true, // 상단 패딩 제거
-        child: NestedScrollView(
-          controller: _scrollController,
-          physics: const ClampingScrollPhysics(), // 스크롤 문제 해결
-          floatHeaderSlivers: true, // 헤더가 자연스럽게 떠 있도록 설정
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [
-            // DetailTop을 SliverPersistentHeader로 변경
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _DetailTopDelegate(video),
-            ),
-
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _StickyTabBarDelegate(
-                TabBar(
-                  controller: _tabController,
-                  tabs: [
-                    const Tab(child: Text("작품정보", style: CustomTextStyle.pretendard)),
-                    Tab(child: Text("리뷰 ${video.reviewCnt}", style: CustomTextStyle.pretendard)),
-                    Tab(child: Text("영상/이미지 ${video.stlls.length}", style: CustomTextStyle.pretendard))
-                  ],
-                  indicatorColor: Theme.of(context).colorScheme.secondary,
-                  labelColor: Theme.of(context).colorScheme.secondary,
-                  overlayColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.secondary),
-                  unselectedLabelColor: Theme.of(context).colorScheme.primary,
-                  indicatorPadding: EdgeInsets.only(bottom: -1.5),
-                  indicatorSize: TabBarIndicatorSize.tab,
-                ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                CupertinoIcons.search,
+                color: iconThemeColor,
               ),
-            )
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.more_vert_outlined,
+                color: iconThemeColor,
+              ),
+            ),
           ],
-          body: TabBarView(
-            controller: _tabController,
-            children: [
-              _buildTabContent(DetailTapInfo(item: video)),
-              _buildTabContent(DetailTapReview(item: video)),
-              _buildTabContent(DetailTapImgs(item: video)),
+        ),
+        extendBodyBehindAppBar: true,
+        body: MediaQuery.removePadding(
+          context: context,
+          removeTop: true, // 상단 패딩 제거
+          child: NestedScrollView(
+            controller: _scrollController,
+            physics: const ClampingScrollPhysics(), // 스크롤 문제 해결
+            floatHeaderSlivers: true, // 헤더가 자연스럽게 떠 있도록 설정
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              // DetailTop을 SliverPersistentHeader로 변경
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _DetailTopDelegate(video),
+              ),
+      
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _StickyTabBarDelegate(
+                  TabBar(
+                    controller: _tabController,
+                    tabs: [
+                      const Tab(child: Text("작품정보", style: CustomTextStyle.pretendard)),
+                      Tab(child: Text("리뷰 ${video.reviewCnt}", style: CustomTextStyle.pretendard)),
+                      Tab(child: Text("영상/이미지 ${video.stlls.length}", style: CustomTextStyle.pretendard))
+                    ],
+                    indicatorColor: Theme.of(context).colorScheme.secondary,
+                    labelColor: Theme.of(context).colorScheme.secondary,
+                    overlayColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.secondary),
+                    unselectedLabelColor: Theme.of(context).colorScheme.primary,
+                    indicatorPadding: EdgeInsets.only(bottom: -1.5),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                  ),
+                ),
+              )
             ],
+            body: TabBarView(
+              controller: _tabController,
+              children: [
+                _buildTabContent(DetailTapInfo(item: video)),
+                _buildTabContent(DetailTapReview(item: video)),
+                _buildTabContent(DetailTapImgs(item: video)),
+              ],
+            ),
           ),
         ),
       ),
