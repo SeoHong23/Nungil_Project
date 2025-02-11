@@ -52,7 +52,9 @@ class DetailTapInfo extends StatelessWidget {
       children: [
         _buildTableRow('장르', item.genre.join(", "), context),
         _buildTableRow('개봉일', item.releaseDate, context),
-        _buildTableRow('연령등급', item.rating ?? '심의 없음',  context),
+        Visibility(
+            visible: item.rating != "",
+            child: _buildTableRow('연령등급', item.rating??'',  context)),
         _buildTableRow('러닝타임', '${item.runtime}분', context),
         _buildTableRow('제작국가', item.nation,  context),
         _buildTableRow('제작연도', '${item.prodYear}년', context),
@@ -138,7 +140,6 @@ class ExpandableText extends StatefulWidget {
 
 class _ExpandableTextState extends State<ExpandableText> {
   bool isExpanded = false;
-
   @override
   Widget build(BuildContext context) {
     const int maxLength = 150;
@@ -149,8 +150,9 @@ class _ExpandableTextState extends State<ExpandableText> {
           TextSpan(
             text: isExpanded
                 ? widget.text
-                : '${widget.text.substring(0, maxLength)}... ',
+                : (widget.text.length<150?widget.text:'${widget.text.substring(0, maxLength)}... '),
           ),
+          widget.text.length>150?
           TextSpan(
             text: isExpanded ? ' 접기' : ' 더보기',
             style: ColorTextStyle.mediumLightNavy(context),
@@ -160,7 +162,7 @@ class _ExpandableTextState extends State<ExpandableText> {
                   isExpanded = !isExpanded;
                 });
               },
-          ),
+          ):TextSpan(),
         ],
       ),
     );
