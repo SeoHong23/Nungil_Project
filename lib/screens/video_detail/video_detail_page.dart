@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:nungil/screens/video_detail/components/custom_animated_switcher.dart';
+import 'package:nungil/screens/video_detail/components/skeleton.dart';
 import 'package:nungil/data/gvm/video_GVM.dart';
 import 'package:nungil/models/Video.dart';
 import 'package:nungil/screens/video_detail/components/detail_tap_imgs.dart';
@@ -30,11 +31,6 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _scrollController.addListener(_scrollListener);
-    _loadVideo();
-  }
-
-  Future<void> _loadVideo() async{
-    await ref.read(videoProvider.notifier).findVideo(widget.item);
   }
 
   void _scrollListener() {
@@ -60,29 +56,24 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    final video = ref.watch(videoProvider);
+    final video = ref.watch(videoDetailProvider(widget.item));
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(_opacity),
+          backgroundColor:
+              Theme.of(context).scaffoldBackgroundColor.withOpacity(_opacity),
           title: Opacity(
             opacity: _opacity,
-            child: video.title.isEmpty?
-                Shimmer.fromColors(baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    height: 24,
-                    width: 200,
-                    color: Colors.grey,
-                  ),
-                )
-                :
-            Text(
-              video.title,
-              style: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16.0),
+            child: CustomAnimatedSwitcher(
+              child: video.title.isEmpty
+                  ? const ShimmerBox(height: 200, width: 80)
+                  : Text(
+                      video.title,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16.0),
+                    ),
             ),
           ),
           centerTitle: true,
@@ -98,14 +89,14 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
           actions: [
             IconButton(
               onPressed: () {},
-              icon: Icon(
+              icon: const Icon(
                 CupertinoIcons.search,
                 color: iconThemeColor,
               ),
             ),
             IconButton(
               onPressed: () {},
-              icon: Icon(
+              icon: const Icon(
                 Icons.more_vert_outlined,
                 color: iconThemeColor,
               ),
@@ -118,28 +109,37 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
           removeTop: true, // 상단 패딩 제거
           child: NestedScrollView(
             controller: _scrollController,
-            physics: const ClampingScrollPhysics(), // 스크롤 문제 해결
-            floatHeaderSlivers: true, // 헤더가 자연스럽게 떠 있도록 설정
+            physics: const ClampingScrollPhysics(),
+            // 스크롤 문제 해결
+            floatHeaderSlivers: true,
+            // 헤더가 자연스럽게 떠 있도록 설정
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
               // DetailTop을 SliverPersistentHeader로 변경
               SliverPersistentHeader(
                 pinned: true,
                 delegate: _DetailTopDelegate(video),
               ),
-      
+
               SliverPersistentHeader(
                 pinned: true,
                 delegate: _StickyTabBarDelegate(
                   TabBar(
                     controller: _tabController,
                     tabs: [
-                      const Tab(child: Text("작품정보", style: CustomTextStyle.pretendard)),
-                      Tab(child: Text("리뷰 ${video.reviewCnt}", style: CustomTextStyle.pretendard)),
-                      Tab(child: Text("영상/이미지 ${video.stlls.length}", style: CustomTextStyle.pretendard))
+                      const Tab(
+                          child:
+                              Text("작품정보", style: CustomTextStyle.pretendard)),
+                      Tab(
+                          child: Text("리뷰 ${video.reviewCnt}",
+                              style: CustomTextStyle.pretendard)),
+                      Tab(
+                          child: Text("영상/이미지 ${video.stlls.length}",
+                              style: CustomTextStyle.pretendard))
                     ],
                     indicatorColor: Theme.of(context).colorScheme.secondary,
                     labelColor: Theme.of(context).colorScheme.secondary,
-                    overlayColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.secondary),
+                    overlayColor: WidgetStatePropertyAll(
+                        Theme.of(context).colorScheme.secondary),
                     unselectedLabelColor: Theme.of(context).colorScheme.primary,
                     indicatorPadding: EdgeInsets.only(bottom: -1.5),
                     indicatorSize: TabBarIndicatorSize.tab,
@@ -150,7 +150,18 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
             body: TabBarView(
               controller: _tabController,
               children: [
-                _buildTabContent(DetailTapInfo(item: video)),
+                _buildTabContent(
+                  CustomAnimatedSwitcher(
+                    child: video.plots.isNotEmpty
+                        ? DetailTapInfo(
+                            key: const ValueKey('data'),
+                            item: video,
+                          )
+                        : const ShimmerInfo(
+                            key: ValueKey('shimmer'),
+                          ),
+                  ),
+                ),
                 _buildTabContent(DetailTapReview(item: video)),
                 _buildTabContent(DetailTapImgs(item: video)),
               ],
@@ -163,7 +174,7 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
 
   Widget _buildTabContent(Widget content) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20.0,top: 32.0),
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 32.0),
       child: content,
     );
   }
@@ -209,7 +220,15 @@ class _DetailTopDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return DetailTop(item: item);
+    return CustomAnimatedSwitcher(
+        child: item.posters.isNotEmpty
+            ? DetailTop(
+                item: item,
+                key: const ValueKey('data'),
+              )
+            : const SkeletonDetailTop(
+                key: ValueKey('shimmer'),
+              ));
   }
 
   @override

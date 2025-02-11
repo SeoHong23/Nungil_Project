@@ -1,12 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:nungil/models/Video.dart';
+import 'package:nungil/screens/video_detail/components/skeleton.dart';
 import 'package:nungil/theme/common_theme.dart';
 
 class DetailTapInfo extends StatelessWidget {
   final Video item;
 
-  const DetailTapInfo({required this.item, Key? key}) : super(key: key);
+  const DetailTapInfo({required this.item, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +23,22 @@ class DetailTapInfo extends StatelessWidget {
           const SizedBox(height: 16),
           _buildInfoTable(context),
           const SizedBox(height: 24),
-          Text('출연진', style: ColorTextStyle.mediumNavy(context)),
+          Text('출연진 ${item.cast.length}',
+              style: ColorTextStyle.mediumNavy(context)),
           const SizedBox(height: 16),
           _buildCast(context),
+          const SizedBox(
+            height: 16,
+          ),
+          _buildTable(item.directors, context),
           const SizedBox(height: 16),
           _ExpandableCast(item: item),
           const SizedBox(height: 24),
           Text('이미지', style: ColorTextStyle.mediumNavy(context)),
           const SizedBox(height: 16),
-          buildExpandImages(item: item,),
+          BuildExpandImages(
+            item: item,
+          ),
           const SizedBox(height: 24),
         ],
       ),
@@ -38,21 +46,33 @@ class DetailTapInfo extends StatelessWidget {
   }
 
   Widget _buildInfoTable(BuildContext context) {
-    return Table(
-      columnWidths: {
-        0: FractionColumnWidth(.2),
-        1: FractionColumnWidth(.3),
-        2: FractionColumnWidth(.2),
-        3: FractionColumnWidth(.3),
-      },
+    return Wrap(
+      spacing: 8.0,
+      runSpacing: 8.0,
       children: [
-        _buildTableRow(
-            '장르', item.genre.join(", "), '개봉일', item.releaseDate, context),
-        _buildTableRow('연령등급', item.rating ?? '심의 없음', '러닝타임',
-            '${item.runtime}분', context),
-        _buildTableRow(
-            '제작국가', item.nation, '제작연도', '${item.prodYear}년', context),
+        _buildTableRow('장르', item.genre.join(", "), context),
+        _buildTableRow('개봉일', item.releaseDate, context),
+        _buildTableRow('연령등급', item.rating ?? '심의 없음',  context),
+        _buildTableRow('러닝타임', '${item.runtime}분', context),
+        _buildTableRow('제작국가', item.nation,  context),
+        _buildTableRow('제작연도', '${item.prodYear}년', context),
       ],
+    );
+  }
+
+  Widget _buildTableRow(String label1, String value1, BuildContext context) {
+    return SizedBox(
+      width: 300,
+      child: Row(
+        children: [
+          SizedBox(
+              width: 100,
+              child: Text(label1, style: ColorTextStyle.smallLightNavy(context))),
+          SizedBox(
+              width: 200,
+              child: Text(value1, style: ColorTextStyle.smallNavy(context))),
+        ],
+      ),
     );
   }
 
@@ -62,11 +82,13 @@ class DetailTapInfo extends StatelessWidget {
       child: Wrap(
           direction: Axis.horizontal,
           alignment: WrapAlignment.start,
+          runAlignment: WrapAlignment.spaceBetween,
           spacing: 20,
           runSpacing: 10,
           children: List.generate(
             item.cast.length > 8 ? 8 : item.cast.length,
             (index) => Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const CircleAvatar(
                   radius: 30,
@@ -77,8 +99,10 @@ class DetailTapInfo extends StatelessWidget {
                   width: 70,
                   child: Text(
                     item.cast[index].staffNm,
-                    style: ColorTextStyle.smallNavy(context),
+                    style: ColorTextStyle.xSmallNavy(context),
                     textAlign: TextAlign.center,
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
                   ),
                 ),
                 Visibility(
@@ -89,6 +113,9 @@ class DetailTapInfo extends StatelessWidget {
                       '(${item.cast[index].staffRole} 역)',
                       style: ColorTextStyle.xSmallLightNavy(context),
                       textAlign: TextAlign.center,
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                      maxLines: 2,
                     ),
                   ),
                 ),
@@ -98,17 +125,6 @@ class DetailTapInfo extends StatelessWidget {
     );
   }
 
-  TableRow _buildTableRow(String label1, String value1, String label2,
-      String value2, BuildContext context) {
-    return TableRow(
-      children: [
-        Text(label1, style: ColorTextStyle.smallLightNavy(context)),
-        Text(value1, style: ColorTextStyle.smallNavy(context)),
-        Text(label2, style: ColorTextStyle.smallLightNavy(context)),
-        Text(value2, style: ColorTextStyle.smallNavy(context)),
-      ],
-    );
-  }
 }
 
 class ExpandableText extends StatefulWidget {
@@ -172,15 +188,11 @@ class _ExpandableCastState extends State<_ExpandableCast> {
     }
 
     return AnimatedCrossFade(
-      duration: const Duration(milliseconds: 300),
-      firstChild: _buildExpandButton(
-        children: [
-          const Icon(Icons.expand_more_rounded),
-          const Text("더보기"),
-        ],
-        onPressed: onPressed,
-        context: context
-      ),
+      duration: const Duration(milliseconds: 200),
+      firstChild: _buildExpandButton(children: [
+        const Icon(Icons.expand_more_rounded),
+        const Text("더보기"),
+      ], onPressed: onPressed, context: context),
       secondChild: Column(
         children: [
           Opacity(
@@ -189,16 +201,19 @@ class _ExpandableCastState extends State<_ExpandableCast> {
               text: TextSpan(
                 children: [
                   ...List.generate(
-                    widget.item.cast.length>8?widget.item.cast.length - 8:0,
+                    widget.item.cast.length > 8
+                        ? widget.item.cast.length - 8
+                        : 0,
                     (index) => TextSpan(
                       children: [
                         TextSpan(
-                          text: widget.item.cast[index + 8].staffNm,
+                          text: widget.item.cast[index + 8].staffNm
+                              .replaceAll("\n", " "),
                           style: ColorTextStyle.xSmallNavy(context),
                         ),
                         TextSpan(
                           text: widget.item.cast[index + 8].staffRole != ""
-                              ? '(${widget.item.cast[index + 8].staffRole}) '
+                              ? '(${widget.item.cast[index + 8].staffRole?.replaceAll("\n", " ")})  '
                               : '',
                           style: ColorTextStyle.xSmallLightNavy(context),
                         ),
@@ -209,56 +224,54 @@ class _ExpandableCastState extends State<_ExpandableCast> {
               ),
             ),
           ),
-          const SizedBox(height: 16,),
-          _buildTable(widget.item.directors),
-          const SizedBox(height: 8,),
-          Divider(color: Theme.of(context).primaryColor.withOpacity(0.3)),
-          const SizedBox(height: 8,),
-          _buildTable(widget.item.makers??{}),
-          const SizedBox(height: 16,),
-          _buildExpandButton(
-            children: [
-              const Icon(Icons.expand_less_rounded),
-              const Text("닫기"),
-            ],
-            onPressed: onPressed,
-            context: context
+          const SizedBox(
+            height: 16,
           ),
+          _buildTable(widget.item.makers ?? {}, context),
+          const SizedBox(
+            height: 16,
+          ),
+          _buildExpandButton(children: [
+            const Icon(Icons.expand_less_rounded),
+            const Text("닫기"),
+          ], onPressed: onPressed, context: context),
         ],
       ),
       crossFadeState:
           isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
     );
   }
-
-  _buildTable(Map<String, dynamic> map) {
-    return Table(
-        columnWidths: const {
-          0: FractionColumnWidth(.2),
-          1: FractionColumnWidth(.8),
-        },
-        children: map.entries.map((entry) {
-          return TableRow(
-            children: [
-              Text(entry.key, style: ColorTextStyle.smallLightNavy(context)),
-              Text(entry.value.toString(),
-                  style: ColorTextStyle.smallNavy(context)),
-            ],
-          );
-        }).toList());
-  }
 }
 
-class buildExpandImages extends StatefulWidget {
+Widget _buildTable(Map<String, dynamic> map, BuildContext context) {
+  return Table(
+      columnWidths: const {
+        0: FractionColumnWidth(.2),
+        1: FractionColumnWidth(.8),
+      },
+      children: map.entries.map((entry) {
+        return TableRow(
+          children: [
+            Text(entry.key, style: ColorTextStyle.smallLightNavy(context)),
+            Text(entry.value.toString(),
+                style: ColorTextStyle.smallNavy(context)),
+          ],
+        );
+      }).toList());
+}
+
+class BuildExpandImages extends StatefulWidget {
   final Video item;
   final List<Widget> children;
-  const buildExpandImages({required this.item,this.children=const[],super.key});
+
+  const BuildExpandImages(
+      {required this.item, this.children = const [], super.key});
 
   @override
-  State<buildExpandImages> createState() => buildExpandImagesState();
+  State<BuildExpandImages> createState() => BuildExpandImagesState();
 }
 
-class buildExpandImagesState extends State<buildExpandImages> {
+class BuildExpandImagesState extends State<BuildExpandImages> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -271,26 +284,26 @@ class buildExpandImagesState extends State<buildExpandImages> {
           children: [
             ...List.generate(
                 widget.item.stlls.length > 4 ? 4 : widget.item.stlls.length,
-                    (index) => ClipRRect(
-                  borderRadius: BorderRadius.circular(4.0),
-                  child: Image.network(
-                    widget.item.stlls[index],
-                    width: 180,
-                    height: 100,
-                    fit: BoxFit.cover,
-                  ),
-                )),
+                (index) => ClipRRect(
+                      borderRadius: BorderRadius.circular(4.0),
+                      child: Image.network(
+                        widget.item.stlls[index],
+                        width: 180,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    )),
             ...List.generate(
                 widget.item.posters.length > 4 ? 4 : widget.item.posters.length,
-                    (index) => ClipRRect(
-                  borderRadius: BorderRadius.circular(4.0),
-                  child: Image.network(
-                    widget.item.posters[index],
-                    width: 180,
-                    height: 100,
-                    fit: BoxFit.cover,
-                  ),
-                ))
+                (index) => ClipRRect(
+                      borderRadius: BorderRadius.circular(4.0),
+                      child: Image.network(
+                        widget.item.posters[index],
+                        width: 180,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    ))
           ],
         ),
         ...widget.children
@@ -299,17 +312,17 @@ class buildExpandImagesState extends State<buildExpandImages> {
   }
 }
 
-
 Widget _buildExpandButton(
-    {required List<Widget> children, required VoidCallback onPressed, required BuildContext context}) {
+    {required List<Widget> children,
+    required VoidCallback onPressed,
+    required BuildContext context}) {
   return Container(
     width: double.infinity,
     height: 40,
     decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).colorScheme.primary,width: 0.5),
-        borderRadius: BorderRadius.circular(4.0)
-
-    ),
+        border: Border.all(
+            color: Theme.of(context).colorScheme.primary, width: 0.5),
+        borderRadius: BorderRadius.circular(4.0)),
     child: Row(
       children: [
         Expanded(
@@ -330,4 +343,122 @@ Widget _buildExpandButton(
       ],
     ),
   );
+}
+
+class ShimmerInfo extends StatelessWidget {
+  const ShimmerInfo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const ShimmerTextPlaceholder(
+            lineHeight: 14,
+            spacing: 8,
+            lineCount: 4,
+            maxWidth: double.infinity,
+          ),
+          const SizedBox(height: 24),
+          Divider(color: Theme.of(context).primaryColor.withOpacity(0.3)),
+          const SizedBox(height: 16),
+          _buildInfoTable(),
+          const SizedBox(height: 32),
+          const ShimmerBox(height: 18, width: 60),
+          const SizedBox(height: 16),
+          _buildCast(),
+          const SizedBox(height: 24),
+          const ShimmerBox(height: 18, width: 60),
+          const SizedBox(height: 16),
+          _buildGalley(),
+          const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoTable() {
+    return Wrap(
+      spacing: 8.0,
+      runSpacing: 16.0,
+      children: [
+        _buildTableRow(2, 10),
+        _buildTableRow(3, 10),
+        _buildTableRow(4, 9),
+        _buildTableRow(4, 4),
+        _buildTableRow(4, 4),
+        _buildTableRow(4, 5),
+      ],
+    );
+  }
+  Widget _buildTableRow(int key, int value, ) {
+    return SizedBox(
+      width: 300,
+      child: Row(
+        children: [
+          SizedBox(
+              width: 100,
+              child: Row(
+                  children: [ShimmerBox(width: 20.0*key, height: 15,)])
+      ),
+          SizedBox(
+              width: 200,
+              child: Row(
+                  children: [ShimmerBox(width: 20.0*value, height: 15,)])
+          )
+        ],
+      ),
+    );
+  }
+  Widget _buildCast() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Wrap(
+          direction: Axis.horizontal,
+          alignment: WrapAlignment.start,
+          runAlignment: WrapAlignment.spaceBetween,
+          spacing: 20,
+          runSpacing: 10,
+          children: List.generate(6,
+                (index) => const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ShimmerBox(
+                  radius: 30,
+                  width: 60,
+                  height: 60,
+                ),
+                SizedBox(height: 8),
+                ShimmerBox(
+                  width: 70,
+                  height: 12,
+                ),
+                SizedBox(height: 4),
+                ShimmerBox(
+                  width: 70,
+                  height: 12,
+                ),
+              ],
+            ),
+          ).toList()),
+    );
+  }
+
+  Widget _buildGalley(){
+    return Wrap(
+      alignment: WrapAlignment.spaceAround,
+      direction: Axis.horizontal,
+      spacing: 10,
+      runSpacing: 10,
+      children: [
+        ...List.generate(4,
+                (index) => const ShimmerBox(
+                  width: 180,
+                  height: 100,
+                )),
+      ],
+    );
+  }
+
 }
