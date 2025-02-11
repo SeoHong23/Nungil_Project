@@ -5,7 +5,14 @@ import 'package:nungil/models/ott_icon_list.dart';
 ///
 
 class OttListComponent extends StatefulWidget {
-  const OttListComponent({super.key});
+  final Map<String, Set<String>> selectedFilters;
+  final Function(Map<String, Set<String>>) onFilterChanged;
+
+  const OttListComponent({
+    super.key,
+    required this.selectedFilters,
+    required this.onFilterChanged,
+  });
 
   @override
   State<OttListComponent> createState() => _OttListComponentState();
@@ -13,6 +20,26 @@ class OttListComponent extends StatefulWidget {
 
 class _OttListComponentState extends State<OttListComponent> {
   final Set<int> _activeIndexes = {};
+  final String filterKey = "OTT"; // 필터 키
+
+  /// ✅ **OTT 필터 추가/제거 메서드**
+  void _toggleOttFilter(int index) {
+    final String ottName = ottIconList[index].name; // 아이콘에 해당하는 OTT 이름
+
+    setState(() {
+      if (_activeIndexes.contains(index)) {
+        _activeIndexes.remove(index); // 선택 해제
+        widget.selectedFilters[filterKey]?.remove(ottName); // 필터에서 제거
+      } else {
+        _activeIndexes.add(index); // 선택 추가
+        widget.selectedFilters.putIfAbsent(filterKey, () => {}).add(ottName);
+      }
+    });
+
+    // ✅ 변경된 필터 상태 전달
+    widget.onFilterChanged(Map.from(widget.selectedFilters));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -23,16 +50,7 @@ class _OttListComponentState extends State<OttListComponent> {
           (index) {
             final isActive = _activeIndexes.contains(index);
             return GestureDetector(
-              onTap: () {
-                setState(() {
-                  // 아이콘 활성화 상태를 토글
-                  if (isActive) {
-                    _activeIndexes.remove(index);
-                  } else {
-                    _activeIndexes.add(index);
-                  }
-                });
-              },
+              onTap: () => _toggleOttFilter(index),
               child: Padding(
                 padding: const EdgeInsets.only(right: 5.0),
                 child: Container(

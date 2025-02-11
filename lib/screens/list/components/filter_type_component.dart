@@ -127,7 +127,9 @@ class _FilterTypeComponentState extends State<FilterTypeComponent> {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: widget.selectedFilters.entries.expand((entry) {
+            children: widget.selectedFilters.entries
+                .where((entry) => entry.key != "OTT") // ✅ OTT 제외
+                .expand((entry) {
               String category = entry.key;
               return entry.value.map((filter) {
                 return Padding(

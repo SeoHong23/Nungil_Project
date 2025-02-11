@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/data/gvm/video_list_GVM.dart';
+import 'package:nungil/util/logger.dart';
 import 'filter_type_component.dart';
 import 'ott_list_component.dart';
 import 'video_list_container_component.dart';
@@ -54,7 +57,10 @@ class _ListBodyComponentState extends ConsumerState<ListBodyComponent> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // OTT 리스트
-        OttListComponent(),
+        OttListComponent(
+          selectedFilters: selectedFilters,
+          onFilterChanged: _onFilterChanged,
+        ),
         const SizedBox(height: 16),
         Expanded(
           child: Padding(
