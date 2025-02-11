@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:nungil/models/Video.dart';
-
+import 'package:nungil/theme/common_theme.dart';
 
 class DetailCastListPage extends StatefulWidget {
   final Video item;
+
   const DetailCastListPage({required this.item, super.key});
 
   @override
@@ -12,38 +13,87 @@ class DetailCastListPage extends StatefulWidget {
 
 class _DetailCastListPageState extends State<DetailCastListPage> {
 
-  int _currentIndex = 0;
-  final List<Widget> _tabs = [
-    Center(child: Text('Tab 1 Content')),
-    Center(child: Text('Tab 2 Content')),
-    Center(child: Text('Tab 3 Content')),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back_ios_rounded),
+    final List<Widget> _tabs = [
+      ListView.builder(
+        itemCount: widget.item.cast.length,
+        itemBuilder: (context, index) => ListTile(
+          leading: const CircleAvatar(
+            radius: 30,
+            child: Icon(Icons.person, size: 30),
           ),
-          bottom: TabBar(
-            onTap: (index){
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            tabs: const[
-              Tab(text: '출연진',),
-              Tab(text: '제작진',),
-            ],
+          title: Text(
+            widget.item.cast[index].staffNm,
+            style: ColorTextStyle.smallNavy(context),
+            textAlign: TextAlign.start,
+          ),
+          subtitle: Text(
+            widget.item.cast[index].staffRole != ""
+                ? '(${widget.item.cast[index].staffRole} 역)'
+                : '',
+            style: ColorTextStyle.smallLightNavy(context),
+            textAlign: TextAlign.start,
           ),
         ),
-        body: _tabs[_currentIndex],
+      ),
+      ListView(
+        padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 32.0),
+        children: [
+          const SizedBox(height: 4.0,),
+          _buildTable(widget.item.directors, context),
+          const SizedBox(height: 4.0,),
+          Divider(color: Theme.of(context).primaryColor.withOpacity(0.3)),
+          const SizedBox(height: 4.0,),
+          _buildTable(widget.item.makers ?? {}, context),
+          const SizedBox(height: 4.0,),
+          Divider(color: Theme.of(context).primaryColor.withOpacity(0.3)),
+          const SizedBox(height: 4.0,),
+          _buildTable(widget.item.crew ?? {}, context),
+        ],
+      ),
+    ];
+    return SafeArea(
+      // DefaultTabController를 사용해 탭바 컨트롤러를 자동으로 제공
+      child: DefaultTabController(
+        length: _tabs.length, // 탭 개수
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_back_ios_rounded),
+            ),
+            title: const Text('출연진/제작진'),
+            bottom: const TabBar(
+              tabs: [
+                Tab(text: '출연진'),
+                Tab(text: '제작진'),
+              ],
+            ),
+          ),
+          // body에 TabBarView를 사용해 각 탭의 내용을 표시
+          body: TabBarView(
+            children: _tabs,
+          ),
+        ),
       ),
     );
+  }
+
+  Widget _buildTable(Map<String, dynamic> map, BuildContext context) {
+    return Table(
+        columnWidths: const {
+          0: FractionColumnWidth(.2),
+          1: FractionColumnWidth(.8),
+        },
+        children: map.entries.map((entry) {
+          return TableRow(
+            children: [
+              Text(entry.key, style: ColorTextStyle.smallLightNavy(context)),
+              Text(entry.value.toString(),
+                  style: ColorTextStyle.smallNavy(context)),
+            ],
+          );
+        }).toList());
   }
 }
