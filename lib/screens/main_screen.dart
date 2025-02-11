@@ -57,54 +57,47 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: 700,
+        body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: 700,
+            ),
+            child: Scaffold(
+              body: PageView(
+                controller: _pageController,
+                onPageChanged: (value) => changePages(value),
+                children: [
+                  HomePage(toggleTheme: widget.toggleTheme ?? () => {}),
+                  RankingPage(),
+                  ListPage(),
+                  isLoggedIn ? LoginView() : UserPage(),
+                ],
               ),
-              child: Scaffold(
-                body: PageView(
-                  controller: _pageController,
-                  onPageChanged: (value) => changePages(value),
-                  children: [
-                    HomePage(toggleTheme: widget.toggleTheme ?? () => {}),
-                    RankingPage(),
-                    ListPage(),
-                    isLoggedIn ? LoginView() : UserPage(),
-                    VideoDetailPage(item: "679c5a244fd75204ab7fa029"),
-                  ],
-                ),
-                bottomNavigationBar: BottomNavigationBar(
-                  type: BottomNavigationBarType.fixed,
-                  currentIndex: _selectedIndex,
-                  onTap: (index) {
-                    changePages(index);
-                    _pageController.jumpToPage(_selectedIndex);
-                  },
-                  items: [
-                    BottomNavigationBarItem(
-                      label: '홈',
-                      icon: Icon(CupertinoIcons.house_fill),
-                    ),
-                    BottomNavigationBarItem(
-                      label: ' 랭킹',
-                      icon: Icon(FontAwesomeIcons.rankingStar),
-                    ),
-                    BottomNavigationBarItem(
-                      label: '리스트',
-                      icon: Icon(CupertinoIcons.square_list_fill),
-                    ),
-                    BottomNavigationBarItem(
-                      label: '유저',
-                      icon: Icon(FontAwesomeIcons.solidUser),
-                    ),
-                    BottomNavigationBarItem(
-                      label: '상세화면',
-                      icon: Icon(FontAwesomeIcons.film),
-                    ),
-                  ],
-                ),
+              bottomNavigationBar: BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                currentIndex: _selectedIndex,
+                onTap: (index) {
+                  changePages(index);
+                  _pageController.jumpToPage(_selectedIndex);
+                },
+                items: const [
+                  BottomNavigationBarItem(
+                    label: '홈',
+                    icon: Icon(CupertinoIcons.house_fill),
+                  ),
+                  BottomNavigationBarItem(
+                    label: ' 랭킹',
+                    icon: Icon(FontAwesomeIcons.rankingStar),
+                  ),
+                  BottomNavigationBarItem(
+                    label: '리스트',
+                    icon: Icon(CupertinoIcons.square_list_fill),
+                  ),
+                  BottomNavigationBarItem(
+                    label: '유저',
+                    icon: Icon(FontAwesomeIcons.solidUser),
+                  ),
+                ],
               ),
             ),
           ),

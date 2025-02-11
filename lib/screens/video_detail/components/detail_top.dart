@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nungil/models/Video.dart';
 import 'package:nungil/providers/auth_provider.dart';
+import 'package:nungil/screens/video_detail/components/custom_animated_switcher.dart';
+import 'package:nungil/screens/video_detail/components/skeleton.dart';
 import 'package:nungil/theme/common_theme.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -229,6 +231,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+            shape: RoundedRectangleBorder(side: BorderSide.none),
             content: Text("로그인 상태가 아닙니다"),
             actions: <Widget>[
               TextButton(
@@ -348,7 +351,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                       fit: BoxFit.cover,
                     )
                   : Container(
-                      color: Theme.of(context).scaffoldBackgroundColor,
+                      color: CupertinoColors.darkBackgroundGray,
                     ),
             ),
           ),
@@ -396,11 +399,15 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                         width: 10,
                       ),
                       // 포스터 썸네일
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(5.0),
-                        child: Image.network(
-                          widget.item.posters[0],
-                          height: 120, // 포스터 크기 고정
+                      SizedBox(
+                        height: 120,
+                        width: 90,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5.0),
+                          child: Image.network(
+                            widget.item.posters[0],
+                            height: 120, // 포스터 크기 고정
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -628,4 +635,164 @@ _buildMoreActionButton(
       ],
     ),
   );
+}
+
+class SkeletonDetailTop extends StatelessWidget {
+  const SkeletonDetailTop({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        // 배경 이미지 - 스틸컷 리스트 중 택 1
+        Positioned(
+          bottom: 20,
+          left: 0,
+          right: 0,
+          child: Container(
+            height: 400,
+            width: double.infinity,
+            color: CupertinoColors.darkBackgroundGray,
+          ),
+        ),
+        // 그라데이션
+        Positioned(
+          bottom: -1,
+          left: -1,
+          right: -1,
+          child: SizedBox(
+            height: 430,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    DefaultColors.black,
+                    Colors.transparent,
+                    Theme.of(context)
+                        .scaffoldBackgroundColor
+                        .withOpacity(0.3),
+                    Theme.of(context)
+                        .scaffoldBackgroundColor
+                        .withOpacity(0.7),
+                    Theme.of(context).scaffoldBackgroundColor,
+                  ],
+                  stops: const [0, 0.18, 0.35, 0.5, 0.8],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    // 포스터 썸네일
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(5.0),
+                        child: const ShimmerBox(height: 120, width: 95)),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ShimmerBox(height: 30, width: 120),
+                          SizedBox(height: 4.0),
+                          ShimmerTextPlaceholder(
+                            lineCount: 1,
+                            maxWidth: 300,
+                            lineHeight: 12,
+                          ),
+                          SizedBox(height: 3.0),
+                          ShimmerTextPlaceholder(
+                            lineCount: 1,
+                            maxWidth: 100,
+                            lineHeight: 14,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+
+              // 버튼 영역
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: ShimmerBox(height: 40, width: 14)
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: ShimmerBox(height: 40, width: 14)
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ShimmerBox(height: 60, width: 80),
+                  ShimmerBox(height: 60, width: 80),
+                  ShimmerBox(height: 60, width: 80),
+                  ShimmerBox(height: 60, width: 80),
+                ],
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    border: Border.all(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .secondary
+                            .withOpacity(0.2)),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "광고",
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
 }

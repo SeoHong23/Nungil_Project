@@ -10,7 +10,23 @@ class Staff {
     this.staffRole,
     this.staffId,
   });
+
+  factory Staff.fromMap(Map<String, dynamic> map) {
+    return Staff(
+      staffNm: map['staffNm'].length > 6
+          ? map['staffNm'].replaceAll(' ', '\n')
+          : map['staffNm'],
+      staffRoleGroup: map['staffRoleGroup'],
+      staffRole: map['staffRole'],
+      staffId: map['staffId'],
+    );
+  }
+
+  static List<Staff> fromList(List<dynamic> list) {
+    return list.map((item) => Staff.fromMap(item as Map<String, dynamic>)).toList();
+  }
 }
+
 
 class Video {
   String id;
@@ -42,7 +58,7 @@ class Video {
     this.titleEng,
     required this.prodYear,
     required this.nation,
-    this.score = 0.0, // 기본값을 0.0으로 수정
+    this.score = 0.0,
     required this.company,
     required this.plots,
     this.runtime,
@@ -60,23 +76,58 @@ class Video {
     this.keywords,
     this.reviewCnt = 0,
   });
-}
-class VideoState {
-  final Video video;
-  final bool isLoading;
-  final String? error;
 
-  VideoState({
-    required this.video,
-    this.isLoading = false,
-    this.error,
-  });
+  factory Video.fromNull(){
+    return Video(
+      id: "",
+      title: "",
+      titleEng: "",
+      prodYear: "",
+      nation: "",
+      score: 0.0,
+      company: [],
+      plots: "",
+      runtime: "",
+      genre: [],
+      releaseDate: "",
+      rating: "",
+      posters: [],
+      stlls: [],
+      directors: {},
+      cast: [],
+      makers: {},
+      crew: {},
+      awards1: "",
+      awards2: "",
+      keywords: [],
+    );
+  }
 
-  VideoState copyWith({Video? video, bool? isLoading, String? error}) {
-    return VideoState(
-      video: video ?? this.video,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
+  // Map 데이터를 Video 객체로 변환하는 팩토리 메서드
+  factory Video.fromMap(Map<String, dynamic> map) {
+    return Video(
+      id: map['id'],
+      title: map['title'],
+      titleEng: map['titleEng'],
+      prodYear: map['prodYear'],
+      nation: map['nation'],
+      score: map['score']?.toDouble() ?? 0.0, // null 방지
+      company: map['company'] ?? [],
+      plots: map['plots'],
+      runtime: map['runtime'],
+      genre: map['genre'] ?? [],
+      releaseDate: map['releaseDate'],
+      rating: map['rating'],
+      posters: map['posters'] ?? [],
+      stlls: map['stlls'] ?? [],
+      directors: map['directors'] ?? {},
+      cast: Staff.fromList(map['cast'] ?? []), // cast 리스트 변환
+      makers: map['makers'],
+      crew: map['crew'],
+      awards1: map['awards1'],
+      awards2: map['awards2'],
+      keywords: map['keywords'] ?? [],
+      reviewCnt: map['reviewCnt'] ?? 0,
     );
   }
 }

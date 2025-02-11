@@ -346,7 +346,7 @@ class ColorTextStyle{
       fontFamily: 'Pretendard',
       fontSize: 14,
       color: Theme.of(context).colorScheme.secondary, // 테마에 맞는 색상 적용
-      height: 1.8,
+      height: 1.5,
     );
   }
 
@@ -373,7 +373,24 @@ class ColorTextStyle{
       fontSize: 12,
       color: Theme.of(context).colorScheme.primary, // 테마에 맞는 색상 적용
       height: 1.3,
-      wordSpacing: -1
+      wordSpacing: -1.2
+    );
+  }
+  static TextStyle xxSmallNavy(BuildContext context) {
+    return TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 10,
+      color: Theme.of(context).colorScheme.secondary, // 테마에 맞는 색상 적용
+      height: 1.5,
+    );
+  }
+  static TextStyle xxSmallLightNavy(BuildContext context) {
+    return TextStyle(
+        fontFamily: 'Pretendard',
+        fontSize: 10,
+        color: Theme.of(context).colorScheme.primary, // 테마에 맞는 색상 적용
+        height: 1.3,
+        wordSpacing: -1.2
     );
   }
 }
