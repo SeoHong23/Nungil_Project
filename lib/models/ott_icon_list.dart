@@ -14,8 +14,8 @@ List<OttIconList> ottIconList = [
   OttIconList(name: '유튜브', uri: 'assets/images/ott_icons/youtube.png'),
   OttIconList(name: '왓챠', uri: 'assets/images/ott_icons/watcha.png'),
   OttIconList(name: '라프텔', uri: 'assets/images/ott_icons/laftel.png'),
-  OttIconList(name: '애플TV', uri: 'assets/images/ott_icons/appletv.png'),
-  OttIconList(name: 'LG U+', uri: 'assets/images/ott_icons/lguplus.png'),
-  OttIconList(name: '아마존', uri: 'assets/images/ott_icons/amazon.png'),
+  OttIconList(name: 'Apple TV', uri: 'assets/images/ott_icons/appletv.png'),
+  OttIconList(name: 'U+모바일tv', uri: 'assets/images/ott_icons/lguplus.png'),
+  OttIconList(name: '아마존 프라임 비디오', uri: 'assets/images/ott_icons/amazon.png'),
   OttIconList(name: '씨네폭스', uri: 'assets/images/ott_icons/cinefox.png'),
 ];
