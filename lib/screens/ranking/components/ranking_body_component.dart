@@ -209,7 +209,7 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
           Positioned(
             right: 20,
             bottom: 20,
-            child: RateBuilder(rate: 80),
+            child: topVideo.rankOldAndNew == "OLD" ? Container() : Text("NEW"),
           ),
         ],
       ),
