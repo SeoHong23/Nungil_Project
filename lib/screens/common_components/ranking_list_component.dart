@@ -68,7 +68,13 @@ class RankingListComponent extends StatelessWidget {
                   video.title,
                 ),
               ),
-              RateBuilder(rate: videoListTmp[index % videoListTmp.length].rate),
+              const SizedBox(width: 8),
+              video.rankOldAndNew == "OLD"
+                  ? Container()
+                  : Text(
+                      "NEW!",
+                      style: TextStyle(color: DefaultColors.green),
+                    ),
             ],
           ),
         ),

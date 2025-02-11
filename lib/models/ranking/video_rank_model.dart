@@ -4,13 +4,15 @@ class VideoRankModel {
   final String poster;
   final String rank;
   final String rankInten;
+  final String rankOldAndNew;
 
   VideoRankModel(
       {required this.id,
       required this.title,
       required this.poster,
       required this.rank,
-      required this.rankInten});
+      required this.rankInten,
+      required this.rankOldAndNew});
 
   factory VideoRankModel.fromJson(Map<String, dynamic> json) {
     return VideoRankModel(
@@ -19,6 +21,7 @@ class VideoRankModel {
       poster: (json['poster'] != null) ? json['poster'] : "",
       rank: json['rank'],
       rankInten: json['rankInten'],
+      rankOldAndNew: json['rankOldAndNew'],
     );
   }
 }

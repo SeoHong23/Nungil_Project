@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nungil/data/repository/video_list_repository.dart';
 import 'package:nungil/models/home/home_review_tmp.dart';
+import 'package:nungil/models/list/video_list_model.dart';
 import 'package:nungil/models/list/video_list_tmp.dart';
+import 'package:nungil/models/ranking/video_rank_model.dart';
 import 'package:nungil/screens/list/components/video_list_component.dart';
 import 'package:nungil/theme/common_theme.dart';
 
@@ -21,6 +24,53 @@ class HomeBodyComponent extends StatefulWidget {
 }
 
 class _HomeBodyComponentState extends State<HomeBodyComponent> {
+  List<VideoRankModel> dailyRanking = [];
+  List<VideoRankModel> weeklyRanking = [];
+  List<VideoListModel> randomMovies = [];
+  List<VideoListModel> latestMovies = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => fetchHomeData());
+  }
+
+  Future<void> fetchHomeData() async {
+    try {
+      final repository = VideoListRepository();
+
+      // ✅ 첫 번째 요청 (일일 랭킹)
+      final dailyData = await repository.fetchRanksDaily();
+      await Future.delayed(Duration(milliseconds: 50)); // ⏳ 요청 간 50ms 지연
+
+      // ✅ 두 번째 요청 (주간 랭킹)
+      final weeklyData = await repository.fetchRanksWeekly();
+      await Future.delayed(Duration(milliseconds: 50));
+
+      // ✅ 세 번째 요청 (랜덤 추천작)
+      final randomData = await repository.fetchVideosRandom(10);
+      await Future.delayed(Duration(milliseconds: 50));
+
+      // ✅ 네 번째 요청 (최신 영화)
+      final latestData =
+          await repository.fetchVideosWithFilter(0, 10, {}, "DateDESC");
+
+      setState(() {
+        dailyRanking = dailyData;
+        weeklyRanking = weeklyData;
+        randomMovies = randomData;
+        latestMovies = latestData;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error fetching home data: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -42,7 +92,11 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
             SizedBox(height: 16),
             // 오늘 랭킹 3위까지
             // 된다면 주간 월간 랭킹 3초에 한번찍 돌아가며 나오기
-            HomeRankingComponent(),
+            HomeRankingComponent(
+              dailyRanking: dailyRanking,
+              weeklyRanking: weeklyRanking,
+              isLoading: isLoading,
+            ),
             SizedBox(height: 16),
             //광고
             Container(
@@ -61,6 +115,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
             HomeMovieListComponent(
               title: "당신을 위한 랜덤 추천작",
               type: "Random",
+              videoList: randomMovies,
             ),
             SizedBox(height: 16),
             // 최신 리뷰
@@ -89,6 +144,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
             HomeMovieListComponent(
               title: "개봉 최신작",
               type: "Least",
+              videoList: latestMovies,
             ),
           ],
         ),

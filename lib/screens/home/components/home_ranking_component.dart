@@ -6,17 +6,22 @@ import 'package:nungil/theme/common_theme.dart';
 import '../../common_components/ranking_list_component.dart';
 
 class HomeRankingComponent extends StatefulWidget {
-  const HomeRankingComponent({super.key});
+  final List<VideoRankModel> dailyRanking;
+  final List<VideoRankModel> weeklyRanking;
+  final bool isLoading;
+
+  const HomeRankingComponent({
+    required this.dailyRanking,
+    required this.weeklyRanking,
+    required this.isLoading,
+    super.key,
+  });
 
   @override
   State<HomeRankingComponent> createState() => _HomeRankingComponentState();
 }
 
 class _HomeRankingComponentState extends State<HomeRankingComponent> {
-  List<VideoRankModel> dailyVideoList = [];
-  List<VideoRankModel> weeklyVideoList = [];
-  bool isDailyLoading = true;
-  bool isWeeklyLoading = true;
   final PageController _pageController = PageController(viewportFraction: 1);
   int _currentPage = 0;
   Timer? _timer;
@@ -24,43 +29,7 @@ class _HomeRankingComponentState extends State<HomeRankingComponent> {
   @override
   void initState() {
     super.initState();
-    fetchDailyVideos();
-    fetchWeeklyVideos();
     startAutoPageChange();
-  }
-
-  /// ✅ **개별 로딩: 일일 랭킹 데이터**
-  Future<void> fetchDailyVideos() async {
-    try {
-      final repository = VideoListRepository();
-      final dailyVideos = await repository.fetchRanksDaily();
-      setState(() {
-        dailyVideoList = dailyVideos;
-        isDailyLoading = false;
-      });
-    } catch (e) {
-      print("Error fetching daily videos: $e");
-      setState(() {
-        isDailyLoading = false;
-      });
-    }
-  }
-
-  /// ✅ **개별 로딩: 주간 랭킹 데이터**
-  Future<void> fetchWeeklyVideos() async {
-    try {
-      final repository = VideoListRepository();
-      final weeklyVideos = await repository.fetchRanksWeekly();
-      setState(() {
-        weeklyVideoList = weeklyVideos;
-        isWeeklyLoading = false;
-      });
-    } catch (e) {
-      print("Error fetching weekly videos: $e");
-      setState(() {
-        isWeeklyLoading = false;
-      });
-    }
   }
 
   /// 3초마다 자동으로 페이지 변경하는 함수
@@ -102,9 +71,9 @@ class _HomeRankingComponentState extends State<HomeRankingComponent> {
   }
 
   Widget _buildRankingPage(int pageIndex) {
-    bool isLoading = (pageIndex == 0) ? isDailyLoading : isWeeklyLoading;
+    bool isLoading = (pageIndex == 0) ? widget.isLoading : widget.isLoading;
     List<VideoRankModel> videoList =
-        (pageIndex == 0) ? dailyVideoList : weeklyVideoList;
+        (pageIndex == 0) ? widget.dailyRanking : widget.weeklyRanking;
     String title = (pageIndex == 0) ? "오늘의 랭킹" : "주간 랭킹";
 
     return Column(
