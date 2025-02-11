@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:nungil/models/Video.dart';
+import 'package:nungil/screens/video_detail/components/detail_cast_list_page.dart';
 import 'package:nungil/screens/video_detail/components/skeleton.dart';
 import 'package:nungil/theme/common_theme.dart';
 
@@ -23,8 +24,20 @@ class DetailTapInfo extends StatelessWidget {
           const SizedBox(height: 16),
           _buildInfoTable(context),
           const SizedBox(height: 24),
-          Text('출연진 ${item.cast.length}',
-              style: ColorTextStyle.mediumNavy(context)),
+          Row(
+            children: [
+              Text('출연진 ${item.cast.length}',
+                  style: ColorTextStyle.mediumNavy(context)),
+              IconButton(onPressed: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailCastListPage(item: item),
+                  ),
+                );
+              }, icon: Icon(Icons.chevron_right_rounded))
+            ],
+          ),
           const SizedBox(height: 16),
           _buildCast(context),
           const SizedBox(

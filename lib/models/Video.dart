@@ -13,9 +13,7 @@ class Staff {
 
   factory Staff.fromMap(Map<String, dynamic> map) {
     return Staff(
-      staffNm: map['staffNm'].length > 6
-          ? map['staffNm'].replaceAll(' ', '\n')
-          : map['staffNm'],
+      staffNm: map['staffNm'],
       staffRoleGroup: map['staffRoleGroup'],
       staffRole: map['staffRole'],
       staffId: map['staffId'],
