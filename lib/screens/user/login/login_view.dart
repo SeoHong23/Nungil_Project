@@ -4,6 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/screens/main_screen.dart';
 import 'package:nungil/providers/auth_provider.dart';
+import 'package:nungil/screens/user/services/favorite_service.dart';
+import 'package:nungil/screens/user/services/watched_service.dart';
+
+final favoriteCountProvider = FutureProvider<int>((ref) async {
+  final authState = ref.watch(authProvider);
+  final userId = authState.user?.userId;
+
+  if (userId == null) return 0; // 로그인 안 됐을 경우 0
+
+  final favoriteService = FavoriteService();
+  return await favoriteService.getFavoriteCount(userId);
+});
+
+final watchedCountProvider = FutureProvider<int>((ref) async {
+  final authState = ref.watch(authProvider);
+  final userId = authState.user?.userId;
+
+  if (userId == null) return 0; // 로그인 안 됐을 경우 0
+
+  final watchedService = WatchedService();
+  return await watchedService.getWatchedCount(userId);
+});
 
 class LoginView extends ConsumerWidget {
   const LoginView({super.key});
@@ -17,6 +39,16 @@ class LoginView extends ConsumerWidget {
         state.user?.nickname != null
             ? utf8.decode(state.user!.nickname!.codeUnits)
             : '사용자'));
+
+    final favoriteCount = ref.watch(favoriteCountProvider).maybeWhen(
+          data: (count) => count.toString(),
+          orElse: () => "0", // 로딩 중이면 0 표시
+        );
+
+    final watchedCount = ref.watch(watchedCountProvider).maybeWhen(
+          data: (count) => count.toString(),
+          orElse: () => "0", // 로딩 중이면 0 표시
+        );
 
     return SafeArea(
       child: Scaffold(
@@ -100,7 +132,7 @@ class LoginView extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 균등 정렬
                   children: [
-                    _buildCategoryItem("0", "찜했어요"),
+                    _buildCategoryItem(favoriteCount, "찜했어요"),
                     Container(
                       width: 1, // 구분선의 두께
                       height: 40, // 구분선의 높이
@@ -112,7 +144,7 @@ class LoginView extends ConsumerWidget {
                       height: 40, // 구분선의 높이
                       color: Colors.black, // 구분선 색상
                     ),
-                    _buildCategoryItem("0", "봤어요"),
+                    _buildCategoryItem(watchedCount, "봤어요"),
                   ],
                 ),
               ),
