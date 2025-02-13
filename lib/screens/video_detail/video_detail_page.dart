@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nungil/screens/search/search_page.dart';
 import 'package:nungil/screens/video_detail/components/custom_animated_switcher.dart';
 import 'package:nungil/screens/video_detail/components/skeleton.dart';
 import 'package:nungil/data/gvm/video_GVM.dart';
@@ -88,11 +90,15 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
           ),
           actions: [
             IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                CupertinoIcons.search,
-                color: iconThemeColor,
-              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchPage(),
+                  ),
+                );
+              },
+              icon: const Icon(FontAwesomeIcons.magnifyingGlass),
             ),
             IconButton(
               onPressed: () {},

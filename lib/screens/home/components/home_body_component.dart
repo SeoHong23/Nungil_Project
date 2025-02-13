@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nungil/data/repository/video_list_repository.dart';
@@ -6,6 +8,7 @@ import 'package:nungil/models/list/video_list_model.dart';
 import 'package:nungil/models/list/video_list_tmp.dart';
 import 'package:nungil/models/ranking/video_rank_model.dart';
 import 'package:nungil/screens/list/components/video_list_component.dart';
+import 'package:nungil/screens/search/search_page.dart';
 import 'package:nungil/theme/common_theme.dart';
 
 import '../../common_components/ranking_list_component.dart';
@@ -34,6 +37,15 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
   void initState() {
     super.initState();
     Future.microtask(() => fetchHomeData());
+  }
+
+  void searchTitle(String value) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchPage(keyword: value),
+      ),
+    );
   }
 
   Future<void> fetchHomeData() async {
@@ -86,7 +98,12 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
                     color: Theme.of(context).iconTheme.color),
                 fillColor: Theme.of(context).cardColor, // 채우기 색
                 filled: true, // 채우기 유무 default = false
+                hintText: dailyRanking.isNotEmpty
+                    ? dailyRanking[Random().nextInt(dailyRanking.length)].title
+                    : "",
+                hintStyle: TextStyle(color: DefaultColors.grey),
               ),
+              onSubmitted: (value) => searchTitle(value),
             ),
 
             SizedBox(height: 16),

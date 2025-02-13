@@ -870,7 +870,7 @@ _buildMoreActionButton(
     style: const ButtonStyle(
       backgroundColor: WidgetStateColor.transparent,
       elevation: WidgetStatePropertyAll(0),
-      padding: WidgetStatePropertyAll(EdgeInsets.all(10)),
+      padding: WidgetStatePropertyAll(EdgeInsets.all(8)),
       fixedSize: WidgetStatePropertyAll(Size(80, 60)),
     ),
     child: Column(
