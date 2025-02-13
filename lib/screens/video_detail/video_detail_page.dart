@@ -28,6 +28,7 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
   final ScrollController _scrollController = ScrollController();
   double _opacity = 0.0; // 초기 투명도
 
+
   @override
   void initState() {
     super.initState();
@@ -139,7 +140,7 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
                           child: Text("리뷰 ${video.reviewCnt}",
                               style: CustomTextStyle.pretendard)),
                       Tab(
-                          child: Text("영상/이미지 ${video.stlls.length}",
+                          child: Text("영상/이미지 ${video.mediaList.length}",
                               style: CustomTextStyle.pretendard))
                     ],
                     indicatorColor: Theme.of(context).colorScheme.secondary,

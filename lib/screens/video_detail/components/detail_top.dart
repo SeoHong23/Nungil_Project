@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +10,7 @@ import 'package:nungil/screens/user/services/not_interested_service.dart';
 import 'package:nungil/screens/user/services/watched_service.dart';
 import 'package:nungil/screens/user/services/watching_service.dart';
 import 'package:nungil/screens/video_detail/components/custom_animated_switcher.dart';
+import 'package:nungil/screens/video_detail/components/detail_image_zoom_page.dart';
 import 'package:nungil/screens/video_detail/components/skeleton.dart';
 import 'package:nungil/theme/common_theme.dart';
 import 'package:http/http.dart' as http;
@@ -34,6 +36,9 @@ class _DetailTopState extends ConsumerState<DetailTop> {
   final NotInterestedService _service = NotInterestedService();
   final WatchingService _watchingService = WatchingService();
   final WatchedService _watchedService = WatchedService();
+
+  bool isPosterLoaded = false;
+  bool isStillLoaded = false;
 
   @override
   void initState() {
@@ -590,9 +595,12 @@ class _DetailTopState extends ConsumerState<DetailTop> {
               height: 400,
               width: double.infinity,
               child: widget.item.stlls.isNotEmpty
-                  ? Image.network(
-                      widget.item.stlls[0],
+                  ? CachedNetworkImage(
+                      imageUrl: widget.item.stlls[0],
                       fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        color: CupertinoColors.darkBackgroundGray,
+                      ),
                     )
                   : Container(
                       color: CupertinoColors.darkBackgroundGray,
@@ -639,24 +647,14 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      const SizedBox(
-                        width: 10,
-                      ),
+                      const SizedBox(width: 10),
                       // 포스터 썸네일
-                      SizedBox(
-                        height: 120,
-                        width: 90,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5.0),
-                          child: Image.network(
-                            widget.item.posters[0],
-                            height: 120, // 포스터 크기 고정
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
+                      DetailImage(
+                          imgList: widget.item.posters,
+                          index: 0,
+                          width: 90,
+                          height: 120),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -674,7 +672,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Icon(CupertinoIcons.star_fill,
+                                const Icon(CupertinoIcons.star_fill,
                                     size: 14, color: Colors.orangeAccent),
                                 const SizedBox(width: 4.0),
                                 Text("${widget.item.score}",

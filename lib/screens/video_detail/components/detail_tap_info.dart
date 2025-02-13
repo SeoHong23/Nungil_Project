@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:nungil/models/Video.dart';
 import 'package:nungil/screens/video_detail/components/detail_cast_list_page.dart';
+import 'package:nungil/screens/video_detail/components/detail_image_zoom_page.dart';
 import 'package:nungil/screens/video_detail/components/skeleton.dart';
 import 'package:nungil/theme/common_theme.dart';
 
@@ -25,25 +27,26 @@ class DetailTapInfo extends StatelessWidget {
           _buildInfoTable(context),
           const SizedBox(height: 24),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('출연진 ${item.cast.length}',
                   style: ColorTextStyle.mediumNavy(context)),
-              IconButton(onPressed: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DetailCastListPage(item: item),
-                  ),
-                );
-              }, icon: Icon(Icons.chevron_right_rounded))
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailCastListPage(item: item),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.chevron_right_rounded),
+                tooltip: "더 보기",
+              )
             ],
           ),
           const SizedBox(height: 16),
           _buildCast(context),
-          const SizedBox(
-            height: 16,
-          ),
-          _buildTable(item.directors, context),
           const SizedBox(height: 16),
           _ExpandableCast(item: item),
           const SizedBox(height: 24),
@@ -59,35 +62,15 @@ class DetailTapInfo extends StatelessWidget {
   }
 
   Widget _buildInfoTable(BuildContext context) {
-    return Wrap(
-      spacing: 8.0,
-      runSpacing: 8.0,
-      children: [
-        _buildTableRow('장르', item.genre.join(", "), context),
-        _buildTableRow('개봉일', item.releaseDate, context),
-        Visibility(
-            visible: item.rating != "",
-            child: _buildTableRow('연령등급', item.rating??'',  context)),
-        _buildTableRow('러닝타임', '${item.runtime}분', context),
-        _buildTableRow('제작국가', item.nation,  context),
-        _buildTableRow('제작연도', '${item.prodYear}년', context),
-      ],
-    );
-  }
-
-  Widget _buildTableRow(String label1, String value1, BuildContext context) {
-    return SizedBox(
-      width: 300,
-      child: Row(
-        children: [
-          SizedBox(
-              width: 100,
-              child: Text(label1, style: ColorTextStyle.smallLightNavy(context))),
-          SizedBox(
-              width: 200,
-              child: Text(value1, style: ColorTextStyle.smallNavy(context))),
-        ],
-      ),
+    return InfoTable(
+      data: {
+        '장르': item.genre.join(", "),
+        '개봉일': item.releaseDate,
+        if (item.rating != "") '연령등급': item.rating,
+        '러닝타임': '${item.runtime}분',
+        '제작국가': item.nation,
+        '제작연도': '${item.prodYear}년',
+      },
     );
   }
 
@@ -125,7 +108,7 @@ class DetailTapInfo extends StatelessWidget {
                   child: SizedBox(
                     width: 70,
                     child: Text(
-                      '(${item.cast[index].staffRole} 역)',
+                      '${item.cast[index].staffRole}',
                       style: ColorTextStyle.xSmallLightNavy(context),
                       textAlign: TextAlign.center,
                       softWrap: true,
@@ -139,9 +122,9 @@ class DetailTapInfo extends StatelessWidget {
           ).toList()),
     );
   }
-
 }
 
+// 줄거리 설명 확장
 class ExpandableText extends StatefulWidget {
   final String text;
 
@@ -153,6 +136,7 @@ class ExpandableText extends StatefulWidget {
 
 class _ExpandableTextState extends State<ExpandableText> {
   bool isExpanded = false;
+
   @override
   Widget build(BuildContext context) {
     const int maxLength = 150;
@@ -163,25 +147,29 @@ class _ExpandableTextState extends State<ExpandableText> {
           TextSpan(
             text: isExpanded
                 ? widget.text
-                : (widget.text.length<150?widget.text:'${widget.text.substring(0, maxLength)}... '),
+                : (widget.text.length < 150
+                    ? widget.text
+                    : '${widget.text.substring(0, maxLength)}... '),
           ),
-          widget.text.length>150?
-          TextSpan(
-            text: isExpanded ? ' 접기' : ' 더보기',
-            style: ColorTextStyle.mediumLightNavy(context),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                setState(() {
-                  isExpanded = !isExpanded;
-                });
-              },
-          ):TextSpan(),
+          widget.text.length > 150
+              ? TextSpan(
+                  text: isExpanded ? '' : ' 더보기',
+                  style: ColorTextStyle.mediumLightNavy(context),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      setState(() {
+                        isExpanded = !isExpanded;
+                      });
+                    },
+                )
+              : const TextSpan(),
         ],
       ),
     );
   }
 }
 
+// 제작진 확장
 class _ExpandableCast extends StatefulWidget {
   final Video item;
 
@@ -204,51 +192,38 @@ class _ExpandableCastState extends State<_ExpandableCast> {
 
     return AnimatedCrossFade(
       duration: const Duration(milliseconds: 200),
-      firstChild: _buildExpandButton(children: [
-        const Icon(Icons.expand_more_rounded),
-        const Text("더보기"),
-      ], onPressed: onPressed, context: context),
-      secondChild: Column(
+      firstChild: Stack(
+        alignment: Alignment.bottomLeft,
         children: [
-          Opacity(
-            opacity: 0.7,
-            child: RichText(
-              text: TextSpan(
-                children: [
-                  ...List.generate(
-                    widget.item.cast.length > 8
-                        ? widget.item.cast.length - 8
-                        : 0,
-                    (index) => TextSpan(
-                      children: [
-                        TextSpan(
-                          text: widget.item.cast[index + 8].staffNm
-                              .replaceAll("\n", " "),
-                          style: ColorTextStyle.xSmallNavy(context),
-                        ),
-                        TextSpan(
-                          text: widget.item.cast[index + 8].staffRole != ""
-                              ? '(${widget.item.cast[index + 8].staffRole?.replaceAll("\n", " ")})  '
-                              : '',
-                          style: ColorTextStyle.xSmallLightNavy(context),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InfoTable(data: widget.item.directors),
+              const SizedBox(height: 4.0),
+              Divider(color: Theme.of(context).primaryColor.withOpacity(0.3)),
+            ],
           ),
-          const SizedBox(
-            height: 16,
+          Positioned(
+            child: _buildExpandButton(
+                children: [const Icon(Icons.expand_more_rounded)],
+                onPressed: onPressed,
+                context: context),
           ),
-          _buildTable(widget.item.makers ?? {}, context),
+        ],
+      ),
+      secondChild: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InfoTable(data: widget.item.directors),
+          const SizedBox(height: 4.0),
+          Divider(color: Theme.of(context).primaryColor.withOpacity(0.3)),
+          const SizedBox(height: 4.0),
+          InfoTable(data: widget.item.makers ?? {}),
           const SizedBox(
             height: 16,
           ),
           _buildExpandButton(children: [
             const Icon(Icons.expand_less_rounded),
-            const Text("닫기"),
           ], onPressed: onPressed, context: context),
         ],
       ),
@@ -258,21 +233,44 @@ class _ExpandableCastState extends State<_ExpandableCast> {
   }
 }
 
-Widget _buildTable(Map<String, dynamic> map, BuildContext context) {
-  return Table(
-      columnWidths: const {
-        0: FractionColumnWidth(.2),
-        1: FractionColumnWidth(.8),
-      },
-      children: map.entries.map((entry) {
-        return TableRow(
-          children: [
-            Text(entry.key, style: ColorTextStyle.smallLightNavy(context)),
-            Text(entry.value.toString(),
-                style: ColorTextStyle.smallNavy(context)),
-          ],
-        );
-      }).toList());
+class InfoTable extends StatelessWidget {
+  final Map<String, dynamic> data;
+
+  const InfoTable({super.key, required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      alignment: WrapAlignment.start,
+      runAlignment: WrapAlignment.start,
+      spacing: 8.0,
+      runSpacing: 8.0,
+      children: data.entries.map((entry) {
+        return _buildRow(entry.key, entry.value, context);
+      }).toList(),
+    );
+  }
+
+  Widget _buildRow(String label, String value, BuildContext context) {
+    return SizedBox(
+      width: 300,
+      child: Row(
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(
+              label,
+              style: ColorTextStyle.smallLightNavy(context),
+            ),
+          ),
+          SizedBox(
+            width: 200,
+            child: Text(value, style: ColorTextStyle.smallNavy(context)),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class BuildExpandImages extends StatefulWidget {
@@ -293,32 +291,20 @@ class BuildExpandImagesState extends State<BuildExpandImages> {
       children: [
         Wrap(
           alignment: WrapAlignment.spaceAround,
-          direction: Axis.horizontal,
+          runAlignment: WrapAlignment.start,
           spacing: 10,
           runSpacing: 10,
           children: [
             ...List.generate(
-                widget.item.stlls.length > 4 ? 4 : widget.item.stlls.length,
-                (index) => ClipRRect(
-                      borderRadius: BorderRadius.circular(4.0),
-                      child: Image.network(
-                        widget.item.stlls[index],
-                        width: 180,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                    )),
-            ...List.generate(
-                widget.item.posters.length > 4 ? 4 : widget.item.posters.length,
-                (index) => ClipRRect(
-                      borderRadius: BorderRadius.circular(4.0),
-                      child: Image.network(
-                        widget.item.posters[index],
-                        width: 180,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                    ))
+              widget.item.mediaList.length > 4 ? 4 : widget.item.mediaList.length,
+              (index) => DetailImage(
+                radius: 4.0,
+                imgList: widget.item.mediaList,
+                index: index,
+                width: 180,
+                height: 100,
+              ),
+            ),
           ],
         ),
         ...widget.children
@@ -335,8 +321,10 @@ Widget _buildExpandButton(
     width: double.infinity,
     height: 40,
     decoration: BoxDecoration(
-        border: Border.all(
-            color: Theme.of(context).colorScheme.primary, width: 0.5),
+        gradient: LinearGradient(colors: [
+          Theme.of(context).scaffoldBackgroundColor,
+          Theme.of(context).scaffoldBackgroundColor.withOpacity(0),
+        ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
         borderRadius: BorderRadius.circular(4.0)),
     child: Row(
       children: [
@@ -407,25 +395,36 @@ class ShimmerInfo extends StatelessWidget {
       ],
     );
   }
-  Widget _buildTableRow(int key, int value, ) {
+
+  Widget _buildTableRow(
+    int key,
+    int value,
+  ) {
     return SizedBox(
       width: 300,
       child: Row(
         children: [
           SizedBox(
               width: 100,
-              child: Row(
-                  children: [ShimmerBox(width: 20.0*key, height: 15,)])
-      ),
+              child: Row(children: [
+                ShimmerBox(
+                  width: 20.0 * key,
+                  height: 15,
+                )
+              ])),
           SizedBox(
               width: 200,
-              child: Row(
-                  children: [ShimmerBox(width: 20.0*value, height: 15,)])
-          )
+              child: Row(children: [
+                ShimmerBox(
+                  width: 20.0 * value,
+                  height: 15,
+                )
+              ]))
         ],
       ),
     );
   }
+
   Widget _buildCast() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -435,45 +434,36 @@ class ShimmerInfo extends StatelessWidget {
           runAlignment: WrapAlignment.spaceBetween,
           spacing: 20,
           runSpacing: 10,
-          children: List.generate(6,
-                (index) => const Column(
+          children: List.generate(
+            6,
+            (index) => const Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ShimmerBox(
-                  radius: 30,
-                  width: 60,
-                  height: 60,
-                ),
+                ShimmerBox(radius: 30, width: 60, height: 60),
                 SizedBox(height: 8),
-                ShimmerBox(
-                  width: 70,
-                  height: 12,
-                ),
+                ShimmerBox(width: 70, height: 12),
                 SizedBox(height: 4),
-                ShimmerBox(
-                  width: 70,
-                  height: 12,
-                ),
+                ShimmerBox(width: 70, height: 12),
               ],
             ),
           ).toList()),
     );
   }
 
-  Widget _buildGalley(){
+  Widget _buildGalley() {
     return Wrap(
       alignment: WrapAlignment.spaceAround,
       direction: Axis.horizontal,
       spacing: 10,
       runSpacing: 10,
       children: [
-        ...List.generate(4,
-                (index) => const ShimmerBox(
+        ...List.generate(
+            4,
+            (index) => const ShimmerBox(
                   width: 180,
                   height: 100,
                 )),
       ],
     );
   }
-
 }

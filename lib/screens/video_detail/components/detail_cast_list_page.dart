@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nungil/models/Video.dart';
+import 'package:nungil/screens/video_detail/components/detail_tap_info.dart';
 import 'package:nungil/theme/common_theme.dart';
 
 class DetailCastListPage extends StatefulWidget {
@@ -12,7 +13,6 @@ class DetailCastListPage extends StatefulWidget {
 }
 
 class _DetailCastListPageState extends State<DetailCastListPage> {
-
   @override
   Widget build(BuildContext context) {
     final List<Widget> _tabs = [
@@ -40,16 +40,10 @@ class _DetailCastListPageState extends State<DetailCastListPage> {
       ListView(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 32.0),
         children: [
-          const SizedBox(height: 4.0,),
-          _buildTable(widget.item.directors, context),
-          const SizedBox(height: 4.0,),
-          Divider(color: Theme.of(context).primaryColor.withOpacity(0.3)),
-          const SizedBox(height: 4.0,),
-          _buildTable(widget.item.makers ?? {}, context),
-          const SizedBox(height: 4.0,),
-          Divider(color: Theme.of(context).primaryColor.withOpacity(0.3)),
-          const SizedBox(height: 4.0,),
-          _buildTable(widget.item.crew ?? {}, context),
+          const SizedBox(height: 4.0),
+          InfoTable(data: widget.item.directors),
+          _buildList(map: widget.item.makers ?? {}),
+          _buildList(map: widget.item.crew ?? {}),
         ],
       ),
     ];
@@ -80,20 +74,18 @@ class _DetailCastListPageState extends State<DetailCastListPage> {
     );
   }
 
-  Widget _buildTable(Map<String, dynamic> map, BuildContext context) {
-    return Table(
-        columnWidths: const {
-          0: FractionColumnWidth(.2),
-          1: FractionColumnWidth(.8),
-        },
-        children: map.entries.map((entry) {
-          return TableRow(
-            children: [
-              Text(entry.key, style: ColorTextStyle.smallLightNavy(context)),
-              Text(entry.value.toString(),
-                  style: ColorTextStyle.smallNavy(context)),
-            ],
-          );
-        }).toList());
+  Widget _buildList({required Map<String, dynamic> map}) {
+    return Visibility(
+      visible: map.isNotEmpty,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 4.0),
+          Divider(color: Theme.of(context).primaryColor.withOpacity(0.3)),
+          const SizedBox(height: 4.0),
+          InfoTable(data: map),
+        ],
+      ),
+    );
   }
 }
