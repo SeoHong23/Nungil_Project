@@ -408,6 +408,8 @@ class _DetailTopState extends ConsumerState<DetailTop> {
     } else {
       print("오류: $result");
     }
+
+    ref.invalidate(notinterestedCountProvider);
   }
 
   Future<void> _initializeWatchingStatus() async {
@@ -488,6 +490,8 @@ class _DetailTopState extends ConsumerState<DetailTop> {
     } else {
       print("오류:$result");
     }
+
+    ref.invalidate(watchingCountProvider);
   }
 
   Future<void> _initializeWatchedStatus() async {

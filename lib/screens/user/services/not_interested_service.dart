@@ -42,4 +42,18 @@ class NotInterestedService {
       return false; // 에러 발생 시 기본적으로 false 반환
     }
   }
+
+  Future<int> getNotInterestedCount(int userId) async {
+    try {
+      Response response = await _dio.get(
+        "/notinterested/count",
+        queryParameters: {"userId": userId},
+      );
+
+      return response.data["count"] ?? 0;
+    } catch (e) {
+      print("Error fetching notinterested count: ${e.toString()}");
+      return 0;
+    }
+  }
 }
