@@ -63,9 +63,11 @@ dependencies:
   shimmer: ^2.0.0 # Skeleton UI
   preload_page_view: ^0.2.0 # 페이지 뷰 미리 불러오기
   photo_view: ^0.15.0 # 이미지 크게 보기
-  path_provider: ^2.1.5
-  flutter_downloader: ^1.11.8
-
+  path_provider: ^2.1.5 # 경로 찾기
+  permission_handler: ^11.3.1 # 권한 요청
+  external_path:
+    path: packages/external_path
+  path: ^1.8.3
 
 
 dev_dependencies:
