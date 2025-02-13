@@ -21,10 +21,11 @@ class Staff {
   }
 
   static List<Staff> fromList(List<dynamic> list) {
-    return list.map((item) => Staff.fromMap(item as Map<String, dynamic>)).toList();
+    return list
+        .map((item) => Staff.fromMap(item as Map<String, dynamic>))
+        .toList();
   }
 }
-
 
 class Video {
   String id;
@@ -49,33 +50,34 @@ class Video {
   String? awards2;
   List<dynamic>? keywords;
   int reviewCnt;
+  List<dynamic> mediaList;
 
-  Video({
-    required this.id,
-    required this.title,
-    this.titleEng,
-    required this.prodYear,
-    required this.nation,
-    this.score = 0.0,
-    required this.company,
-    required this.plots,
-    this.runtime,
-    this.rating,
-    required this.genre,
-    required this.releaseDate,
-    required this.posters,
-    required this.stlls,
-    this.directors = const {},
-    this.cast = const [],
-    this.makers,
-    this.crew,
-    this.awards1,
-    this.awards2,
-    this.keywords,
-    this.reviewCnt = 0,
-  });
+  Video(
+      {required this.id,
+      required this.title,
+      this.titleEng,
+      required this.prodYear,
+      required this.nation,
+      this.score = 0.0,
+      required this.company,
+      required this.plots,
+      this.runtime,
+      this.rating,
+      required this.genre,
+      required this.releaseDate,
+      required this.posters,
+      required this.stlls,
+      this.directors = const {},
+      this.cast = const [],
+      this.makers,
+      this.crew,
+      this.awards1,
+      this.awards2,
+      this.keywords,
+      this.reviewCnt = 0,
+      this.mediaList = const []});
 
-  factory Video.fromNull(){
+  factory Video.fromNull() {
     return Video(
       id: "",
       title: "",
@@ -109,7 +111,8 @@ class Video {
       titleEng: map['titleEng'],
       prodYear: map['prodYear'],
       nation: map['nation'],
-      score: map['score']?.toDouble() ?? 0.0, // null 방지
+      score: map['score']?.toDouble() ?? 0.0,
+      // null 방지
       company: map['company'] ?? [],
       plots: map['plots'],
       runtime: map['runtime'],
@@ -119,13 +122,18 @@ class Video {
       posters: map['posters'] ?? [],
       stlls: map['stlls'] ?? [],
       directors: map['directors'] ?? {},
-      cast: Staff.fromList(map['cast'] ?? []), // cast 리스트 변환
+      cast: Staff.fromList(map['cast'] ?? []),
+      // cast 리스트 변환
       makers: map['makers'],
       crew: map['crew'],
       awards1: map['awards1'],
       awards2: map['awards2'],
       keywords: map['keywords'] ?? [],
       reviewCnt: map['reviewCnt'] ?? 0,
+      mediaList: [
+        ...map['stlls'],
+        ...map['posters'],
+      ],
     );
   }
 }
