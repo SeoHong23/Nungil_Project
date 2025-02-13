@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nungil/providers/theme_provider.dart';
+import 'package:nungil/screens/search/search_page.dart';
 
 import 'components/home_body_component.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key, required this.toggleTheme});
-
-  final VoidCallback toggleTheme; // 🔥 임시 테마 변경 함수
+class HomePage extends ConsumerWidget {
+  const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkMode = ref.watch(themeProvider);
+    final themeNotifier = ref.read(themeProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         title: const Text("눈길"),
@@ -17,12 +20,19 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              toggleTheme();
+              themeNotifier.toggleTheme();
             },
-            icon: const Icon(FontAwesomeIcons.share),
+            icon: Icon(isDarkMode ? Icons.nightlight_round : Icons.wb_sunny),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SearchPage(),
+                ),
+              );
+            },
             icon: const Icon(FontAwesomeIcons.magnifyingGlass),
           ),
         ],

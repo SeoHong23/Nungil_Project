@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:nungil/models/list/video_list_model.dart';
+import 'package:nungil/util/logger.dart';
 
 import '../../models/ranking/video_rank_model.dart';
 import '../../util/my_http.dart';
@@ -132,5 +133,29 @@ class VideoListRepository {
       },
     );
     return queryParams;
+  }
+
+  Future<List<VideoListModel>> searchVideos(
+      int page, int size, String query, String searchType) async {
+    try {
+      final response = await dio.get("/api/videos/search", queryParameters: {
+        "page": page,
+        "size": size,
+        "query": query,
+        "searchType": searchType
+      });
+
+      if (response.statusCode == 200 && response.data is List) {
+        return (response.data as List)
+            .map(
+                (item) => VideoListModel.fromJson(item as Map<String, dynamic>))
+            .toList();
+      } else {
+        throw Exception('Invalid response format');
+      }
+    } catch (e) {
+      print("Error fetching videos: $e");
+      throw Exception('Failed to load videos');
+    }
   }
 }

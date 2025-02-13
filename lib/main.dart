@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nungil/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:nungil/providers/theme_provider.dart';
 import 'package:nungil/screens/main_screen.dart';
 import 'package:nungil/theme/common_theme.dart';
 
@@ -12,29 +13,17 @@ void main() {
   );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  bool _isDarkMode = false; // 다크 모드 여부
-
-  void _toggleTheme() {
-    setState(() {
-      _isDarkMode = !_isDarkMode;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkMode = ref.watch(themeProvider);
     return MaterialApp(
       title: 'nungil',
       debugShowCheckedModeBanner: false,
-      theme: _isDarkMode ? dTheme() : mTheme(), // 다크/라이트 테마 적용
-      home: MainScreen(toggleTheme: _toggleTheme),
+      theme: isDarkMode ? dTheme() : mTheme(), // 다크/라이트 테마 적용
+      home: MainScreen(),
     );
   }
 }

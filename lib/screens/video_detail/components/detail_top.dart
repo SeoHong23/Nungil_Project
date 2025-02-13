@@ -624,7 +624,7 @@ _buildMoreActionButton(
     style: const ButtonStyle(
       backgroundColor: WidgetStateColor.transparent,
       elevation: WidgetStatePropertyAll(0),
-      padding: WidgetStatePropertyAll(EdgeInsets.all(10)),
+      padding: WidgetStatePropertyAll(EdgeInsets.all(8)),
       fixedSize: WidgetStatePropertyAll(Size(80, 60)),
     ),
     child: Column(
@@ -668,12 +668,8 @@ class SkeletonDetailTop extends StatelessWidget {
                   colors: [
                     DefaultColors.black,
                     Colors.transparent,
-                    Theme.of(context)
-                        .scaffoldBackgroundColor
-                        .withOpacity(0.3),
-                    Theme.of(context)
-                        .scaffoldBackgroundColor
-                        .withOpacity(0.7),
+                    Theme.of(context).scaffoldBackgroundColor.withOpacity(0.3),
+                    Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
                     Theme.of(context).scaffoldBackgroundColor,
                   ],
                   stops: const [0, 0.18, 0.35, 0.5, 0.8],
@@ -739,15 +735,11 @@ class SkeletonDetailTop extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                  Expanded(
-                    child: ShimmerBox(height: 40, width: 14)
-                  ),
+                  Expanded(child: ShimmerBox(height: 40, width: 14)),
                   SizedBox(
                     width: 10,
                   ),
-                  Expanded(
-                    child: ShimmerBox(height: 40, width: 14)
-                  ),
+                  Expanded(child: ShimmerBox(height: 40, width: 14)),
                   SizedBox(
                     width: 10,
                   ),
