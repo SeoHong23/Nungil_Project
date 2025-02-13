@@ -1,10 +1,13 @@
-import 'dart:typed_data';
+import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:path/path.dart' as p;
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
 import 'package:nungil/screens/video_detail/components/skeleton.dart';
 import 'package:nungil/util/my_http.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:preload_page_view/preload_page_view.dart' as preload_page;
 
@@ -25,17 +28,59 @@ class DetailImageZoomPage extends StatefulWidget {
 class _DetailImageZoomPageState extends State<DetailImageZoomPage> {
   int _currentIndex = 0;
   bool _isDownloading = false;
+  String progressingString = "";
+  String file = "";
 
-  void downloadImage(String imageUrl) async {
-    setState(() {
-      _isDownloading = true;
-    });
+  Future<void> downloadImage(String imageUrl) async {
+    String downloadDirPath = (await getApplicationDocumentsDirectory())!.path;
+
+    if (Platform.isAndroid) {
+      downloadDirPath = await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
+      Directory dir = Directory(downloadDirPath);
+
+      if (!dir.existsSync()) {
+        downloadDirPath = (await getExternalStorageDirectory())!.path;
+      }
+    }
+    try {
+      // URL에서 파일 이름 추출
+      String fileName = Uri.parse(imageUrl).pathSegments.last;
+      String extension = '.jpg'; // 기본 확장자
+        Response response = await dio.head(imageUrl);
+        String? contentType = response.headers.value('content-type');
+
+        if (contentType != null) {
+          if (contentType.contains('image/jpeg')) {
+            extension = '.jpg';
+          } else if (contentType.contains('image/png')) {
+            extension = '.png';
+          } else if (contentType.contains('image/gif')) {
+            extension = '.gif';
+          }
+        }
+
+        fileName += extension;
+
+      final filePath = '$downloadDirPath/$fileName';
+
+      await dio.download(imageUrl, filePath, onReceiveProgress: (rec, total) {
+        setState(() {
+          _isDownloading = true;
+          progressingString = '${((rec / total) * 100).toStringAsFixed(0)}%';
+          file = filePath;
+        });
+      });
+      progressingString = '성공적으로 저장되었습니다.';
+      print(filePath);
+    } catch (e) {
+      print('Error: $e');
+    }
 
     setState(() {
       _isDownloading = false;
     });
-
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +97,18 @@ class _DetailImageZoomPageState extends State<DetailImageZoomPage> {
           ),
           backgroundColor: Colors.transparent,
           actions: [
+            _isDownloading?
+                CircularProgressIndicator()
+                :
             IconButton(
               onPressed: () {
                 if(!_isDownloading){
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(
+                    content: Text(progressingString,textAlign: TextAlign.center,),backgroundColor: Colors.black26,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+                    duration: const Duration(milliseconds: 500),
+                  ));
                   downloadImage(widget.imgList[_currentIndex]);
                 }
               },
