@@ -3,9 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nungil/screens/video_detail/video_detail_page.dart';
 import 'package:nungil/theme/common_theme.dart';
 
-import '../../../models/Video.dart';
-import '../../common_components/poster_image_component.dart';
-import '../../common_components/rate_builder.dart';
+import '../../models/Video.dart';
+import 'poster_image_component.dart';
+import 'rate_builder.dart';
 
 /// 2025-01-23 강중원 - 생성
 /// 2025-01-24 강중원 - 임시 모델로 불러오도록 설정

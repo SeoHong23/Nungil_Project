@@ -4,7 +4,7 @@ import '../../../data/repository/video_list_repository.dart';
 import '../../../models/list/video_list_model.dart';
 import '../../../models/list/video_list_tmp.dart';
 import '../../../theme/common_theme.dart';
-import '../../list/components/video_list_component.dart';
+import '../../common_components/video_list_component.dart';
 
 class HomeMovieListComponent extends StatefulWidget {
   final String title;
