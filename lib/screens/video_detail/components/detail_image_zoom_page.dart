@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:nungil/screens/video_detail/components/skeleton.dart';
 import 'package:nungil/util/my_http.dart';
 import 'package:photo_view/photo_view.dart';
@@ -31,17 +30,6 @@ class _DetailImageZoomPageState extends State<DetailImageZoomPage> {
     setState(() {
       _isDownloading = true;
     });
-
-    Response<dynamic> response = await dio.get(imageUrl, options: Options(responseType: ResponseType.bytes));
-
-    final result = await ImageGallerySaver.saveImage(Uint8List.fromList(response.data));
-
-    String msg = "오류가 발생했습니다.";
-    if(result['isSuccess']){
-      msg = '다운로드 완료';
-    }
-
-    print(msg);
 
     setState(() {
       _isDownloading = false;
