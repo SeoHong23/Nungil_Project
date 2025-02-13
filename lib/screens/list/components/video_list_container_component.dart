@@ -4,7 +4,7 @@ import 'package:nungil/data/gvm/video_list_GVM.dart';
 import 'package:nungil/models/list/video_list_tmp.dart';
 import 'package:nungil/util/logger.dart';
 
-import 'video_list_component.dart';
+import '../../common_components/video_list_component.dart';
 
 class VideoListContainerComponent extends ConsumerStatefulWidget {
   final Map<String, Set<String>> selectedFilters;

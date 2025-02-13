@@ -7,7 +7,7 @@ import 'package:nungil/models/home/home_review_tmp.dart';
 import 'package:nungil/models/list/video_list_model.dart';
 import 'package:nungil/models/list/video_list_tmp.dart';
 import 'package:nungil/models/ranking/video_rank_model.dart';
-import 'package:nungil/screens/list/components/video_list_component.dart';
+import 'package:nungil/screens/common_components/video_list_component.dart';
 import 'package:nungil/screens/search/search_page.dart';
 import 'package:nungil/theme/common_theme.dart';
 
