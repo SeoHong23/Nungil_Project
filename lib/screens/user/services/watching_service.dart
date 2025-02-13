@@ -42,4 +42,18 @@ class WatchingService {
       return false;
     }
   }
+
+  Future<int> getWatchingCount(int userId) async {
+    try {
+      Response response = await _dio.get(
+        "/watching/count",
+        queryParameters: {"userId": userId},
+      );
+
+      return response.data["count"] ?? 0;
+    } catch (e) {
+      print("Error fetching watching count: ${e.toString()}");
+      return 0;
+    }
+  }
 }

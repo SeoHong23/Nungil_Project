@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/screens/main_screen.dart';
 import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/screens/user/services/favorite_service.dart';
+import 'package:nungil/screens/user/services/not_interested_service.dart';
 import 'package:nungil/screens/user/services/watched_service.dart';
+import 'package:nungil/screens/user/services/watching_service.dart';
 
 final favoriteCountProvider = FutureProvider<int>((ref) async {
   final authState = ref.watch(authProvider);
@@ -27,6 +29,26 @@ final watchedCountProvider = FutureProvider<int>((ref) async {
   return await watchedService.getWatchedCount(userId);
 });
 
+final watchingCountProvider = FutureProvider<int>((ref) async {
+  final authState = ref.watch(authProvider);
+  final userId = authState.user?.userId;
+
+  if (userId == null) return 0; // 로그인 안 됐을 경우 0
+
+  final watchingService = WatchingService();
+  return await watchingService.getWatchingCount(userId);
+});
+
+final notinterestedCountProvider = FutureProvider<int>((ref) async {
+  final authState = ref.watch(authProvider);
+  final userId = authState.user?.userId;
+
+  if (userId == null) return 0; // 로그인 안 됐을 경우 0
+
+  final notinterestedService = NotInterestedService();
+  return await notinterestedService.getNotInterestedCount(userId);
+});
+
 class LoginView extends ConsumerWidget {
   const LoginView({super.key});
 
@@ -46,6 +68,16 @@ class LoginView extends ConsumerWidget {
         );
 
     final watchedCount = ref.watch(watchedCountProvider).maybeWhen(
+          data: (count) => count.toString(),
+          orElse: () => "0", // 로딩 중이면 0 표시
+        );
+
+    final watchingCount = ref.watch(watchingCountProvider).maybeWhen(
+          data: (count) => count.toString(),
+          orElse: () => "0", // 로딩 중이면 0 표시
+        );
+
+    final notinterestedCount = ref.watch(notinterestedCountProvider).maybeWhen(
           data: (count) => count.toString(),
           orElse: () => "0", // 로딩 중이면 0 표시
         );
@@ -138,7 +170,7 @@ class LoginView extends ConsumerWidget {
                       height: 40, // 구분선의 높이
                       color: Colors.black, // 구분선 색상
                     ),
-                    _buildCategoryItem("0", "보는중"),
+                    _buildCategoryItem(watchingCount, "보는중"),
                     Container(
                       width: 1, // 구분선의 두께
                       height: 40, // 구분선의 높이
@@ -192,7 +224,7 @@ class LoginView extends ConsumerWidget {
                     ),
 
                     // "관심없어요 0 >"
-                    _buildRowItem("관심없어요", "0"),
+                    _buildRowItem("관심없어요", notinterestedCount),
 
                     Container(
                       width: 310, // 구분선의 두께
