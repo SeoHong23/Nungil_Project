@@ -36,6 +36,10 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
     _scrollController.addListener(_scrollListener);
   }
 
+  void _switchTab(int index) {
+    _tabController.animateTo(index);
+  }
+
   void _scrollListener() {
     const double maxOffset = 100.0;
     double offset = _scrollController.offset;
@@ -163,6 +167,7 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
                         ? DetailTapInfo(
                             key: const ValueKey('data'),
                             item: video,
+                      changeTab: _switchTab,
                           )
                         : const ShimmerInfo(
                             key: ValueKey('shimmer'),

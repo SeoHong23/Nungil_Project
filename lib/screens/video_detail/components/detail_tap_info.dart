@@ -9,8 +9,9 @@ import 'package:nungil/theme/common_theme.dart';
 
 class DetailTapInfo extends StatelessWidget {
   final Video item;
+  final Function(int) changeTab;
 
-  const DetailTapInfo({required this.item, super.key});
+  const DetailTapInfo({required this.item, required this.changeTab, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class DetailTapInfo extends StatelessWidget {
                   );
                 },
                 icon: const Icon(Icons.chevron_right_rounded),
-                tooltip: "더 보기",
+                tooltip: "더보기",
               )
             ],
           ),
@@ -50,11 +51,19 @@ class DetailTapInfo extends StatelessWidget {
           const SizedBox(height: 16),
           _ExpandableCast(item: item),
           const SizedBox(height: 24),
-          Text('이미지', style: ColorTextStyle.mediumNavy(context)),
+          Text('이미지 ${item.mediaList.length}',
+              style: ColorTextStyle.mediumNavy(context)),
           const SizedBox(height: 16),
           BuildExpandImages(
             item: item,
           ),
+          const SizedBox(height: 16),
+          _buildExpandButton(
+              context: context,
+              onPressed: () {
+                changeTab(2);
+              },
+              children: [Text("더보기"), Icon(Icons.chevron_right_rounded)]),
           const SizedBox(height: 24),
         ],
       ),
@@ -275,10 +284,12 @@ class InfoTable extends StatelessWidget {
 
 class BuildExpandImages extends StatefulWidget {
   final Video item;
-  final List<Widget> children;
+  final bool isExpand;
 
   const BuildExpandImages(
-      {required this.item, this.children = const [], super.key});
+      {required this.item,
+      this.isExpand = false,
+      super.key});
 
   @override
   State<BuildExpandImages> createState() => BuildExpandImagesState();
@@ -296,7 +307,11 @@ class BuildExpandImagesState extends State<BuildExpandImages> {
           runSpacing: 10,
           children: [
             ...List.generate(
-              widget.item.mediaList.length > 4 ? 4 : widget.item.mediaList.length,
+              widget.isExpand
+                  ? widget.item.mediaList.length
+                  : (widget.item.mediaList.length > 4
+                      ? 4
+                      : widget.item.mediaList.length),
               (index) => DetailImage(
                 radius: 4.0,
                 imgList: widget.item.mediaList,
@@ -307,7 +322,6 @@ class BuildExpandImagesState extends State<BuildExpandImages> {
             ),
           ],
         ),
-        ...widget.children
       ],
     );
   }

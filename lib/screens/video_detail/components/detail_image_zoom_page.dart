@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:path/path.dart' as p;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
@@ -32,10 +31,11 @@ class _DetailImageZoomPageState extends State<DetailImageZoomPage> {
   String file = "";
 
   Future<void> downloadImage(String imageUrl) async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     String downloadDirPath = (await getApplicationDocumentsDirectory())!.path;
-
     if (Platform.isAndroid) {
-      downloadDirPath = await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
+      downloadDirPath = await ExternalPath.getExternalStoragePublicDirectory(
+          ExternalPath.DIRECTORY_DOWNLOADS);
       Directory dir = Directory(downloadDirPath);
 
       if (!dir.existsSync()) {
@@ -44,43 +44,56 @@ class _DetailImageZoomPageState extends State<DetailImageZoomPage> {
     }
     try {
       // URL에서 파일 이름 추출
-      String fileName = Uri.parse(imageUrl).pathSegments.last;
-      String extension = '.jpg'; // 기본 확장자
-        Response response = await dio.head(imageUrl);
-        String? contentType = response.headers.value('content-type');
+      String fileName = (DateTime.now().millisecondsSinceEpoch.toString());
+      String extension = '.png'; // 기본 확장자
+      Response response = await dio.head(imageUrl);
+      String? contentType = response.headers.value('content-type');
 
-        if (contentType != null) {
-          if (contentType.contains('image/jpeg')) {
-            extension = '.jpg';
-          } else if (contentType.contains('image/png')) {
-            extension = '.png';
-          } else if (contentType.contains('image/gif')) {
-            extension = '.gif';
-          }
+      if (contentType != null) {
+        if (contentType.contains('image/jpeg')) {
+          extension = '.jpg';
+        } else if (contentType.contains('image/png')) {
+          extension = '.png';
+        } else if (contentType.contains('image/gif')) {
+          extension = '.gif';
         }
+      }
 
-        fileName += extension;
+      fileName += extension;
 
       final filePath = '$downloadDirPath/$fileName';
 
       await dio.download(imageUrl, filePath, onReceiveProgress: (rec, total) {
         setState(() {
           _isDownloading = true;
-          progressingString = '${((rec / total) * 100).toStringAsFixed(0)}%';
           file = filePath;
         });
       });
       progressingString = '성공적으로 저장되었습니다.';
       print(filePath);
     } catch (e) {
+      progressingString = '오류가 발생했습니다.';
       print('Error: $e');
     }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        progressingString,
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 12),
+      ),
+      backgroundColor: Colors.grey[800],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+      padding: EdgeInsets.symmetric(vertical: 10.0),
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.only(bottom: 100, left: 20, right: 20),
+      // 아래 여백 50px
+      duration: const Duration(seconds: 2),
+    ));
 
     setState(() {
       _isDownloading = false;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -97,26 +110,19 @@ class _DetailImageZoomPageState extends State<DetailImageZoomPage> {
           ),
           backgroundColor: Colors.transparent,
           actions: [
-            _isDownloading?
-                CircularProgressIndicator()
-                :
-            IconButton(
-              onPressed: () {
-                if(!_isDownloading){
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(
-                    content: Text(progressingString,textAlign: TextAlign.center,),backgroundColor: Colors.black26,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-                    duration: const Duration(milliseconds: 500),
-                  ));
-                  downloadImage(widget.imgList[_currentIndex]);
-                }
-              },
-              icon: const Icon(
-                Icons.download_rounded,
-                color: Colors.white,
-              ),
-            )
+            _isDownloading
+                ? CircularProgressIndicator()
+                : IconButton(
+                    onPressed: () {
+                      if (!_isDownloading) {
+                        downloadImage(widget.imgList[_currentIndex]);
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.download_rounded,
+                      color: Colors.white,
+                    ),
+                  )
           ],
         ),
         backgroundColor: Colors.black,
@@ -136,7 +142,6 @@ class _DetailImageZoomPageState extends State<DetailImageZoomPage> {
                 return Center(
                   child: PhotoView(
                     imageProvider: NetworkImage(widget.imgList[position]),
-
                   ),
                 );
               },
