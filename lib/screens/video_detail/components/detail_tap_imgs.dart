@@ -21,7 +21,8 @@ class DetailTapImgs extends StatelessWidget {
         Text('이미지 ${item.mediaList.length}',
             style: ColorTextStyle.mediumNavy(context)),
         const SizedBox(height: 16),
-        BuildExpandImages(item: item, isExpand: true,)
+        BuildExpandImages(item: item, isExpand: true,),
+        const SizedBox(height: 24),
       ],
     );
   }
