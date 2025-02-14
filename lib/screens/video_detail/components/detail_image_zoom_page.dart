@@ -30,6 +30,13 @@ class _DetailImageZoomPageState extends State<DetailImageZoomPage> {
   String progressingString = "";
   String file = "";
 
+
+  @override
+  void initState() {
+    _currentIndex = widget.index;
+    super.initState();
+  }
+
   Future<void> downloadImage(String imageUrl) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     String downloadDirPath = (await getApplicationDocumentsDirectory())!.path;
