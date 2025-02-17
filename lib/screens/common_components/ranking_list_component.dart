@@ -29,11 +29,11 @@ class RankingListComponent extends StatelessWidget {
             ),
           );
         },
-        child: Container(
+        child: SizedBox(
           height: 60,
           child: Row(
             children: [
-              Container(
+              SizedBox(
                 width: 51,
                 child: Column(
                   children: [
@@ -71,7 +71,7 @@ class RankingListComponent extends StatelessWidget {
               const SizedBox(width: 8),
               video.rankOldAndNew == "OLD"
                   ? Container()
-                  : Text(
+                  : const Text(
                       "NEW!",
                       style: TextStyle(color: DefaultColors.green),
                     ),

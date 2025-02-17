@@ -29,7 +29,7 @@ class HomePage extends ConsumerWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SearchPage(),
+                  builder: (context) => const SearchPage(),
                 ),
               );
             },
