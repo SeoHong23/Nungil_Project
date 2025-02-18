@@ -357,7 +357,7 @@ class _UserInfoState extends State<UserInfo> {
                   },
                   style: ColorTextStyle.smallNavy(context),
                   decoration: InputDecoration(
-                    hintText: '이메일 주소 입력',
+                    hintText: '출생 연도',
                     hintStyle: ColorTextStyle.smallLightNavy(context),
                     filled: true,
                     fillColor: Theme.of(context).colorScheme.surface,
