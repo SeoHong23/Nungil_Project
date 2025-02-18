@@ -19,10 +19,10 @@ class RankitenComponent extends StatelessWidget {
                 children: [
                   Text(
                     rankInten,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: DefaultColors.grey, fontWeight: FontWeight.bold),
                   ),
-                  Icon(
+                  const Icon(
                     CupertinoIcons.minus,
                     size: 15,
                     color: DefaultColors.grey,
@@ -34,11 +34,11 @@ class RankitenComponent extends StatelessWidget {
                 children: [
                   Text(
                     '+${rankInten}',
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: DefaultColors.green,
                         fontWeight: FontWeight.bold),
                   ),
-                  Icon(
+                  const Icon(
                     CupertinoIcons.arrowtriangle_up_fill,
                     size: 15,
                     color: DefaultColors.green,
@@ -49,11 +49,11 @@ class RankitenComponent extends StatelessWidget {
               return Row(
                 children: [
                   Text(
-                    '${rankInten}',
-                    style: TextStyle(
+                    rankInten,
+                    style: const TextStyle(
                         color: DefaultColors.red, fontWeight: FontWeight.bold),
                   ),
-                  Icon(
+                  const Icon(
                     CupertinoIcons.arrowtriangle_down_fill,
                     size: 15,
                     color: DefaultColors.red,

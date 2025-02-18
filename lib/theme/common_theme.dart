@@ -15,40 +15,49 @@ TextTheme textTheme() {
   return const TextTheme(
     // 가장 큰 제목 스타일
     displayLarge: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 18.0, color: DefaultColors.black),
+        fontFamily: 'GmarketSans', fontSize: 18.0, color: DefaultColors.black,
+        fontWeight: FontWeight.w700),
     // 중간 크기의 제목 스타일
     displayMedium: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 16.0, color: DefaultColors.black),
+        fontFamily: 'GmarketSans', fontSize: 16.0, color: DefaultColors.black,
+        fontWeight: FontWeight.w400),
 
     // 본문 텍스트 스타일 (기사, 설명)
     bodyLarge: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 16.0, color: DefaultColors.black),
-    // 부제목, 작은 본문 텍스트 스타일
-    bodyMedium: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 14.0, color: DefaultColors.black),
-    bodySmall: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 12.0, color: DefaultColors.black),
+        fontFamily: 'GmarketSans', fontSize: 16.0, color: DefaultColors.black,
+        fontWeight: FontWeight.w100),
 
+    // 부제목, 작은 본문 텍스트 스타일
+    // 상세설명 장르 개봉일
+    bodyMedium: TextStyle(
+        fontFamily: 'GmarketSans', fontSize: 14.0, color: DefaultColors.black, fontWeight: FontWeight.w400),
+
+    bodySmall: TextStyle(
+        fontFamily: 'GmarketSans', fontSize: 12.0, color: DefaultColors.black,
+        fontWeight: FontWeight.w500),
     // 두꺼운 제목 스타일
     // 상세보기 제목에 사용됨
     titleLarge: TextStyle(
-        fontFamily: 'GmarketSans',
+        fontFamily: 'Pretendard',
         fontSize: 20.0,
         color: DefaultColors.black,
-        fontWeight: FontWeight.bold),
+        fontWeight: FontWeight.w800),
 
     // 중간 크기의 제목 스타일
+    // 검색창
     titleMedium: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 15.0, color: DefaultColors.black),
+        fontFamily: 'Pretendard', fontSize: 15.0, color: DefaultColors.black, fontWeight: FontWeight.w400),
 
     // 작은 글자 스타일
     // 버튼?에 써도 될듯?
     labelMedium: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 13.0, color: DefaultColors.black),
+        fontFamily: 'Pretendard', fontSize: 13.0, color: DefaultColors.black,
+        fontWeight: FontWeight.w400),
     // 상당히 작은 글자 스타일
     // 상세보기 부제/연도에 사용함
     labelSmall: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 12.0, color: DefaultColors.black),
+        fontFamily: 'Pretendard', fontSize: 12.0, color: DefaultColors.black,
+        fontWeight: FontWeight.w400),
 
   );
 }
@@ -75,23 +84,23 @@ TextTheme textThemeDark() {
     // 두꺼운 제목 스타일
     // 상세보기 제목에 사용됨
     titleLarge: TextStyle(
-        fontFamily: 'GmarketSans',
+        fontFamily: 'Pretendard',
         fontSize: 20.0,
         color: DefaultColors.white,
-        fontWeight: FontWeight.bold),
+        fontWeight: FontWeight.w800),
 
     // 중간 크기의 제목 스타일
     titleMedium: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 15.0, color: DefaultColors.white),
+        fontFamily: 'Pretendard', fontSize: 15.0, color: DefaultColors.white),
 
     // 작은 글자 스타일
     // 버튼?에 써도 될듯?
     labelMedium: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 13.0, color: DefaultColors.white),
+        fontFamily: 'Pretendard', fontSize: 13.0, color: DefaultColors.white),
     // 상당히 작은 글자 스타일
     // 상세보기 부제/연도에 사용함
     labelSmall: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 12.0, color: DefaultColors.white),
+        fontFamily: 'Pretendard', fontSize: 12.0, color: DefaultColors.white),
   );
 }
 
@@ -106,9 +115,9 @@ AppBarTheme appBarTheme() {
     scrolledUnderElevation: 0,
     iconTheme: IconThemeData(color: iconThemeColor[700]), //아이콘 색상
     titleTextStyle: TextStyle(
-        fontFamily: 'GmarketSans',
+        fontFamily: 'Pretendard',
         fontSize: 16, // 폰트 사이즈
-        fontWeight: FontWeight.bold, // 굵기
+        fontWeight: FontWeight.w900, // 굵기
         color: iconThemeColor[700] // 앱바 제목 텍스트 색상
         ),
   );
@@ -123,9 +132,9 @@ AppBarTheme appBarThemeDark() {
     scrolledUnderElevation: 0,
     iconTheme: IconThemeData(color: iconThemeColorDark[700]), //아이콘 색상
     titleTextStyle: TextStyle(
-        fontFamily: 'GmarketSans',
+        fontFamily: 'Pretendard',
         fontSize: 16, // 폰트 사이즈
-        fontWeight: FontWeight.bold, // 굵기
+        fontWeight: FontWeight.w900, // 굵기
         color: iconThemeColorDark[700] // 앱바 제목 텍스트 색상
         ),
   );
@@ -163,11 +172,11 @@ ThemeData mTheme() {
     // 우리가 직접 지정 함
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: iconThemeColor,
-      backgroundColor: baseBackgroundColor[900],
       accentColor: iconThemeColor[900],
-      cardColor: baseBackgroundColor[50]
+      cardColor: baseBackgroundColor[50],
+      backgroundColor: baseBackgroundColor[500],
     ),
-    cardColor: baseBackgroundColor[600],
+    cardColor: baseBackgroundColor[300],
     scaffoldBackgroundColor: baseBackgroundColor,
     textTheme: textTheme(),
     appBarTheme: appBarTheme(),
@@ -187,7 +196,7 @@ ThemeData dTheme() {
       backgroundColor: baseBackgroundColorDark[50],
       cardColor: baseBackgroundColorDark[300]
     ),
-    cardColor: baseBackgroundColorDark[200],
+    cardColor: baseBackgroundColorDark[400],
     scaffoldBackgroundColor: baseBackgroundColorDark,
     textTheme: textThemeDark(),
     iconTheme: IconThemeData(color: iconThemeColorDark[300]),
@@ -202,18 +211,19 @@ const int _primaryColorValue = 0xFF6B85C2;
 const MaterialColor baseBackgroundColor = MaterialColor(
   _baseColorValue,
   <int, Color>{
-    50: Color(0xFFFCFEFF), // 거의 하얀색
-    100: Color(0xFFF9FDFF), // 아주 연한 하늘색
-    200: Color(0xFFF6FBFF), // 조금 더 진한 연한 색
-    300: Color(0xFFF3FAFF), // 기본 배경보다 조금 더 진함
-    400: Color(0xFFF0F8FF), // 더 선명한 배경용
-    500: Color(_baseColorValue), // 기본 베이스 색상
-    600: Color(0xFFEAF3F9), // 약간 어두운 배경 대체 색
-    700: Color(0xFFDDEDF4), // 어두운 톤의 배경
-    800: Color(0xFFCFDDEC), // 더 어두운 대체 색상
-    900: Color(0xFFB9CBDD), // 가장 어두운 배경 대체 색
+    50: Color(0xFFFCFDFF), // 거의 흰색, 아이콘이 선명하게 보임
+    100: Color(0xFFF5F8FE), // 채도를 낮춘 연한 푸른빛 배경
+    200: Color(0xFFEBF0FA), // 차분한 푸른빛이 감도는 뉴트럴 톤
+    300: Color(0xFFDFE6F3), // 차가운 느낌을 줄이면서 부드럽게
+    400: Color(0xFFD4DCEF), // 중간 정도 밝기의 배경색
+    500: Color(0xFFBCC9DE), // 기본 배경색 (아이콘과 적절한 대비)
+    600: Color(0xFFBAC5DD), // 좀 더 어두운 대체 배경
+    700: Color(0xFFAAB6D0), // 뉴트럴하면서도 고급스러운 배경
+    800: Color(0xFF98A5C1), // 너무 어둡지 않으면서도 차분한 느낌
+    900: Color(0xFF8290AA), // 가장 어두운 배경 대체 색상
   },
 );
+
 
 const int _baseColorValueDark = 0xFF272A2F;
 const int _primaryColorValueDark = 0xFF788B98;
@@ -282,6 +292,7 @@ class DefaultColors {
 
 class CustomTextStyle {
   static const TextStyle bigLogo = TextStyle(fontSize: 50);
+  static const TextStyle mediumLogo = TextStyle(fontSize: 30,overflow: TextOverflow.visible, height: 1.2);
   static const TextStyle ranking = TextStyle(
     fontStyle: FontStyle.italic,
     fontSize: 20,
@@ -318,13 +329,55 @@ class CustomTextStyle {
       color: DefaultColors.navy,
       height: 1.8);
 }
+
+
+
 class ColorTextStyle{
-  // 라이트 테마 색상
-  static TextStyle mediumNavy(BuildContext context) {
+  static TextStyle xLargeNavy(BuildContext context) {
+    return TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 20,
+      color: Theme.of(context).colorScheme.secondary,
+      height: 1.6,
+      fontWeight: FontWeight.w400,
+      wordSpacing: 0.6,
+    );
+  }
+static TextStyle xLargeLightNavy(BuildContext context) {
+    return TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 20,
+      color: Theme.of(context).colorScheme.primary,
+      height: 1.6,
+      fontWeight: FontWeight.w400,
+      wordSpacing: 0.6,
+    );
+  }
+  static TextStyle largeNavy(BuildContext context) {
+    return TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 18,
+      color: Theme.of(context).colorScheme.secondary,
+      height: 1.6,
+      fontWeight: FontWeight.w400,
+      wordSpacing: 0.6,
+    );
+  }
+static TextStyle largeLightNavy(BuildContext context) {
+    return TextStyle(
+      fontFamily: 'Pretendard',
+      fontSize: 18,
+      color: Theme.of(context).colorScheme.primary,
+      height: 1.6,
+      fontWeight: FontWeight.w400,
+      wordSpacing: 0.6,
+    );
+  }
+static TextStyle mediumNavy(BuildContext context) {
     return TextStyle(
       fontFamily: 'Pretendard',
       fontSize: 15,
-      color: Theme.of(context).colorScheme.secondary, // 테마에 맞는 색상 적용
+      color: Theme.of(context).colorScheme.secondary,
       height: 1.6,
       fontWeight: FontWeight.w400,
       wordSpacing: 0.6,
@@ -335,7 +388,7 @@ class ColorTextStyle{
     return TextStyle(
       fontFamily: 'Pretendard',
       fontSize: 15,
-      color: Theme.of(context).colorScheme.primary, // 테마에 맞는 색상 적용
+      color: Theme.of(context).colorScheme.primary,
       height: 1.6,
       fontWeight: FontWeight.w400,
     );
@@ -345,7 +398,7 @@ class ColorTextStyle{
     return TextStyle(
       fontFamily: 'Pretendard',
       fontSize: 14,
-      color: Theme.of(context).colorScheme.secondary, // 테마에 맞는 색상 적용
+      color: Theme.of(context).colorScheme.secondary,
       height: 1.5,
     );
   }
@@ -354,7 +407,7 @@ class ColorTextStyle{
     return TextStyle(
       fontFamily: 'Pretendard',
       fontSize: 14,
-      color: Theme.of(context).colorScheme.primary, // 테마에 맞는 색상 적용
+      color: Theme.of(context).colorScheme.primary,
       height: 1.8,
     );
   }
@@ -363,7 +416,7 @@ class ColorTextStyle{
     return TextStyle(
       fontFamily: 'Pretendard',
       fontSize: 12,
-      color: Theme.of(context).colorScheme.secondary, // 테마에 맞는 색상 적용
+      color: Theme.of(context).colorScheme.secondary,
       height: 1.5,
     );
   }
@@ -371,7 +424,7 @@ class ColorTextStyle{
     return TextStyle(
       fontFamily: 'Pretendard',
       fontSize: 12,
-      color: Theme.of(context).colorScheme.primary, // 테마에 맞는 색상 적용
+      color: Theme.of(context).colorScheme.primary,
       height: 1.3,
       wordSpacing: -1.2
     );
@@ -380,7 +433,7 @@ class ColorTextStyle{
     return TextStyle(
       fontFamily: 'Pretendard',
       fontSize: 10,
-      color: Theme.of(context).colorScheme.secondary, // 테마에 맞는 색상 적용
+      color: Theme.of(context).colorScheme.secondary,
       height: 1.5,
     );
   }
@@ -388,7 +441,7 @@ class ColorTextStyle{
     return TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 10,
-        color: Theme.of(context).colorScheme.primary, // 테마에 맞는 색상 적용
+        color: Theme.of(context).colorScheme.primary,
         height: 1.3,
         wordSpacing: -1.2
     );

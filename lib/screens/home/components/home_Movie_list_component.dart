@@ -50,7 +50,7 @@ class _HomeMovieListComponentState extends State<HomeMovieListComponent> {
                 widget.videoList.length,
                 (index) => Padding(
                   padding: const EdgeInsets.only(right: 16),
-                  child: Container(
+                  child: SizedBox(
                     width: 170,
                     height: 310,
                     child: VideoListComponent(

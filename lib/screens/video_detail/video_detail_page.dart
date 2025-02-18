@@ -88,9 +88,9 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: const Icon(
+            icon: Icon(
               CupertinoIcons.left_chevron,
-              color: iconThemeColor,
+              color: Theme.of(context).primaryColor,
             ),
           ),
           actions: [
@@ -107,9 +107,9 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
             ),
             IconButton(
               onPressed: () {},
-              icon: const Icon(
+              icon: Icon(
                 Icons.more_vert_outlined,
-                color: iconThemeColor,
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ],
