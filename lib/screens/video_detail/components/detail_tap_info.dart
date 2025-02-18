@@ -63,7 +63,10 @@ class DetailTapInfo extends StatelessWidget {
               onPressed: () {
                 changeTab(2);
               },
-              children: [Text("더보기"), Icon(Icons.chevron_right_rounded)]),
+              children: [
+                const Text("더보기"),
+                const Icon(Icons.chevron_right_rounded),
+              ]),
           const SizedBox(height: 24),
         ],
       ),
@@ -287,9 +290,7 @@ class BuildExpandImages extends StatefulWidget {
   final bool isExpand;
 
   const BuildExpandImages(
-      {required this.item,
-      this.isExpand = false,
-      super.key});
+      {required this.item, this.isExpand = false, super.key});
 
   @override
   State<BuildExpandImages> createState() => BuildExpandImagesState();
