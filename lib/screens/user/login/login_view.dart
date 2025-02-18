@@ -8,6 +8,7 @@ import 'package:nungil/screens/user/services/favorite_service.dart';
 import 'package:nungil/screens/user/services/not_interested_service.dart';
 import 'package:nungil/screens/user/services/watched_service.dart';
 import 'package:nungil/screens/user/services/watching_service.dart';
+import 'package:nungil/theme/common_theme.dart';
 
 final favoriteCountProvider = FutureProvider<int>((ref) async {
   final authState = ref.watch(authProvider);
@@ -130,7 +131,7 @@ class LoginView extends ConsumerWidget {
         ),
         body: Column(
           children: [
-            SizedBox(height: 20), // 상단 여백 추가
+            const SizedBox(height: 32), // 상단 여백 추가
 
             // 닉네임 (클릭 가능한 버튼)
             GestureDetector(
@@ -142,41 +143,37 @@ class LoginView extends ConsumerWidget {
                 );
               },
               child: Text(
-                nickName,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
+                '안녕하세요, $nickName 님!',
+                style: ColorTextStyle.largeNavy(context),
               ),
             ),
 
-            SizedBox(height: 20), // 닉네임 아래 여백
+            const SizedBox(height: 16), // 닉네임 아래 여백
             // 구분선
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               child: Container(
                 height: 90,
                 decoration: BoxDecoration(
-                  color: Color(0xFFB3E0FF), // 연한 회색 배경색
+                  color: Theme.of(context).cardColor, // 연한 회색 배경색
                   borderRadius: BorderRadius.circular(12), // 둥근 모서리
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 균등 정렬
                   children: [
-                    _buildCategoryItem(favoriteCount, "찜했어요"),
+                    _buildCategoryItem(favoriteCount, "찜했어요",context),
                     Container(
                       width: 1, // 구분선의 두께
                       height: 40, // 구분선의 높이
-                      color: Colors.black, // 구분선 색상
+                      color: Theme.of(context).colorScheme.secondary, // 구분선 색상
                     ),
-                    _buildCategoryItem(watchingCount, "보는중"),
+                    _buildCategoryItem(watchingCount, "보는중",context),
                     Container(
                       width: 1, // 구분선의 두께
                       height: 40, // 구분선의 높이
-                      color: Colors.black, // 구분선 색상
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
-                    _buildCategoryItem(watchedCount, "봤어요"),
+                    _buildCategoryItem(watchedCount, "봤어요",context),
                   ],
                 ),
               ),
@@ -196,11 +193,7 @@ class LoginView extends ConsumerWidget {
                   },
                   child: Text(
                     '본 작품 통계 >',
-                    style: TextStyle(
-                      fontSize: 18, // 텍스트 크기
-                      fontWeight: FontWeight.bold, // 두꺼운 글씨
-                      color: Colors.blue, // 파란색 텍스트
-                    ),
+                    style: ColorTextStyle.largeNavy(context),
                   ),
                 ),
               ),
@@ -209,31 +202,24 @@ class LoginView extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Color(0xFFB3E0FF), // 연한 파란색 배경색
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(12), // 둥근 모서리
                 ),
                 child: Column(
                   children: [
                     // "작성한 리뷰 0 >"
-                    _buildRowItem("작성한 리뷰", "0"),
+                    _buildRowItem("작성한 리뷰", "0",context),
 
-                    Container(
-                      width: 310, // 구분선의 두께
-                      height: 1, // 구분선의 높이
-                      color: Colors.black, // 구분선 색상
-                    ),
+                    Divider(color: Theme.of(context).colorScheme.secondary,
+                    indent: 15,endIndent: 15,),
 
                     // "관심없어요 0 >"
-                    _buildRowItem("관심없어요", notinterestedCount),
+                    _buildRowItem("관심없어요", notinterestedCount,context),
 
-                    Container(
-                      width: 310, // 구분선의 두께
-                      height: 1, // 구분선의 높이
-                      color: Colors.black, // 구분선 색상
-                    ),
-
+                    Divider(color: Theme.of(context).colorScheme.secondary,
+                      indent: 15,endIndent: 15,),
                     // "구독중인 서비스 >"
-                    _buildRowItem("구독중인 서비스", ""),
+                    _buildRowItem("구독중인 서비스", "",context),
                   ],
                 ),
               ),
@@ -243,49 +229,50 @@ class LoginView extends ConsumerWidget {
       ),
     );
   }
-}
-
-Widget _buildCategoryItem(String count, String label) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center, // 내용 중앙 정렬
-    children: [
-      Text(
-        count,
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      ),
-      SizedBox(height: 4),
-      Text(
-        label,
-        style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-      ),
-    ],
-  );
-}
-
-Widget _buildRowItem(String label, String count) {
-  return Padding(
-    padding: const EdgeInsets.all(18.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween, // 항목들을 양쪽 끝으로 배치
+  Widget _buildCategoryItem(String count, String label, BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center, // 내용 중앙 정렬
       children: [
         Text(
-          label,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          count,
+          style: ColorTextStyle.largeNavy(context),
         ),
-        Row(
-          children: [
-            Text(
-              count,
-              style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-            ),
-            SizedBox(width: 4), // "0"과 ">" 사이 간격
-            Text(
-              ">",
-              style: TextStyle(fontSize: 16, color: Colors.blue),
-            ),
-          ],
+        Text(
+          label,
+          style: ColorTextStyle.mediumLightNavy(context),
         ),
       ],
-    ),
-  );
+    );
+  }
+
+  Widget _buildRowItem(String label, String count, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween, // 항목들을 양쪽 끝으로 배치
+        children: [
+          Text(
+            label,
+            style: ColorTextStyle.largeNavy(context),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                count,
+                style: ColorTextStyle.mediumNavy(context),
+              ),
+              const SizedBox(width: 8.0), // "0"과 ">" 사이 간격
+              Text(
+                ">",
+                style: ColorTextStyle.mediumNavy(context),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
+
+
