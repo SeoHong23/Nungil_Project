@@ -105,6 +105,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
                       ? dailyRanking[Random().nextInt(dailyRanking.length)].title
                       : "",
                   hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
+                    border: InputBorder.none
                 ),
                 onSubmitted: (value) => searchTitle(value),
               ),
@@ -160,7 +161,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             // 최신 인기작
             HomeMovieListComponent(
               title: "개봉 최신작",

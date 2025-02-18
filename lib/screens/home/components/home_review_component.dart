@@ -18,16 +18,8 @@ class HomeReviewComponent extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 16),
       child: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.4),
-              spreadRadius: 0,
-              blurRadius: 5.0,
-              offset: Offset(0, 1),
-            ),
-          ],
           borderRadius: BorderRadius.circular(10),
           color: Theme.of(context).cardColor,
         ),
@@ -41,8 +33,8 @@ class HomeReviewComponent extends StatelessWidget {
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 3),
-            Expanded(child: Text(contents)),
-            Text(uName),
+            Expanded(child: Text(contents, style: CustomTextStyle.pretendard,)),
+            Text(uName, style: CustomTextStyle.pretendard,),
           ],
         ),
       ),

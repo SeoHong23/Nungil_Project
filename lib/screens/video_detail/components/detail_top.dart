@@ -249,11 +249,11 @@ class _DetailTopState extends ConsumerState<DetailTop> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(side: BorderSide.none),
-            content: Text("로그인 상태가 아닙니다"),
+            shape: const RoundedRectangleBorder(side: BorderSide.none),
+            content: const Text("로그인 상태가 아닙니다"),
             actions: <Widget>[
               TextButton(
-                child: Text("확인"),
+                child: const Text("확인"),
                 onPressed: () {
                   Navigator.of(context).pop(); // 다이얼로그 닫기
                 },
@@ -358,7 +358,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
 
     if (videoId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("비디오 ID가 없습니다.")),
+        const SnackBar(content: Text("비디오 ID가 없습니다.")),
       );
       return;
     }
@@ -379,7 +379,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
 
     if (videoId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("비디오 ID가 없습니다.")),
+        const SnackBar(content: Text("비디오 ID가 없습니다.")),
       );
       return;
     }
@@ -618,7 +618,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      DefaultColors.black,
+                      Colors.black,
                       Colors.transparent,
                       Theme.of(context)
                           .scaffoldBackgroundColor
@@ -628,7 +628,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                           .withOpacity(0.7),
                       Theme.of(context).scaffoldBackgroundColor,
                     ],
-                    stops: [0, 0.18, 0.35, 0.5, 0.8],
+                    stops: const [0.001, 0.2, 0.35, 0.5, 0.8],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),

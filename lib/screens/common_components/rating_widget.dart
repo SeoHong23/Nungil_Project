@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:nungil/theme/common_theme.dart';
@@ -5,8 +6,7 @@ import 'package:nungil/theme/common_theme.dart';
 class RatingExample extends StatefulWidget {
   final Function(double) onRatingSelected;
 
-  const RatingExample({Key? key, required this.onRatingSelected})
-      : super(key: key);
+  const RatingExample({super.key, required this.onRatingSelected});
 
   @override
   _RatingExampleState createState() => _RatingExampleState();
@@ -20,27 +20,24 @@ class _RatingExampleState extends State<RatingExample> {
     return Column(
       children: [
         Text(
-          '별점: ${_rating.toStringAsFixed(1)}',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: DefaultColors.black,
-          ),
+          '평점 ${_rating.toStringAsFixed(1)}점',
+          style: ColorTextStyle.largeNavy(context),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         RatingBar.builder(
           initialRating: _rating,
-          minRating: 1,
+          minRating: 0.5,
           direction: Axis.horizontal,
           allowHalfRating: true,
           itemCount: 5,
-          glow: false, // 그림자 효과 제거
-          itemSize: 40,
+          glow: false,
+          // 그림자 효과 제거
+          itemSize: 30,
           unratedColor: iconThemeColorDark[300],
-          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-          itemBuilder: (context, _) => Icon(
-            Icons.star,
-            color: Colors.amber,
+          itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+          itemBuilder: (context, _) => const Icon(
+            CupertinoIcons.star_fill,
+            color: Colors.orangeAccent,
           ),
           onRatingUpdate: (rating) {
             setState(() {
