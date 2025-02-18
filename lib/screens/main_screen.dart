@@ -12,6 +12,10 @@ import 'package:nungil/screens/video_detail/video_detail_page.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/theme/common_theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../util/logger.dart';
+import 'admin/admin_page.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
@@ -33,7 +37,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   }
 
   List<Widget> _screens = [
-    // HomePage(),
+    HomePage(),
     RankingPage(),
     ListPage(),
     UserPage(),
@@ -52,6 +56,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     // 로그인 여부를 확인합니다.
     final isLoggedIn =
         ref.watch(authProvider.select((state) => state.isAuthenticated));
+    final isAdmin =
+        ref.watch(authProvider.select((state) => state.isAdmin)) ?? false;
 
     return SafeArea(
       child: Scaffold(
@@ -68,7 +74,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   HomePage(),
                   RankingPage(),
                   ListPage(),
-                  isLoggedIn ? LoginView() : UserPage(),
+                  isLoggedIn
+                      ? (isAdmin ? AdminPage() : LoginView())
+                      : UserPage(),
                 ],
               ),
               bottomNavigationBar: BottomNavigationBar(
@@ -78,7 +86,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   changePages(index);
                   _pageController.jumpToPage(_selectedIndex);
                 },
-                items: const [
+                items: [
                   BottomNavigationBarItem(
                     label: '홈',
                     icon: Icon(CupertinoIcons.house_fill),
@@ -91,10 +99,15 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                     label: '리스트',
                     icon: Icon(CupertinoIcons.square_list_fill),
                   ),
-                  BottomNavigationBarItem(
-                    label: '유저',
-                    icon: Icon(FontAwesomeIcons.solidUser),
-                  ),
+                  isAdmin
+                      ? BottomNavigationBarItem(
+                          label: '관리자',
+                          icon: Icon(FontAwesomeIcons.solidStar),
+                        )
+                      : BottomNavigationBarItem(
+                          label: '유저',
+                          icon: Icon(FontAwesomeIcons.solidUser),
+                        ),
                 ],
               ),
             ),
