@@ -1,1 +1,1 @@
-import 'package:nungil/models/review/review.dart';
+import 'package:nungil/models/review/review_model.dart';
