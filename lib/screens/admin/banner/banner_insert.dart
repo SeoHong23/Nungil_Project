@@ -41,10 +41,11 @@ class _BannerInsertState extends State<BannerInsert> {
 
     try {
       final repository = BannerRepository();
-      bool result = repository.fetchBanner(_image, name) as bool;
+      bool result = await repository.fetchBanner(_image, name);
       if (result) {
-        SnackBar(content: Text("업로드 성공"));
-        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("✅ 업로드 성공.")),
+        );
       } else {
         throw Exception("업로드 실패");
       }
@@ -106,7 +107,7 @@ class _BannerInsertState extends State<BannerInsert> {
                         ? Image.file(
                             _image!,
                             height: 100,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fill,
                           )
                         : Container(
                             height: 100,
@@ -155,7 +156,7 @@ class _BannerInsertState extends State<BannerInsert> {
                             clipBehavior: Clip.hardEdge,
                             child: Image.file(
                               _image!,
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fill,
                             ),
                           ),
                         )

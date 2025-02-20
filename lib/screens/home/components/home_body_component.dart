@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nungil/data/repository/Banner_repository.dart';
 import 'package:nungil/data/repository/video_list_repository.dart';
+import 'package:nungil/models/admin/banner_model.dart';
 import 'package:nungil/models/home/home_review_tmp.dart';
 import 'package:nungil/models/list/video_list_model.dart';
 import 'package:nungil/models/list/video_list_tmp.dart';
@@ -10,6 +12,7 @@ import 'package:nungil/models/ranking/video_rank_model.dart';
 import 'package:nungil/screens/common_components/video_list_component.dart';
 import 'package:nungil/screens/search/search_page.dart';
 import 'package:nungil/theme/common_theme.dart';
+import 'package:nungil/util/my_http.dart';
 
 import '../../common_components/ranking_list_component.dart';
 import 'home_Movie_list_component.dart';
@@ -29,6 +32,7 @@ class HomeBodyComponent extends StatefulWidget {
 class _HomeBodyComponentState extends State<HomeBodyComponent> {
   List<VideoRankModel> dailyRanking = [];
   List<VideoRankModel> weeklyRanking = [];
+  BannerModel? randomAd;
   List<VideoListModel> randomMovies = [];
   List<VideoListModel> latestMovies = [];
   bool isLoading = true;
@@ -51,6 +55,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
   Future<void> fetchHomeData() async {
     try {
       final repository = VideoListRepository();
+      final bannerRepository = BannerRepository();
 
       // ✅ 첫 번째 요청 (일일 랭킹)
       final dailyData = await repository.fetchRanksDaily();
@@ -58,6 +63,9 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
 
       // ✅ 두 번째 요청 (주간 랭킹)
       final weeklyData = await repository.fetchRanksWeekly();
+      await Future.delayed(Duration(milliseconds: 50));
+
+      final adData = await bannerRepository.randomBanner();
       await Future.delayed(Duration(milliseconds: 50));
 
       // ✅ 세 번째 요청 (랜덤 추천작)
@@ -71,6 +79,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
       setState(() {
         dailyRanking = dailyData;
         weeklyRanking = weeklyData;
+        randomAd = adData;
         randomMovies = randomData;
         latestMovies = latestData;
         isLoading = false;
@@ -85,6 +94,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
 
   @override
   Widget build(BuildContext context) {
+    String URL = "http://13.239.238.92:8080/api/banner/image/";
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SingleChildScrollView(
@@ -116,16 +126,35 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
             ),
             SizedBox(height: 16),
             //광고
-            Container(
-              height: 100,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text("광고"),
-              ),
-            ),
+
+            randomAd != null
+                ? Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      height: 100,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10), // 둥근 모서리
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      child: Image.network(
+                        URL + randomAd!.fileName,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      height: 100,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(Icons.image, size: 50, color: Colors.grey),
+                    ),
+                  ),
 
             SizedBox(height: 16),
             // 오늘의 랜덤 추천작

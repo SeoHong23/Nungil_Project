@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nungil/screens/admin/banner/banner_insert.dart';
+import 'package:nungil/screens/admin/banner/banner_list.dart';
 
 class AdminBannerComponent extends StatelessWidget {
   final String title;
@@ -32,7 +33,12 @@ class AdminBannerComponent extends StatelessWidget {
             style: Theme.of(context).textTheme.titleMedium,
           ),
           onTap: () {
-            // 상세 메뉴 클릭 시 동작
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BannerList(),
+              ),
+            );
           },
         ),
       ],
