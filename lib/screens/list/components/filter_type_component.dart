@@ -23,40 +23,62 @@ class _FilterTypeComponentState extends State<FilterTypeComponent> {
 
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          padding: EdgeInsets.all(16),
-          height: 300,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "$filterType 선택",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Divider(),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: options.length,
-                  itemBuilder: (context, index) {
-                    String option = options[index];
-                    bool isSelected =
-                        widget.selectedFilters[filterType]?.contains(option) ??
-                            false;
-                    return ListTile(
-                      title: Text(option),
-                      trailing: isSelected
-                          ? Icon(Icons.check_box, color: Colors.green)
-                          : Icon(Icons.check_box_outline_blank),
-                      onTap: () {
-                        _toggleFilter(filterType, option);
-                        Navigator.pop(context); // 다이얼로그 닫기
-                      },
-                    );
-                  },
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor, // ✅ 바텀시트 배경색 지정
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(20),
+            ),
+          ),
+          child: DraggableScrollableSheet(
+            initialChildSize: 0.7,
+            minChildSize: 0.7,
+            maxChildSize: 0.7,
+            expand: false, // ✅ 바텀시트가 전체 화면을 덮지 않도록 설정
+            builder: (context, scrollController) {
+              return Container(
+                padding: EdgeInsets.all(16),
+                height: 300,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "$filterType 선택",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Divider(),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: options.length,
+                        itemBuilder: (context, index) {
+                          String option = options[index];
+                          bool isSelected = widget.selectedFilters[filterType]
+                                  ?.contains(option) ??
+                              false;
+                          return ListTile(
+                            title: Text(
+                              option,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            trailing: isSelected
+                                ? Icon(Icons.check_box, color: Colors.green)
+                                : Icon(Icons.check_box_outline_blank),
+                            onTap: () {
+                              _toggleFilter(filterType, option);
+                              Navigator.pop(context); // 다이얼로그 닫기
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+              );
+            },
           ),
         );
       },

@@ -54,35 +54,47 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
 
   Future<void> fetchHomeData() async {
     try {
-      const repository = VideoListRepository();
-      const bannerRepository = BannerRepository();
+      final repository = VideoListRepository();
+      final bannerRepository = BannerRepository();
 
       // ✅ 첫 번째 요청 (일일 랭킹)
       final dailyData = await repository.fetchRanksDaily();
+      setState(() {
+        dailyRanking = dailyData;
+      });
+
       await Future.delayed(const Duration(milliseconds: 50)); // ⏳ 요청 간 50ms 지연
 
       // ✅ 두 번째 요청 (주간 랭킹)
       final weeklyData = await repository.fetchRanksWeekly();
+      setState(() {
+        weeklyRanking = weeklyData;
+      });
+
       await Future.delayed(const Duration(milliseconds: 50));
 
+      // ✅ 세 번째 요청 (랜덤 배너)
       final adData = await bannerRepository.randomBanner();
-      await Future.delayed(Duration(milliseconds: 50));
+      setState(() {
+        randomAd = adData;
+      });
 
-      // ✅ 세 번째 요청 (랜덤 추천작)
-      final randomData = await repository.fetchVideosRandom(10);
       await Future.delayed(const Duration(milliseconds: 50));
 
-      // ✅ 네 번째 요청 (최신 영화)
+      // ✅ 네 번째 요청 (랜덤 추천작)
+      final randomData = await repository.fetchVideosRandom(10);
+      setState(() {
+        randomMovies = randomData;
+      });
+
+      await Future.delayed(const Duration(milliseconds: 50));
+
+      // ✅ 마지막 요청 (최신 영화)
       final latestData =
           await repository.fetchVideosWithFilter(0, 10, {}, "DateDESC");
-
       setState(() {
-        dailyRanking = dailyData;
-        weeklyRanking = weeklyData;
-        randomAd = adData;
-        randomMovies = randomData;
         latestMovies = latestData;
-        isLoading = false;
+        isLoading = false; // 모든 데이터가 불러와졌으면 로딩 상태 변경
       });
     } catch (e) {
       print("Error fetching home data: $e");
@@ -107,16 +119,17 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
               child: TextField(
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search,
-                      color: Theme.of(context).colorScheme.primary),
-                  fillColor: Theme.of(context).cardColor, // 채우기 색
-                  filled: true, // 채우기 유무 default = false
-                  hintText: dailyRanking.isNotEmpty
-                      ? dailyRanking[Random().nextInt(dailyRanking.length)].title
-                      : "",
-                  hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
-                    border: InputBorder.none
-                ),
+                    prefixIcon: Icon(Icons.search,
+                        color: Theme.of(context).colorScheme.primary),
+                    fillColor: Theme.of(context).cardColor, // 채우기 색
+                    filled: true, // 채우기 유무 default = false
+                    hintText: dailyRanking.isNotEmpty
+                        ? dailyRanking[Random().nextInt(dailyRanking.length)]
+                            .title
+                        : "",
+                    hintStyle:
+                        TextStyle(color: Theme.of(context).colorScheme.primary),
+                    border: InputBorder.none),
                 onSubmitted: (value) => searchTitle(value),
               ),
             ),
@@ -133,31 +146,28 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
             //광고
 
             randomAd != null
-                ? Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Container(
-                      height: 100,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10), // 둥근 모서리
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: Image.network(
-                        URL + randomAd!.fileName,
-                        fit: BoxFit.fill,
-                      ),
+                ? Container(
+                    height: 100,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10), // 둥근 모서리
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: Image.network(
+                      URL + randomAd!.fileName,
+                      fit: BoxFit.fill,
                     ),
                   )
-                : Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Container(
-                      height: 100,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(Icons.image, size: 50, color: Colors.grey),
+                : Container(
+                    height: 100,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10), // 둥근 모서리
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: Image.asset(
+                      "assets/images/banner/banner1.png",
+                      fit: BoxFit.fill,
                     ),
                   ),
 
