@@ -54,6 +54,7 @@ class _UserInfoState extends State<UserInfo> {
   // 성별 선택 상태 추가
   bool isFemaleSelected = false;
   bool isMaleSelected = false;
+  bool isNoneSelected = false;
 
   @override
   void initState() {
@@ -97,7 +98,7 @@ class _UserInfoState extends State<UserInfo> {
   void _checkButtonState() {
     setState(() {
       isButtonEnabled = _nicknameController.text.isNotEmpty &&
-          (isFemaleSelected || isMaleSelected) &&
+          (isFemaleSelected || isMaleSelected || isNoneSelected) &&
           _selectedYear != null;
     });
   }
@@ -108,12 +109,20 @@ class _UserInfoState extends State<UserInfo> {
       if (gender == 'female') {
         isFemaleSelected = !isFemaleSelected; // 여성 선택 상태 토글
         if (isFemaleSelected) {
-          isMaleSelected = false; // 남성 선택 취소
+          isMaleSelected = false; // 선택 취소
+          isNoneSelected = false; // 선택 취소
         }
       } else if (gender == 'male') {
         isMaleSelected = !isMaleSelected; // 남성 선택 상태 토글
         if (isMaleSelected) {
-          isFemaleSelected = false; // 여성 선택 취소
+          isFemaleSelected = false; // 선택 취소
+          isNoneSelected = false; // 선택 취소
+        }
+      }else if(gender == 'none') {
+        isNoneSelected = !isNoneSelected; // 선택 상태 토글
+        if (isNoneSelected) {
+          isMaleSelected = false; // 선택 취소
+          isFemaleSelected = false; // 선택 취소
         }
       }
       _checkButtonState();
@@ -128,7 +137,7 @@ class _UserInfoState extends State<UserInfo> {
     if (!isButtonEnabled) return;
 
     final nickname = _nicknameController.text;
-    final gender = isFemaleSelected ? 'FEMALE' : 'MALE';
+    final gender = isFemaleSelected ? 'FEMALE' : isMaleSelected?'MALE':'NONE';
     final birthDate = _selectedYear;
 
     print('전송할 데이터: ${gender}, ${birthDate}, ${nickname}');
@@ -330,6 +339,30 @@ class _UserInfoState extends State<UserInfo> {
                         ),
                       ),
                     ),
+                    const SizedBox(width: 8), // 버튼 간 간격
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => _toggleGenderSelection('none'),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: isNoneSelected
+                              ? Theme.of(context).colorScheme.background // 선택 색상
+                              : Theme.of(context).colorScheme.surface, // 기본 색상
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text('기타',style: ColorTextStyle.smallNavy(context),),
+                            Text('그렇게 간단하지 않음',style: ColorTextStyle.xxSmallLightNavy(context),),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 24.0),
@@ -357,7 +390,7 @@ class _UserInfoState extends State<UserInfo> {
                   },
                   style: ColorTextStyle.smallNavy(context),
                   decoration: InputDecoration(
-                    hintText: '출생 연도',
+                    hintText: '연도 선택',
                     hintStyle: ColorTextStyle.smallLightNavy(context),
                     filled: true,
                     fillColor: Theme.of(context).colorScheme.surface,

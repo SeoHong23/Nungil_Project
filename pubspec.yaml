@@ -67,7 +67,7 @@ dependencies:
   path_provider: ^2.1.5 # 경로 찾기
   permission_handler: ^11.3.1 # 권한 요청
   external_path:
-    path: packages/external_path
+    path: packages/external_path # 외부 파일 경로
   path: ^1.8.3
 
 

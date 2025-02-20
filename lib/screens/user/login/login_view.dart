@@ -156,23 +156,17 @@ class LoginView extends ConsumerWidget {
                 height: 90,
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor, // 연한 회색 배경색
-                  borderRadius: BorderRadius.circular(12), // 둥근 모서리
+                  borderRadius: BorderRadius.circular(8.0), // 둥근 모서리
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 균등 정렬
                   children: [
                     _buildCategoryItem(favoriteCount, "찜했어요",context),
-                    Container(
-                      width: 1, // 구분선의 두께
-                      height: 40, // 구분선의 높이
-                      color: Theme.of(context).colorScheme.secondary, // 구분선 색상
-                    ),
+                    VerticalDivider(color: Theme.of(context).colorScheme.secondary,
+                      indent: 15,endIndent: 15,),
                     _buildCategoryItem(watchingCount, "보는중",context),
-                    Container(
-                      width: 1, // 구분선의 두께
-                      height: 40, // 구분선의 높이
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
+                    VerticalDivider(color: Theme.of(context).colorScheme.secondary,
+                      indent: 15,endIndent: 15,),
                     _buildCategoryItem(watchedCount, "봤어요",context),
                   ],
                 ),
@@ -188,7 +182,7 @@ class LoginView extends ConsumerWidget {
                     print("본 작품 통계 클릭됨!");
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MainScreen()),
+                      MaterialPageRoute(builder: (context) => const MainScreen()),
                     );
                   },
                   child: Text(
@@ -203,7 +197,7 @@ class LoginView extends ConsumerWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(12), // 둥근 모서리
+                  borderRadius: BorderRadius.circular(8.0), // 둥근 모서리
                 ),
                 child: Column(
                   children: [
