@@ -33,9 +33,9 @@ class VideoListRepository {
   }
 
   Future<List<VideoListModel>> fetchVideosWithFilter(int page, int size,
-      Map<String, Set<String>> filter, String sortOrder) async {
+      Map<String, Set<String>> filter, String sortOrder, bool isNotOpen) async {
     Map<String, dynamic> queryParams =
-        _buildQueryParams(page, size, filter, sortOrder);
+        _buildQueryParams(page, size, filter, sortOrder, isNotOpen);
     try {
       // ✅ API 호출 (JSON 데이터 직접 받음)
       Response response =
@@ -117,12 +117,13 @@ class VideoListRepository {
     }
   }
 
-  Map<String, dynamic> _buildQueryParams(
-      int page, int size, Map<String, Set<String>> filters, String sortOrder) {
+  Map<String, dynamic> _buildQueryParams(int page, int size,
+      Map<String, Set<String>> filters, String sortOrder, bool isNotOpen) {
     Map<String, dynamic> queryParams = {
       "page": page,
       "size": size,
       "orderBy": sortOrder,
+      "isNotOpen": isNotOpen
     };
 
     filters.forEach(

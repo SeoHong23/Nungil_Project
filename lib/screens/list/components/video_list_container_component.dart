@@ -9,9 +9,11 @@ import '../../common_components/video_list_component.dart';
 class VideoListContainerComponent extends ConsumerStatefulWidget {
   final Map<String, Set<String>> selectedFilters;
   final String sortOrder;
+  final bool isNotOpen;
   const VideoListContainerComponent({
     required this.sortOrder,
     required this.selectedFilters,
+    required this.isNotOpen,
     super.key,
   });
 
@@ -49,9 +51,9 @@ class _VideoListContainerComponentState
 
   /// ✅ **필터 적용된 데이터 불러오기**
   void _fetchVideos() {
-    ref
-        .read(videoNotifierProvider.notifier)
-        .fetchMoreVideosWithFilter(widget.selectedFilters, widget.sortOrder);
+    ref.read(videoNotifierProvider.notifier).fetchMoreVideosWithFilter(
+        widget.selectedFilters, widget.sortOrder,
+        isNotOpen: widget.isNotOpen);
   }
 
   void _onScroll() {

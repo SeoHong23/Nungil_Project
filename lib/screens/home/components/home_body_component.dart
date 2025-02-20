@@ -91,7 +91,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
 
       // ✅ 마지막 요청 (최신 영화)
       final latestData =
-          await repository.fetchVideosWithFilter(0, 10, {}, "DateDESC");
+          await repository.fetchVideosWithFilter(0, 10, {}, "DateDESC", false);
       setState(() {
         latestMovies = latestData;
         isLoading = false; // 모든 데이터가 불러와졌으면 로딩 상태 변경
