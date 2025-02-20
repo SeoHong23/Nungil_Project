@@ -82,13 +82,13 @@ class BannerRepository {
       Response response = await dio.get('/api/banner/random');
 
       if (response.statusCode == 200) {
-        return response.data as BannerModel;
+        return BannerModel.fromJson(response.data);
       } else {
         throw Exception('Invalid response format');
       }
     } catch (e) {
       print("Error fetching videos: $e");
-      throw Exception('Failed to load videos');
+      throw Exception('Failed to load banner');
     }
   }
 }
