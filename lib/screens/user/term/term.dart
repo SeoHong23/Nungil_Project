@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nungil/theme/common_theme.dart';
 
 import '../register/write_email.dart';
 
@@ -46,45 +47,36 @@ class _MainScreenState extends State<Term> {
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10),
-                  child: Text(
-                    '약관 동의',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child:
+                      Text('약관 동의', style: ColorTextStyle.largeNavy(context)),
                 ),
               ),
               const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.only(left: 10),
-                child: Text(
-                  '가입을 하시려면 다음의 정책에 대한\n동의가 필요합니다.',
-                  style: TextStyle(
-                    color: Colors.black54, // 약간 연한 색상
-                    fontSize: 16,
-                  ),
-                ),
+                child: Text('가입을 하시려면 다음의 정책에 대한 동의가 필요합니다.',
+                    style: ColorTextStyle.mediumLightNavy(context)),
               ),
               const SizedBox(height: 16),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Checkbox(
                     value: isChecked,
                     onChanged: (bool? value) {
                       updateIndividualCheckboxes(value ?? false);
                     },
-                    activeColor: const Color(0xFF0066CC),
-                    checkColor: Colors.white,
-                  ),
-                  const Text(
-                    '모두 동의합니다.',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
                     ),
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 2,
+                    ),
+                    activeColor: Theme.of(context).colorScheme.secondary,
+                    checkColor: Theme.of(context).colorScheme.surface,
                   ),
+                  Text('모두 동의합니다.', style: ColorTextStyle.mediumNavy(context)),
                 ],
               ),
               const SizedBox(height: 8),
@@ -98,6 +90,7 @@ class _MainScreenState extends State<Term> {
               ),
               const SizedBox(height: 16),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Checkbox(
                     value: isChecked1,
@@ -107,19 +100,22 @@ class _MainScreenState extends State<Term> {
                         updateAllAgreeCheckbox();
                       });
                     },
-                    activeColor: const Color(0xFF0066CC),
-                    checkColor: Colors.white,
-                  ),
-                  const Text(
-                    '[필수] 이용약관에 동의합니다.',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
                     ),
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 2,
+                    ),
+                    activeColor: Theme.of(context).colorScheme.secondary,
+                    checkColor: Theme.of(context).colorScheme.surface,
                   ),
+                  Text('[필수] 이용약관에 동의합니다.',
+                      style: ColorTextStyle.mediumNavy(context)),
                 ],
               ),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Checkbox(
                     value: isChecked2,
@@ -129,19 +125,22 @@ class _MainScreenState extends State<Term> {
                         updateAllAgreeCheckbox();
                       });
                     },
-                    activeColor: const Color(0xFF0066CC),
-                    checkColor: Colors.white,
-                  ),
-                  const Text(
-                    '[필수] 개인정보 수집 및 이용에 동의합니다.',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
                     ),
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 2,
+                    ),
+                    activeColor: Theme.of(context).colorScheme.secondary,
+                    checkColor: Theme.of(context).colorScheme.surface,
                   ),
+                  Text('[필수] 개인정보 수집 및 이용에 동의합니다.',
+                      style: ColorTextStyle.mediumNavy(context)),
                 ],
               ),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Checkbox(
                     value: isChecked3,
@@ -151,16 +150,18 @@ class _MainScreenState extends State<Term> {
                         updateAllAgreeCheckbox();
                       });
                     },
-                    activeColor: const Color(0xFF0066CC),
-                    checkColor: Colors.white,
-                  ),
-                  const Text(
-                    '[필수] 본인은 만 14세 이상입니다.',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
                     ),
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 2,
+                    ),
+                    activeColor: Theme.of(context).colorScheme.secondary,
+                    checkColor: Theme.of(context).colorScheme.surface,
                   ),
+                  Text('[필수] 본인은 만 14세 이상입니다.',
+                      style: ColorTextStyle.mediumNavy(context)),
                 ],
               ),
               const Spacer(),
@@ -183,20 +184,21 @@ class _MainScreenState extends State<Term> {
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         backgroundColor:
                             (isChecked1 && isChecked2 && isChecked3)
-                                ? const Color(0xFF0066CC) // 기본 활성화 색상
-                                : const Color(0xFF5F92D0), // 비활성화 색상
-                        disabledBackgroundColor: const Color(0xFF5F92D0),
+                                ? Theme.of(context).colorScheme.secondary
+                                : Theme.of(context).cardColor, // 비활성화 색상
+                        disabledBackgroundColor: Theme.of(context).cardColor,
                         foregroundColor:
                             (isChecked1 && isChecked2 && isChecked3)
-                                ? Colors.white // 활성화되면 텍스트 색은 흰색
-                                : Colors.white70, // 비활성화되면 살짝 어두운 흰색
-                        disabledForegroundColor: Colors.white54,
+                                ? Theme.of(context).colorScheme.surface // 활성화
+                                : Theme.of(context).colorScheme.primary, // 비활성화
+                        disabledForegroundColor:
+                            Theme.of(context).colorScheme.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6),
                         )),
                     child: const Text(
                       '다음',
-                      style: TextStyle(fontSize: 16),
+                      style: CustomTextStyle.pretendard,
                     ),
                   ),
                 ),

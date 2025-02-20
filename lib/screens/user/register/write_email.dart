@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nungil/theme/common_theme.dart';
 import 'password.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -122,11 +123,7 @@ class _WriteEmailState extends State<WriteEmail> {
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
                       '이메일',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: ColorTextStyle.mediumNavy(context),
                     ),
                   ),
                 ),
@@ -151,21 +148,22 @@ class _WriteEmailState extends State<WriteEmail> {
                             !isValidEmail(_controller.text); // 이메일 유효성 검사
                         emailExistsError = false; // 이메일 입력 중에는 중복 에러 초기화
                       },
+                      style: ColorTextStyle.smallNavy(context),
                       decoration: InputDecoration(
                         hintText: '이메일 주소 입력',
-                        hintStyle: const TextStyle(
-                          color: Colors.grey,
-                        ),
+                        hintStyle: ColorTextStyle.smallLightNavy(context),
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surface,
                         border: const OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: hasError ? Colors.red : Colors.grey.shade600,
+                            color: hasError ? Colors.red : Theme.of(context).colorScheme.background,
                             width: 1.0,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: hasError ? Colors.red : Colors.black,
+                            color: hasError ? Colors.red : Theme.of(context).colorScheme.primary,
                           ),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
@@ -174,19 +172,19 @@ class _WriteEmailState extends State<WriteEmail> {
                         ),
                         suffixIcon: _controller.text.isNotEmpty
                             ? IconButton(
-                                icon: const Icon(Icons.clear),
+                                icon: Icon(Icons.close_rounded,color: Theme.of(context).colorScheme.secondary,size: 18,),
                                 onPressed: clearText,
                               )
                             : null, // 텍스트가 있을 때만 X 버튼 보이기
-                      ),
+                      )
                     ),
                   ),
                 ),
                 const SizedBox(height: 8),
                 // 이메일 형식 오류 메시지
                 if (hasError)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       '이메일 형식이 올바르지 않습니다.',
                       style: TextStyle(
@@ -197,8 +195,8 @@ class _WriteEmailState extends State<WriteEmail> {
                   ),
                 // 이메일 중복 오류 메시지
                 if (emailExistsError)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       '이미 가입된 이메일입니다. 이메일 로그인을 시도해주세요.',
                       style: TextStyle(
@@ -224,16 +222,16 @@ class _WriteEmailState extends State<WriteEmail> {
                           },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 12),
-                            backgroundColor: Colors.white,
+                            backgroundColor: Theme.of(context).cardColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6),
-                              side: BorderSide(color: Colors.grey),
+                              side: BorderSide(color: Theme.of(context).colorScheme.background),
                             ),
-                            minimumSize: Size(117, 45),
+                            minimumSize: const Size(117, 45),
                           ),
                           child: Text(
                             emailDomains[index],
-                            style: TextStyle(color: Colors.black),
+                            style: ColorTextStyle.smallNavy(context),
                           ),
                         ),
                       );
@@ -263,18 +261,20 @@ class _WriteEmailState extends State<WriteEmail> {
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: isButtonEnabled
-                            ? const Color(0xFF0066CC) // 활성화 색상
-                            : const Color(0xFF5F92D0), // 비활성화 색상
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context).cardColor,
+                        disabledBackgroundColor: Theme.of(context).cardColor,
                         foregroundColor: isButtonEnabled
-                            ? Colors.white // 활성화된 상태에서 텍스트는 흰색
-                            : Colors.white70, // 비활성화된 상태에서 텍스트는 약간 어두운 흰색
+                            ? Theme.of(context).colorScheme.surface // 활성화
+                            : Theme.of(context).colorScheme.primary, // 비활성화
+                        disabledForegroundColor: Theme.of(context).colorScheme.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6),
                         ),
                       ),
                       child: const Text(
                         '다음',
-                        style: TextStyle(fontSize: 16),
+                        style: CustomTextStyle.pretendard
                       ),
                     ),
                   ),

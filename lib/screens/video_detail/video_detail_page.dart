@@ -28,11 +28,16 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
   final ScrollController _scrollController = ScrollController();
   double _opacity = 0.0; // 초기 투명도
 
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _scrollController.addListener(_scrollListener);
+  }
+
+  void _switchTab(int index) {
+    _tabController.animateTo(index);
   }
 
   void _scrollListener() {
@@ -83,9 +88,9 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: const Icon(
+            icon: Icon(
               CupertinoIcons.left_chevron,
-              color: iconThemeColor,
+              color: Theme.of(context).primaryColor,
             ),
           ),
           actions: [
@@ -102,9 +107,9 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
             ),
             IconButton(
               onPressed: () {},
-              icon: const Icon(
+              icon: Icon(
                 Icons.more_vert_outlined,
-                color: iconThemeColor,
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ],
@@ -139,7 +144,7 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
                           child: Text("리뷰 ${video.reviewCnt}",
                               style: CustomTextStyle.pretendard)),
                       Tab(
-                          child: Text("영상/이미지 ${video.stlls.length}",
+                          child: Text("영상/이미지 ${video.mediaList.length}",
                               style: CustomTextStyle.pretendard))
                     ],
                     indicatorColor: Theme.of(context).colorScheme.secondary,
@@ -162,6 +167,7 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
                         ? DetailTapInfo(
                             key: const ValueKey('data'),
                             item: video,
+                      changeTab: _switchTab,
                           )
                         : const ShimmerInfo(
                             key: ValueKey('shimmer'),

@@ -54,23 +54,23 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
 
   Future<void> fetchHomeData() async {
     try {
-      final repository = VideoListRepository();
-      final bannerRepository = BannerRepository();
+      const repository = VideoListRepository();
+      const bannerRepository = BannerRepository();
 
       // ✅ 첫 번째 요청 (일일 랭킹)
       final dailyData = await repository.fetchRanksDaily();
-      await Future.delayed(Duration(milliseconds: 50)); // ⏳ 요청 간 50ms 지연
+      await Future.delayed(const Duration(milliseconds: 50)); // ⏳ 요청 간 50ms 지연
 
       // ✅ 두 번째 요청 (주간 랭킹)
       final weeklyData = await repository.fetchRanksWeekly();
-      await Future.delayed(Duration(milliseconds: 50));
+      await Future.delayed(const Duration(milliseconds: 50));
 
       final adData = await bannerRepository.randomBanner();
       await Future.delayed(Duration(milliseconds: 50));
 
       // ✅ 세 번째 요청 (랜덤 추천작)
       final randomData = await repository.fetchVideosRandom(10);
-      await Future.delayed(Duration(milliseconds: 50));
+      await Future.delayed(const Duration(milliseconds: 50));
 
       // ✅ 네 번째 요청 (최신 영화)
       final latestData =
@@ -102,21 +102,26 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 검색창
-            TextField(
-              decoration: InputDecoration(
-                prefixIcon: Icon(FontAwesomeIcons.magnifyingGlass,
-                    color: Theme.of(context).iconTheme.color),
-                fillColor: Theme.of(context).cardColor, // 채우기 색
-                filled: true, // 채우기 유무 default = false
-                hintText: dailyRanking.isNotEmpty
-                    ? dailyRanking[Random().nextInt(dailyRanking.length)].title
-                    : "",
-                hintStyle: TextStyle(color: DefaultColors.grey),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4.0),
+              child: TextField(
+                textAlignVertical: TextAlignVertical.center,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search,
+                      color: Theme.of(context).colorScheme.primary),
+                  fillColor: Theme.of(context).cardColor, // 채우기 색
+                  filled: true, // 채우기 유무 default = false
+                  hintText: dailyRanking.isNotEmpty
+                      ? dailyRanking[Random().nextInt(dailyRanking.length)].title
+                      : "",
+                  hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
+                    border: InputBorder.none
+                ),
+                onSubmitted: (value) => searchTitle(value),
               ),
-              onSubmitted: (value) => searchTitle(value),
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             // 오늘 랭킹 3위까지
             // 된다면 주간 월간 랭킹 3초에 한번찍 돌아가며 나오기
             HomeRankingComponent(
@@ -124,7 +129,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
               weeklyRanking: weeklyRanking,
               isLoading: isLoading,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             //광고
 
             randomAd != null
@@ -156,14 +161,14 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
                     ),
                   ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             // 오늘의 랜덤 추천작
             HomeMovieListComponent(
               title: "당신을 위한 랜덤 추천작",
               type: "Random",
               videoList: randomMovies,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             // 최신 리뷰
             Text(
               "최신 리뷰",
@@ -185,7 +190,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             // 최신 인기작
             HomeMovieListComponent(
               title: "개봉 최신작",

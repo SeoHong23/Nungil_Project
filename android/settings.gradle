@@ -23,3 +23,6 @@ plugins {
 }
 
 include ":app"
+include ':external_path'
+project(':external_path').projectDir = new File(rootProject.projectDir, '../packages/external_path/android')
+

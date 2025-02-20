@@ -34,7 +34,7 @@ class _RankingPageState extends ConsumerState<RankingPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SearchPage(),
+                  builder: (context) => const SearchPage(),
                 ),
               );
             },
@@ -42,7 +42,7 @@ class _RankingPageState extends ConsumerState<RankingPage> {
           ),
         ],
       ),
-      body: RankingBodyComponent(),
+      body: const RankingBodyComponent(),
     );
   }
 }

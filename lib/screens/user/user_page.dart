@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nungil/screens/user/login/email_login.dart';
+import 'package:nungil/theme/common_theme.dart';
 
 import 'term/term.dart';
 
@@ -20,11 +21,11 @@ class UserPage extends StatelessWidget {
                 width: 270,
                 height: 270,
               ),
-              SizedBox(height: 12),
-              Text(
+              const SizedBox(height: 12),
+              const Text(
                 '최근에 이메일로 로그인했어요!',
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               SizedBox(
                 width: 350, // 기존 버튼과 동일한 크기 유지
                 child: GestureDetector(
@@ -37,7 +38,7 @@ class UserPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               SizedBox(
                 width: 350,
                 child: ElevatedButton(
@@ -65,12 +66,12 @@ class UserPage extends StatelessWidget {
                           height: 26,
                         ),
                       ),
-                      Expanded(
+                      const Expanded(
                         child: Center(
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 20.0),
+                            padding: EdgeInsets.only(right: 20.0),
                             child: Text(
-                              '네이버로 시작하기',
+                              '네이버 로그인',
                               style: TextStyle(
                                 fontSize: 15,
                                 color: Colors.white, // 글자 색상 설정
@@ -84,7 +85,7 @@ class UserPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -97,17 +98,16 @@ class UserPage extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Text(
-                      '이메일 로그인    ',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal:8.0),
+                      child: Text(
+                        '이메일 로그인',
+                        style: ColorTextStyle.mediumNavy(context),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       '|',
                       style: TextStyle(
@@ -126,12 +126,11 @@ class UserPage extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Text(
-                      '   이메일 회원가입',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal:8.0),
+                      child: Text(
+                        '이메일 회원가입',
+                          style: ColorTextStyle.mediumNavy(context)
                       ),
                     ),
                   ),

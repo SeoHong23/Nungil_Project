@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nungil/theme/common_theme.dart';
 import '../../main_screen.dart';
 import 'login_view.dart';
 import 'package:nungil/providers/auth_provider.dart';
@@ -157,29 +158,30 @@ class _EmailLoginState extends ConsumerState<EmailLogin> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 16),
-              const Text(
+              Text(
                 '이메일',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: ColorTextStyle.mediumNavy(context),
               ),
               const SizedBox(height: 8),
               TextField(
                 controller: emailController,
                 onChanged: (text) => validateEmail(),
+                style: ColorTextStyle.smallNavy(context),
                 decoration: InputDecoration(
                   hintText: '이메일 주소를 입력하세요',
+                  hintStyle: ColorTextStyle.smallLightNavy(context),
+                  filled: true,
+                  fillColor: Theme.of(context).colorScheme.surface,
                   border: const OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: emailHasError ? Colors.red : Colors.grey.shade600,
+                      color: emailHasError ? Colors.red : Theme.of(context).colorScheme.background,
                       width: 1.0,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: emailHasError ? Colors.red : Colors.black,
+                      color: emailHasError ? Colors.red : Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
@@ -206,31 +208,32 @@ class _EmailLoginState extends ConsumerState<EmailLogin> {
                   ),
                 ),
               const SizedBox(height: 16),
-              const Text(
+              Text(
                 '비밀번호',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: ColorTextStyle.mediumNavy(context),
               ),
               const SizedBox(height: 8),
               TextField(
                 controller: passwordController,
                 obscureText: !isPasswordVisible,
                 onChanged: (text) => validatePassword(),
+                style: ColorTextStyle.smallNavy(context),
                 decoration: InputDecoration(
                   hintText: '8자 이상 입력 (문자/숫자/기호 사용 가능)',
+                  hintStyle: ColorTextStyle.smallLightNavy(context),
+                  filled: true,
+                  fillColor: Theme.of(context).colorScheme.surface,
                   border: const OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                       color:
-                          passwordHasError ? Colors.red : Colors.grey.shade600,
+                          passwordHasError ? Colors.red : Theme.of(context).colorScheme.background,
                       width: 1.0,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: passwordHasError ? Colors.red : Colors.black,
+                      color: passwordHasError ? Colors.red : Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
@@ -242,14 +245,14 @@ class _EmailLoginState extends ConsumerState<EmailLogin> {
                     children: [
                       if (passwordController.text.isNotEmpty)
                         IconButton(
-                          icon: const Icon(Icons.clear),
+                          icon: Icon(Icons.close_rounded,color: Theme.of(context).colorScheme.secondary,size: 18,),
                           onPressed: clearPasswordField,
                         ),
                       IconButton(
                         icon: Icon(
                           isPasswordVisible
                               ? Icons.visibility
-                              : Icons.visibility_off,
+                              : Icons.visibility_off,color: Theme.of(context).colorScheme.secondary,size: 18,
                         ),
                         onPressed: () {
                           setState(() {
@@ -288,11 +291,14 @@ class _EmailLoginState extends ConsumerState<EmailLogin> {
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           backgroundColor: isButtonEnabled
-                              ? const Color(0xFF0066CC) // 활성화 색상
-                              : const Color(0xFF5F92D0), // 비활성화 색상
+                              ? Theme.of(context).colorScheme.secondary
+                              : Theme.of(context).cardColor,
+                          disabledBackgroundColor: Theme.of(context).cardColor, // 비활성화 색상
                           foregroundColor: isButtonEnabled
-                              ? Colors.white // 활성화된 상태에서 텍스트는 흰색
-                              : Colors.white70, // 비활성화된 상태에서 텍스트는 약간 어두운 흰색
+                              ? Theme.of(context).colorScheme.surface // 활성화
+                              : Theme.of(context).colorScheme.primary, // 비활성화
+                          disabledForegroundColor:
+                          Theme.of(context).colorScheme.primary, // 비활성화
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6),
                           ),
@@ -303,7 +309,6 @@ class _EmailLoginState extends ConsumerState<EmailLogin> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16), // 버튼 사이의 간격
                     SizedBox(
                       width: 350,
                       child: TextButton(
@@ -312,10 +317,8 @@ class _EmailLoginState extends ConsumerState<EmailLogin> {
                           print('두 번째 버튼 클릭됨');
                         },
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          foregroundColor: Colors.grey, // 텍스트 색상: 파란색
-                          textStyle: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                          padding: const EdgeInsets.only(bottom: 12),
+                          textStyle: ColorTextStyle.smallLightNavy(context),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6),
                           ),

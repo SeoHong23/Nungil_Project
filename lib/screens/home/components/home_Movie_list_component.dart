@@ -40,6 +40,7 @@ class _HomeMovieListComponentState extends State<HomeMovieListComponent> {
           widget.title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
+        const SizedBox(height: 8.0,),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Padding(
@@ -49,7 +50,7 @@ class _HomeMovieListComponentState extends State<HomeMovieListComponent> {
                 widget.videoList.length,
                 (index) => Padding(
                   padding: const EdgeInsets.only(right: 16),
-                  child: Container(
+                  child: SizedBox(
                     width: 170,
                     height: 310,
                     child: VideoListComponent(
