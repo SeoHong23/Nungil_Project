@@ -58,10 +58,21 @@ class LoginView extends ConsumerWidget {
     // AuthProvider에서 로그인된 사용자 정보를 가져옵니다.
     final userEmail =
         ref.watch(authProvider.select((state) => state.user?.email));
-    final nickName = ref.watch(authProvider.select((state) =>
-        state.user?.nickname != null
-            ? utf8.decode(state.user!.nickname!.codeUnits)
-            : '사용자'));
+    // final nickName = ref
+    //     .watch(authProvider.select((state) => state.user?.nickname ?? '사용자'));
+
+    final nickName = ref.watch(authProvider.select((state) {
+      final nickname = state.user?.nickname;
+      if (nickname == null) return '사용자';
+
+      try {
+        // 이메일 로그인의 경우 UTF-8 디코딩이 필요할 수 있음
+        return utf8.decode(nickname.codeUnits);
+      } catch (e) {
+        // 소셜 로그인의 경우 이미 디코딩된 상태일 수 있으므로 그대로 반환
+        return nickname;
+      }
+    }));
 
     final favoriteCount = ref.watch(favoriteCountProvider).maybeWhen(
           data: (count) => count.toString(),

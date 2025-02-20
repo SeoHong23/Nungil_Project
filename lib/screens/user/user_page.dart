@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nungil/screens/user/login/email_login.dart';
-import 'package:nungil/theme/common_theme.dart';
+import 'package:nungil/screens/user/login/kakao_login.dart';
+
 
 import 'term/term.dart';
 
-class UserPage extends StatelessWidget {
-  const UserPage({super.key});
+class UserPage extends ConsumerWidget {
+  const UserPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // ✅ 올바른 Ref 타입 사용
+    final kakaoLoginService = ref.read(kakaoLoginProvider);
     return SafeArea(
       child: Scaffold(
         body: Center(
@@ -29,8 +33,15 @@ class UserPage extends StatelessWidget {
               SizedBox(
                 width: 350, // 기존 버튼과 동일한 크기 유지
                 child: GestureDetector(
-                  onTap: () {
-                    // 여기에 카카오 로그인 기능 추가
+                  onTap: () async {
+                    print('✅ 로그인 버튼 클릭됨!'); // 로그 추가
+                    bool token = await kakaoLoginService.kakaoLogin();
+                    if (token != null) {
+                      print("카카오 로그인 성공 : $token");
+                      // TODO: 서버 토큰 전송
+                    } else {
+                      print("카카오 로그인 실패");
+                    }
                   },
                   child: Image.asset(
                     'assets/images/login_icons/kakao_login_medium_wide.png',
