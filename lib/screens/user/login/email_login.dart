@@ -116,8 +116,8 @@ class _EmailLoginState extends ConsumerState<EmailLogin> {
         final nickname = responseData['nickname'] ?? 'Unknown';
         final String email = responseData['email'] ?? '';
         final int userId = responseData['userId'] ?? 0;
-
-        ref.read(authProvider.notifier).login(userId, nickname, email);
+        final bool admin = responseData['admin'] ?? false;
+        ref.read(authProvider.notifier).login(userId, nickname, email, admin);
 
         Navigator.pushReplacement(
           context,
