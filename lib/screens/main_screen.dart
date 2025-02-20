@@ -74,25 +74,25 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   changePages(index);
                   _pageController.jumpToPage(_selectedIndex);
                 },
-                items: const [
-                  BottomNavigationBarItem(
+                items: [
+                  const BottomNavigationBarItem(
                     label: '홈',
                     icon: Icon(CupertinoIcons.house_fill),
                   ),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                     label: ' 랭킹',
                     icon: Icon(FontAwesomeIcons.rankingStar),
                   ),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                     label: '리스트',
                     icon: Icon(CupertinoIcons.square_list_fill),
                   ),
                   isAdmin
-                      ? BottomNavigationBarItem(
+                      ? const BottomNavigationBarItem(
                           label: '관리자',
                           icon: Icon(FontAwesomeIcons.solidStar),
                         )
-                      : BottomNavigationBarItem(
+                      : const BottomNavigationBarItem(
                           label: '유저',
                           icon: Icon(FontAwesomeIcons.solidUser),
                         ),
