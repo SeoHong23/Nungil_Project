@@ -7,8 +7,10 @@ import 'package:nungil/screens/user/login/kakao_login.dart';
 class AuthState {
   final bool isAuthenticated;
   final UserModel? user;
+  final bool? isAdmin;
 
-  AuthState({required this.isAuthenticated, this.user});
+
+  AuthState({required this.isAuthenticated, this.user, this.isAdmin});
 
   AuthState copyWith({bool? isAuthenticated, UserModel? user}) {
     return AuthState(
@@ -22,7 +24,7 @@ class AuthState {
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier() : super(AuthState(isAuthenticated: false));
 
-  Future<void> login(int userId, String nickname, String email) async {
+  Future<void> login(int userId, String nickname, String email, bool admin) async {
     final user = UserModel(
       userId: userId,
       nickname: nickname,
