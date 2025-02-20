@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:nungil/theme/common_theme.dart';
 
 import '../../main_screen.dart';
 
@@ -40,8 +41,8 @@ class _UserInfoState extends State<UserInfo> {
   final List<String> names = [
     "강동원",
     "팀버튼",
-    "브래드피트",
-    "이병헌",
+    "봉준호",
+    "브루스윌리스",
     "레이놀즈",
     "크리스토퍼",
     "마동석",
@@ -53,6 +54,7 @@ class _UserInfoState extends State<UserInfo> {
   // 성별 선택 상태 추가
   bool isFemaleSelected = false;
   bool isMaleSelected = false;
+  bool isNoneSelected = false;
 
   @override
   void initState() {
@@ -96,7 +98,7 @@ class _UserInfoState extends State<UserInfo> {
   void _checkButtonState() {
     setState(() {
       isButtonEnabled = _nicknameController.text.isNotEmpty &&
-          (isFemaleSelected || isMaleSelected) &&
+          (isFemaleSelected || isMaleSelected || isNoneSelected) &&
           _selectedYear != null;
     });
   }
@@ -107,12 +109,20 @@ class _UserInfoState extends State<UserInfo> {
       if (gender == 'female') {
         isFemaleSelected = !isFemaleSelected; // 여성 선택 상태 토글
         if (isFemaleSelected) {
-          isMaleSelected = false; // 남성 선택 취소
+          isMaleSelected = false; // 선택 취소
+          isNoneSelected = false; // 선택 취소
         }
       } else if (gender == 'male') {
         isMaleSelected = !isMaleSelected; // 남성 선택 상태 토글
         if (isMaleSelected) {
-          isFemaleSelected = false; // 여성 선택 취소
+          isFemaleSelected = false; // 선택 취소
+          isNoneSelected = false; // 선택 취소
+        }
+      }else if(gender == 'none') {
+        isNoneSelected = !isNoneSelected; // 선택 상태 토글
+        if (isNoneSelected) {
+          isMaleSelected = false; // 선택 취소
+          isFemaleSelected = false; // 선택 취소
         }
       }
       _checkButtonState();
@@ -127,7 +137,7 @@ class _UserInfoState extends State<UserInfo> {
     if (!isButtonEnabled) return;
 
     final nickname = _nicknameController.text;
-    final gender = isFemaleSelected ? 'FEMALE' : 'MALE';
+    final gender = isFemaleSelected ? 'FEMALE' : isMaleSelected?'MALE':'NONE';
     final birthDate = _selectedYear;
 
     print('전송할 데이터: ${gender}, ${birthDate}, ${nickname}');
@@ -174,17 +184,13 @@ class _UserInfoState extends State<UserInfo> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 닉네임 라벨
-                const Align(
+                Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.only(left: 10),
                     child: Text(
                       '닉네임',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: ColorTextStyle.mediumNavy(context),
                     ),
                   ),
                 ),
@@ -197,31 +203,17 @@ class _UserInfoState extends State<UserInfo> {
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(20), // 글자 수 제한 (최대 20자)
                   ],
+                  style: ColorTextStyle.smallNavy(context),
                   decoration: InputDecoration(
                     hintText: '한글/영문 20자 이내로 입력',
-                    hintStyle: const TextStyle(
-                      color: Colors.grey,
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: _isNicknameValid
-                            ? Colors.grey
-                            : Colors.red, // 유효성에 따라 색상 변경
-                        width: 1.0,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: _isNicknameValid
-                            ? Colors.grey
-                            : Colors.red, // 유효성에 따라 색상 변경
-                        width: 1.0,
-                      ),
-                    ),
+                    hintStyle: ColorTextStyle.smallLightNavy(context),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surface,
+                    border: const OutlineInputBorder(),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: _isNicknameValid
-                            ? Colors.black
+                            ? Theme.of(context).colorScheme.primary
                             : Colors.red, // 유효성에 따라 색상 변경
                         width: 1.0,
                       ),
@@ -232,7 +224,7 @@ class _UserInfoState extends State<UserInfo> {
                     ),
                     suffixIcon: _nicknameController.text.isNotEmpty
                         ? IconButton(
-                            icon: const Icon(Icons.clear),
+                      icon: Icon(Icons.close_rounded,color: Theme.of(context).colorScheme.secondary,size: 18,),
                             onPressed: () {
                               setState(() {
                                 _nicknameController.clear(); // 텍스트 지우기
@@ -266,19 +258,17 @@ class _UserInfoState extends State<UserInfo> {
                     onTap: _setRandomNickname, // 클릭 시 닉네임 자동 생성
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: const [
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
                         Text(
                           "자동생성",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
-                          ),
+                          style: ColorTextStyle.smallNavy(context),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 4.0),
                         Icon(
                           Icons.autorenew,
-                          color: Colors.blue,
+                          color: Theme.of(context).colorScheme.secondary,
+                          size: 18,
                         ),
                       ],
                     ),
@@ -289,11 +279,7 @@ class _UserInfoState extends State<UserInfo> {
                   padding: EdgeInsets.only(left: 10),
                   child: Text(
                     '성별',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: ColorTextStyle.mediumNavy(context)
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -303,25 +289,26 @@ class _UserInfoState extends State<UserInfo> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () => _toggleGenderSelection('female'),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('여성'),
-                            Icon(
-                              FontAwesomeIcons.female, // 여성 아이콘
-                              color: Colors.white, // 아이콘 색상
-                            ),
-                          ],
-                        ),
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
                           backgroundColor: isFemaleSelected
-                              ? Colors.blue // 여성 버튼이 선택되었으면 파란색
-                              : Colors.blueGrey, // 기본 색상
+                              ? Theme.of(context).colorScheme.background // 선택 색상
+                              : Theme.of(context).colorScheme.surface, // 기본 색상
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          padding: EdgeInsets.symmetric(vertical: 14),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('여성 ',style: ColorTextStyle.mediumNavy(context),),
+                            Icon(
+                              FontAwesomeIcons.personDress, // 여성 아이콘
+                              color: Theme.of(context).colorScheme.secondary, // 아이콘 색상
+                              size: 18,
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -329,25 +316,50 @@ class _UserInfoState extends State<UserInfo> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () => _toggleGenderSelection('male'),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('남성'),
-                            Icon(
-                              FontAwesomeIcons.male,
-                              color: Colors.white, // 아이콘 색상
-                            ),
-                          ],
-                        ),
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
                           backgroundColor: isMaleSelected
-                              ? Colors.blue // 남성 버튼이 선택되었으면 파란색
-                              : Colors.blueGrey, // 기본 색상
+                              ? Theme.of(context).colorScheme.background // 선택 색상
+                              : Theme.of(context).colorScheme.surface, // 기본 색상
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          padding: EdgeInsets.symmetric(vertical: 14),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('남성 ',style: ColorTextStyle.mediumNavy(context),),
+                            Icon(
+                              FontAwesomeIcons.person,
+                              color: Theme.of(context).colorScheme.secondary, // 아이콘 색상
+                              size: 18,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8), // 버튼 간 간격
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => _toggleGenderSelection('none'),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: isNoneSelected
+                              ? Theme.of(context).colorScheme.background // 선택 색상
+                              : Theme.of(context).colorScheme.surface, // 기본 색상
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text('기타',style: ColorTextStyle.smallNavy(context),),
+                            Text('그렇게 간단하지 않음',style: ColorTextStyle.xxSmallLightNavy(context),),
+                          ],
                         ),
                       ),
                     ),
@@ -357,12 +369,8 @@ class _UserInfoState extends State<UserInfo> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0),
                   child: Text(
-                    '태어난 연도',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    '출생 연도',
+                      style: ColorTextStyle.mediumNavy(context)
                   ),
                 ),
                 const SizedBox(height: 8.0),
@@ -380,16 +388,28 @@ class _UserInfoState extends State<UserInfo> {
                       _checkButtonState();
                     });
                   },
+                  style: ColorTextStyle.smallNavy(context),
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1),
+                    hintText: '연도 선택',
+                    hintStyle: ColorTextStyle.smallLightNavy(context),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surface,
+                    border: const OutlineInputBorder(),enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.background,
+                      width: 1.0,
+                    ),
+                  ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                       vertical: 12.0,
                       horizontal: 16.0,
                     ),
                   ),
-                  hint: const Text('출생 연도'),
                 ),
                 const Spacer(),
 
@@ -412,17 +432,20 @@ class _UserInfoState extends State<UserInfo> {
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: isButtonEnabled
-                            ? const Color(0xFF0066CC)
-                            : const Color(0xFF5F92D0),
-                        foregroundColor:
-                            isButtonEnabled ? Colors.white : Colors.white70,
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context).cardColor,
+                        disabledBackgroundColor: Theme.of(context).cardColor,
+                        foregroundColor: isButtonEnabled
+                            ? Theme.of(context).colorScheme.surface // 활성화
+                            : Theme.of(context).colorScheme.primary, // 비활성화
+                        disabledForegroundColor: Theme.of(context).colorScheme.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6),
                         ),
                       ),
                       child: const Text(
                         '완료',
-                        style: TextStyle(fontSize: 16),
+                          style: CustomTextStyle.pretendard
                       ),
                     ),
                   ),

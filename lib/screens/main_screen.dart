@@ -1,17 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:nungil/models/Video.dart';
 import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/screens/home/home_page.dart';
 import 'package:nungil/screens/list/list_page.dart';
 import 'package:nungil/screens/ranking/ranking_page.dart';
 import 'package:nungil/screens/user/login/login_view.dart';
 import 'package:nungil/screens/user/user_page.dart';
-import 'package:nungil/screens/video_detail/video_detail_page.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nungil/theme/common_theme.dart';
+
+import 'admin/admin_page.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
@@ -32,13 +31,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     ref.read(authProvider.notifier).checkLoginStatus();
   }
 
-  List<Widget> _screens = [
-    // HomePage(),
-    RankingPage(),
-    ListPage(),
-    UserPage(),
-  ];
-
   void changePages(int index) {
     setState(
       () {
@@ -52,6 +44,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     // 로그인 여부를 확인합니다.
     final isLoggedIn =
         ref.watch(authProvider.select((state) => state.isAuthenticated));
+    final isAdmin =
+        ref.watch(authProvider.select((state) => state.isAdmin)) ?? false;
 
     return SafeArea(
       child: Scaffold(
@@ -65,10 +59,12 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                 controller: _pageController,
                 onPageChanged: (value) => changePages(value),
                 children: [
-                  HomePage(),
-                  RankingPage(),
-                  ListPage(),
-                  isLoggedIn ? LoginView() : UserPage(),
+                  const HomePage(),
+                  const RankingPage(),
+                  const ListPage(),
+                  isLoggedIn
+                      ? (isAdmin ? const AdminPage() : const LoginView())
+                      : const UserPage(),
                 ],
               ),
               bottomNavigationBar: BottomNavigationBar(
@@ -78,23 +74,28 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   changePages(index);
                   _pageController.jumpToPage(_selectedIndex);
                 },
-                items: const [
-                  BottomNavigationBarItem(
+                items: [
+                  const BottomNavigationBarItem(
                     label: '홈',
                     icon: Icon(CupertinoIcons.house_fill),
                   ),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                     label: ' 랭킹',
                     icon: Icon(FontAwesomeIcons.rankingStar),
                   ),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                     label: '리스트',
                     icon: Icon(CupertinoIcons.square_list_fill),
                   ),
-                  BottomNavigationBarItem(
-                    label: '유저',
-                    icon: Icon(FontAwesomeIcons.solidUser),
-                  ),
+                  isAdmin
+                      ? const BottomNavigationBarItem(
+                          label: '관리자',
+                          icon: Icon(FontAwesomeIcons.solidStar),
+                        )
+                      : const BottomNavigationBarItem(
+                          label: '유저',
+                          icon: Icon(FontAwesomeIcons.solidUser),
+                        ),
                 ],
               ),
             ),

@@ -356,7 +356,7 @@ static TextStyle xLargeLightNavy(BuildContext context) {
   static TextStyle largeNavy(BuildContext context) {
     return TextStyle(
       fontFamily: 'Pretendard',
-      fontSize: 18,
+      fontSize: 17,
       color: Theme.of(context).colorScheme.secondary,
       height: 1.6,
       fontWeight: FontWeight.w400,
@@ -366,7 +366,7 @@ static TextStyle xLargeLightNavy(BuildContext context) {
 static TextStyle largeLightNavy(BuildContext context) {
     return TextStyle(
       fontFamily: 'Pretendard',
-      fontSize: 18,
+      fontSize: 17,
       color: Theme.of(context).colorScheme.primary,
       height: 1.6,
       fontWeight: FontWeight.w400,

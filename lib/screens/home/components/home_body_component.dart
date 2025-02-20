@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nungil/data/repository/Banner_repository.dart';
 import 'package:nungil/data/repository/video_list_repository.dart';
+import 'package:nungil/models/admin/banner_model.dart';
 import 'package:nungil/models/home/home_review_tmp.dart';
 import 'package:nungil/models/list/video_list_model.dart';
 import 'package:nungil/models/list/video_list_tmp.dart';
@@ -10,6 +12,7 @@ import 'package:nungil/models/ranking/video_rank_model.dart';
 import 'package:nungil/screens/common_components/video_list_component.dart';
 import 'package:nungil/screens/search/search_page.dart';
 import 'package:nungil/theme/common_theme.dart';
+import 'package:nungil/util/my_http.dart';
 
 import '../../common_components/ranking_list_component.dart';
 import 'home_Movie_list_component.dart';
@@ -29,6 +32,7 @@ class HomeBodyComponent extends StatefulWidget {
 class _HomeBodyComponentState extends State<HomeBodyComponent> {
   List<VideoRankModel> dailyRanking = [];
   List<VideoRankModel> weeklyRanking = [];
+  BannerModel? randomAd;
   List<VideoListModel> randomMovies = [];
   List<VideoListModel> latestMovies = [];
   bool isLoading = true;
@@ -50,30 +54,47 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
 
   Future<void> fetchHomeData() async {
     try {
-      const repository = VideoListRepository();
+      final repository = VideoListRepository();
+      final bannerRepository = BannerRepository();
 
       // ✅ 첫 번째 요청 (일일 랭킹)
       final dailyData = await repository.fetchRanksDaily();
+      setState(() {
+        dailyRanking = dailyData;
+      });
+
       await Future.delayed(const Duration(milliseconds: 50)); // ⏳ 요청 간 50ms 지연
 
       // ✅ 두 번째 요청 (주간 랭킹)
       final weeklyData = await repository.fetchRanksWeekly();
-      await Future.delayed(const Duration(milliseconds: 50));
-
-      // ✅ 세 번째 요청 (랜덤 추천작)
-      final randomData = await repository.fetchVideosRandom(10);
-      await Future.delayed(const Duration(milliseconds: 50));
-
-      // ✅ 네 번째 요청 (최신 영화)
-      final latestData =
-          await repository.fetchVideosWithFilter(0, 10, {}, "DateDESC");
-
       setState(() {
-        dailyRanking = dailyData;
         weeklyRanking = weeklyData;
+      });
+
+      await Future.delayed(const Duration(milliseconds: 50));
+
+      // ✅ 세 번째 요청 (랜덤 배너)
+      final adData = await bannerRepository.randomBanner();
+      setState(() {
+        randomAd = adData;
+      });
+
+      await Future.delayed(const Duration(milliseconds: 50));
+
+      // ✅ 네 번째 요청 (랜덤 추천작)
+      final randomData = await repository.fetchVideosRandom(10);
+      setState(() {
         randomMovies = randomData;
+      });
+
+      await Future.delayed(const Duration(milliseconds: 50));
+
+      // ✅ 마지막 요청 (최신 영화)
+      final latestData =
+          await repository.fetchVideosWithFilter(0, 10, {}, "DateDESC", false);
+      setState(() {
         latestMovies = latestData;
-        isLoading = false;
+        isLoading = false; // 모든 데이터가 불러와졌으면 로딩 상태 변경
       });
     } catch (e) {
       print("Error fetching home data: $e");
@@ -85,6 +106,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
 
   @override
   Widget build(BuildContext context) {
+    String URL = "http://13.239.238.92:8080/api/banner/image/";
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SingleChildScrollView(
@@ -97,16 +119,17 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
               child: TextField(
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search,
-                      color: Theme.of(context).colorScheme.primary),
-                  fillColor: Theme.of(context).cardColor, // 채우기 색
-                  filled: true, // 채우기 유무 default = false
-                  hintText: dailyRanking.isNotEmpty
-                      ? dailyRanking[Random().nextInt(dailyRanking.length)].title
-                      : "",
-                  hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
-                    border: InputBorder.none
-                ),
+                    prefixIcon: Icon(Icons.search,
+                        color: Theme.of(context).colorScheme.primary),
+                    fillColor: Theme.of(context).cardColor, // 채우기 색
+                    filled: true, // 채우기 유무 default = false
+                    hintText: dailyRanking.isNotEmpty
+                        ? dailyRanking[Random().nextInt(dailyRanking.length)]
+                            .title
+                        : "",
+                    hintStyle:
+                        TextStyle(color: Theme.of(context).colorScheme.primary),
+                    border: InputBorder.none),
                 onSubmitted: (value) => searchTitle(value),
               ),
             ),
@@ -121,16 +144,32 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
             ),
             const SizedBox(height: 16),
             //광고
-            Container(
-              height: 100,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Center(
-                child: Text("광고"),
-              ),
-            ),
+
+            randomAd != null
+                ? Container(
+                    height: 100,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10), // 둥근 모서리
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: Image.network(
+                      URL + randomAd!.fileName,
+                      fit: BoxFit.fill,
+                    ),
+                  )
+                : Container(
+                    height: 100,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10), // 둥근 모서리
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: Image.asset(
+                      "assets/images/banner/banner1.png",
+                      fit: BoxFit.fill,
+                    ),
+                  ),
 
             const SizedBox(height: 16),
             // 오늘의 랜덤 추천작

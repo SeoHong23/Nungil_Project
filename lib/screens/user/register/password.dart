@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nungil/theme/common_theme.dart';
 
 import 'user_info.dart';
 
@@ -159,11 +160,7 @@ class _PasswordState extends State<Password> {
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
                       '비밀번호',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: ColorTextStyle.mediumNavy(context),
                     ),
                   ),
                 ),
@@ -173,23 +170,22 @@ class _PasswordState extends State<Password> {
                   controller: _controller1,
                   obscureText: !_isPasswordVisible1, // 가시성 토글
                   focusNode: _focusNode1, // FocusNode 연결
+                  style: ColorTextStyle.smallNavy(context),
                   decoration: InputDecoration(
                     hintText: '영문/숫자/특수문자를 사용하여 8자 이상 입력',
-                    hintStyle: const TextStyle(
-                      color: Colors.grey,
-                    ),
+                    hintStyle: ColorTextStyle.smallLightNavy(context),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surface,
                     border: const OutlineInputBorder(),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: hasError
-                            ? Colors.red
-                            : Colors.grey.shade600, // 에러 상태일 때 빨간색
+                        color: hasError ? Colors.red : Theme.of(context).colorScheme.background,
                         width: 1.0,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: hasError ? Colors.red : Colors.black,
+                        color: hasError ? Colors.red : Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
@@ -201,7 +197,7 @@ class _PasswordState extends State<Password> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.clear),
+                                icon: Icon(Icons.close_rounded,color: Theme.of(context).colorScheme.secondary,size: 18,),
                                 onPressed: () {
                                   setState(() {
                                     _controller1.clear();
@@ -212,7 +208,7 @@ class _PasswordState extends State<Password> {
                                 icon: Icon(
                                   _isPasswordVisible1
                                       ? Icons.visibility
-                                      : Icons.visibility_off,
+                                      : Icons.visibility_off,color: Theme.of(context).colorScheme.secondary,size: 18,
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -244,12 +240,8 @@ class _PasswordState extends State<Password> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
-                      '비밀번호 확인', // 두 번째 필드의 라벨을 '비밀번호 확인'으로 변경
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      '비밀번호 확인',
+                      style: ColorTextStyle.mediumNavy(context),
                     ),
                   ),
                 ),
@@ -260,23 +252,22 @@ class _PasswordState extends State<Password> {
                   controller: _controller2,
                   obscureText: !_isPasswordVisible2, // 가시성 토글
                   focusNode: _focusNode2, // FocusNode 연결
+                  style: ColorTextStyle.smallNavy(context),
                   decoration: InputDecoration(
                     hintText: '비밀번호 다시 입력',
-                    hintStyle: const TextStyle(
-                      color: Colors.grey,
-                    ),
+                    hintStyle: ColorTextStyle.smallLightNavy(context),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surface,
                     border: const OutlineInputBorder(),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: isPasswordMatch
-                            ? Colors.grey.shade600
-                            : Colors.red, // 비밀번호 일치 여부에 따라 색상 변경
+                        color: hasError ? Colors.red : Theme.of(context).colorScheme.background,
                         width: 1.0,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: isPasswordMatch ? Colors.red : Colors.black,
+                        color: hasError ? Colors.red : Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
@@ -288,7 +279,7 @@ class _PasswordState extends State<Password> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.clear),
+                                icon: Icon(Icons.close_rounded,color: Theme.of(context).colorScheme.secondary,size: 18,),
                                 onPressed: () {
                                   setState(() {
                                     _controller2.clear();
@@ -299,7 +290,7 @@ class _PasswordState extends State<Password> {
                                 icon: Icon(
                                   _isPasswordVisible2
                                       ? Icons.visibility
-                                      : Icons.visibility_off,
+                                      : Icons.visibility_off,color: Theme.of(context).colorScheme.secondary,size: 18,
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -348,18 +339,21 @@ class _PasswordState extends State<Password> {
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: isButtonEnabled
-                            ? const Color(0xFF0066CC) // 활성화 색상
-                            : const Color(0xFF5F92D0), // 비활성화 색상
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context).cardColor,
+                        disabledBackgroundColor: Theme.of(context).cardColor, // 비활성화 색상
                         foregroundColor: isButtonEnabled
-                            ? Colors.white // 활성화된 상태에서 텍스트는 흰색
-                            : Colors.white70, // 비활성화된 상태에서 텍스트는 약간 어두운 흰색
+                            ? Theme.of(context).colorScheme.surface // 활성화
+                            : Theme.of(context).colorScheme.primary, // 비활성화
+                        disabledForegroundColor:
+                        Theme.of(context).colorScheme.primary, // 비활성화
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(6),
                         ),
                       ),
                       child: const Text(
                         '다음',
-                        style: TextStyle(fontSize: 16),
+                        style: CustomTextStyle.pretendard,
                       ),
                     ),
                   ),

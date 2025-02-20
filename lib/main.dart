@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nungil/providers/theme_provider.dart';
 import 'package:nungil/screens/main_screen.dart';
 import 'package:nungil/theme/common_theme.dart';
@@ -12,9 +12,13 @@ void main() {
   KakaoSdk.init(
       nativeAppKey: "8624912776c557f351ebf004d8aabcf5"); // 카카오 SDK 초기화
 
+
   runApp(
-    const ProviderScope(
-      child: MyApp(),
+    ProviderScope(
+      overrides: [
+        themeProvider.overrideWith((ref) => ThemeNotifier(prefs)), // 초기값 적용
+      ],
+      child: const MyApp(),
     ),
   );
 }
@@ -29,7 +33,7 @@ class MyApp extends ConsumerWidget {
       title: 'nungil',
       debugShowCheckedModeBanner: false,
       theme: isDarkMode ? dTheme() : mTheme(), // 다크/라이트 테마 적용
-      home: MainScreen(),
+      home: const MainScreen(),
     );
   }
 }
