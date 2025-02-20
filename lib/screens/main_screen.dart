@@ -1,20 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:nungil/models/Video.dart';
 import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/screens/home/home_page.dart';
 import 'package:nungil/screens/list/list_page.dart';
 import 'package:nungil/screens/ranking/ranking_page.dart';
 import 'package:nungil/screens/user/login/login_view.dart';
 import 'package:nungil/screens/user/user_page.dart';
-import 'package:nungil/screens/video_detail/video_detail_page.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nungil/theme/common_theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../util/logger.dart';
 import 'admin/admin_page.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
@@ -35,13 +30,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     // 로그인 상태를 확인합니다.
     ref.read(authProvider.notifier).checkLoginStatus();
   }
-
-  List<Widget> _screens = [
-    HomePage(),
-    RankingPage(),
-    ListPage(),
-    UserPage(),
-  ];
 
   void changePages(int index) {
     setState(
@@ -71,12 +59,12 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                 controller: _pageController,
                 onPageChanged: (value) => changePages(value),
                 children: [
-                  HomePage(),
-                  RankingPage(),
-                  ListPage(),
+                  const HomePage(),
+                  const RankingPage(),
+                  const ListPage(),
                   isLoggedIn
-                      ? (isAdmin ? AdminPage() : LoginView())
-                      : UserPage(),
+                      ? (isAdmin ? const AdminPage() : const LoginView())
+                      : const UserPage(),
                 ],
               ),
               bottomNavigationBar: BottomNavigationBar(
@@ -86,7 +74,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   changePages(index);
                   _pageController.jumpToPage(_selectedIndex);
                 },
-                items: [
+                items: const [
                   BottomNavigationBarItem(
                     label: '홈',
                     icon: Icon(CupertinoIcons.house_fill),
