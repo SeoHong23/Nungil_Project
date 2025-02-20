@@ -10,6 +10,7 @@ class VideoNotifier extends Notifier<List<VideoListModel>> {
   bool _isLoading = false;
   Map<String, Set<String>> _selectedFilters = {}; // ✅ 현재 선택된 필터
   String _sortOrder = "";
+  bool _isNotOpen = false;
 
   bool get hasMore => _hasMore;
   bool get isLoading => _isLoading;
@@ -39,7 +40,7 @@ class VideoNotifier extends Notifier<List<VideoListModel>> {
 
   Future<void> fetchMoreVideosWithFilter(
       Map<String, Set<String>> filters, String sortOrder,
-      {bool reset = false}) async {
+      {bool reset = false, bool isNotOpen = false}) async {
     if (_isLoading || (!_hasMore && !reset)) return;
 
     _isLoading = true;
@@ -54,12 +55,14 @@ class VideoNotifier extends Notifier<List<VideoListModel>> {
 
       _selectedFilters = filters;
       _sortOrder = sortOrder;
+      _isNotOpen = isNotOpen;
       List<VideoListModel> newVideos =
           await _videoService.fetchVideosWithFilter(
         _page,
         _size,
         _selectedFilters,
         _sortOrder,
+        _isNotOpen,
       );
 
       state = [...state, ...newVideos];

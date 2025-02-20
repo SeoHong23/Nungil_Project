@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nungil/theme/common_theme.dart';
 import '../../../models/list/list_filter_type.dart';
@@ -5,9 +6,13 @@ import '../../../models/list/list_filter_type.dart';
 class FilterTypeComponent extends StatefulWidget {
   final Map<String, Set<String>> selectedFilters;
   final Function(Map<String, Set<String>>) onFilterChanged;
+  final Function(bool isOpen) onOpenChanged;
+  final bool isNotOpen;
 
   const FilterTypeComponent({
     super.key,
+    required this.isNotOpen,
+    required this.onOpenChanged,
     required this.selectedFilters,
     required this.onFilterChanged,
   });
@@ -105,43 +110,65 @@ class _FilterTypeComponentState extends State<FilterTypeComponent> {
     widget.onFilterChanged(newFilters); // ✅ 필터 변경 이벤트 호출
   }
 
+  void _toggleOpen(bool isNotOpen) {
+    widget.onOpenChanged(isNotOpen); // ✅ 필터 변경 이벤트 호출
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// ✅ **필터 버튼 (클릭 시 다이얼로그 열림)**
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: FilterRepository.filters.map((filterData) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    _showFilterDialog(filterData.category);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      color: iconThemeColor[800],
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          filterData.category,
-                          style: const TextStyle(
-                              fontSize: 15, color: Colors.white),
+        Row(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: FilterRepository.filters.map((filterData) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          _showFilterDialog(filterData.category);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                            color: iconThemeColor[800],
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                filterData.category,
+                                style: const TextStyle(
+                                    fontSize: 15, color: Colors.white),
+                              ),
+                              Icon(Icons.keyboard_arrow_down,
+                                  color: Colors.white),
+                            ],
+                          ),
                         ),
-                        Icon(Icons.keyboard_arrow_down, color: Colors.white),
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  }).toList(),
                 ),
-              );
-            }).toList(),
-          ),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Text("미개봉"),
+            CupertinoSwitch(
+              value: widget.isNotOpen,
+              activeColor: CupertinoColors.activeBlue,
+              onChanged: (bool? value) {
+                setState(() {
+                  _toggleOpen(value ?? false);
+                });
+              },
+            ),
+          ],
         ),
         const SizedBox(height: 5),
 

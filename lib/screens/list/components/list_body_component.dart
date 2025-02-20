@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/data/gvm/video_list_GVM.dart';
@@ -18,7 +19,7 @@ class ListBodyComponent extends ConsumerStatefulWidget {
 class _ListBodyComponentState extends ConsumerState<ListBodyComponent> {
   bool seenVideo = false;
   Map<String, Set<String>> selectedFilters = {};
-
+  bool _isNotOpen = false;
   String sortOrder = "DateDESC"; // ✅ 기본 정렬: 최신순
 
   /// ✅ **필터 변경 시 비디오 데이터 다시 로드**
@@ -28,9 +29,20 @@ class _ListBodyComponentState extends ConsumerState<ListBodyComponent> {
     });
 
     // ✅ 필터 적용 후 첫 페이지부터 다시 불러오기
-    ref
-        .read(videoNotifierProvider.notifier)
-        .fetchMoreVideosWithFilter(filters, sortOrder, reset: true);
+    ref.read(videoNotifierProvider.notifier).fetchMoreVideosWithFilter(
+        filters, sortOrder,
+        isNotOpen: _isNotOpen, reset: true);
+  }
+
+  void _onOpenChanged(bool isNotOpen) {
+    setState(() {
+      _isNotOpen = isNotOpen;
+    });
+
+    // ✅ 필터 적용 후 첫 페이지부터 다시 불러오기
+    ref.read(videoNotifierProvider.notifier).fetchMoreVideosWithFilter(
+        selectedFilters, sortOrder,
+        isNotOpen: isNotOpen, reset: true);
   }
 
   /// ✅ **정렬 변경 핸들러**
@@ -46,6 +58,7 @@ class _ListBodyComponentState extends ConsumerState<ListBodyComponent> {
       ref.read(videoNotifierProvider.notifier).fetchMoreVideosWithFilter(
             selectedFilters,
             sortOrder,
+            isNotOpen: _isNotOpen,
             reset: true,
           );
     }
@@ -72,6 +85,8 @@ class _ListBodyComponentState extends ConsumerState<ListBodyComponent> {
                 FilterTypeComponent(
                   selectedFilters: selectedFilters,
                   onFilterChanged: _onFilterChanged,
+                  isNotOpen: _isNotOpen,
+                  onOpenChanged: _onOpenChanged,
                 ),
 
                 /// ✅ **'본 작품 포함' & 정렬 옵션**
@@ -119,6 +134,7 @@ class _ListBodyComponentState extends ConsumerState<ListBodyComponent> {
                 VideoListContainerComponent(
                   selectedFilters: selectedFilters,
                   sortOrder: sortOrder, // ✅ 정렬 옵션 전달
+                  isNotOpen: _isNotOpen,
                 ),
               ],
             ),
