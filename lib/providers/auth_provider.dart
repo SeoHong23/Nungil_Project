@@ -1,23 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-// User 모델
-class User {
-  final int userId;
-  final String nickname;
-  final String email;
-
-  User({required this.userId, required this.nickname, required this.email});
-}
+import 'package:nungil/models/user/user_model.dart';
+import 'package:nungil/screens/user/login/kakao_login.dart';
 
 // AuthState 데이터 모델 (로그인 상태 저장)
 class AuthState {
   final bool isAuthenticated;
-  final User? user;
+  final UserModel? user;
 
   AuthState({required this.isAuthenticated, this.user});
 
-  AuthState copyWith({bool? isAuthenticated, User? user}) {
+  AuthState copyWith({bool? isAuthenticated, UserModel? user}) {
     return AuthState(
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       user: user ?? this.user,
@@ -30,7 +23,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier() : super(AuthState(isAuthenticated: false));
 
   Future<void> login(int userId, String nickname, String email) async {
-    final user = User(
+    final user = UserModel(
       userId: userId,
       nickname: nickname,
       email: email,
@@ -47,14 +40,20 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    final userId = prefs.getInt('userId'); // userId 가져오기ㅂㅈ
+    final userId = prefs.getInt('userId'); // userId 가져오기
     final nickname = prefs.getString('nickname');
     final email = prefs.getString('userEmail');
+
+    if (nickname == null || email == null) {
+      print("🚨 저장된 사용자 데이터가 손상됨! 기본값으로 설정합니다.");
+      await prefs.clear(); // 손상된 데이터 삭제
+      return;
+    }
 
     if (isLoggedIn && userId != null && email != null && nickname != null) {
       state = AuthState(
         isAuthenticated: true,
-        user: User(userId: userId, email: email, nickname: nickname),
+        user: UserModel(userId: userId, email: email, nickname: nickname),
       );
     }
   }
@@ -76,3 +75,4 @@ final userIdProvider = Provider<int?>((ref) {
   final authState = ref.watch(authProvider);
   return authState.isAuthenticated ? authState.user?.userId : null;
 });
+final kakaoLoginProvider = Provider((ref) => KakaoLoginService(ref));

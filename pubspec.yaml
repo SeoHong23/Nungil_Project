@@ -56,6 +56,7 @@ dependencies:
 
   # 박서홍 02-05 추가
   flutter_rating_bar: ^4.0.1 #평점 라이브러리
+  kakao_flutter_sdk: ^1.9.0  # 카카오 로그인 라이브러리
 
 
   # 김주경
