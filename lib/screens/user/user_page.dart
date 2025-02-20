@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nungil/screens/user/login/email_login.dart';
 import 'package:nungil/screens/user/login/kakao_login.dart';
+import 'package:nungil/theme/common_theme.dart';
 
 
 import 'term/term.dart';

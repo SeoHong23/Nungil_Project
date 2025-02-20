@@ -23,6 +23,7 @@ class KakaoLoginService {
             user.id?.toInt() ?? 0,
             nickname,
             email,
+            false
           );
 
       return true; // 토큰 반환
