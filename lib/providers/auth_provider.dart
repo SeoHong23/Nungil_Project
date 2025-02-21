@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nungil/models/user/user_model.dart';
@@ -8,7 +10,6 @@ class AuthState {
   final bool isAuthenticated;
   final UserModel? user;
   final bool? isAdmin;
-
 
   AuthState({required this.isAuthenticated, this.user, this.isAdmin});
 
@@ -24,7 +25,53 @@ class AuthState {
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier() : super(AuthState(isAuthenticated: false));
 
-  Future<void> login(int userId, String nickname, String email, bool admin) async {
+  Future<void> handleKakaoLogin(
+      String kakaoId, String email, String nickname) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+
+      // 서버로 카카오 로그인 정보 전송
+      final response = await http.post(
+        Uri.parse('http://13.239.238.92:8080/kakao/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'kakaoId': kakaoId,
+          'email': email,
+          'nickname': nickname,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        // 서버에서 받은 userId로 UserModel 생성
+        final user = UserModel(
+          userId: data['userId'], // 서버에서 생성된 일반 userId
+          kakaoId: kakaoId, // 카카오 ID 저장
+          email: email,
+          nickname: nickname,
+        );
+
+        // 상태 업데이트
+        state = AuthState(isAuthenticated: true, user: user);
+
+        // SharedPreferences에 저장
+        await prefs.setBool('isLoggedIn', true);
+        await prefs.setInt('userId', data['userId']);
+        await prefs.setString('userEmail', email);
+        await prefs.setString('nickname', nickname);
+        await prefs.setString('kakaoId', kakaoId); // 카카오 ID도 저장
+      } else {
+        throw Exception('Server error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('카카오 로그인 에러: $e');
+      throw Exception('카카오 로그인 실패');
+    }
+  }
+
+  Future<void> login(
+      int userId, String nickname, String email, bool admin) async {
     final user = UserModel(
       userId: userId,
       nickname: nickname,
@@ -45,6 +92,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     final userId = prefs.getInt('userId'); // userId 가져오기
     final nickname = prefs.getString('nickname');
     final email = prefs.getString('userEmail');
+    final kakaoId = prefs.getString('kakaoId');
 
     if (nickname == null || email == null) {
       print("🚨 저장된 사용자 데이터가 손상됨! 기본값으로 설정합니다.");
@@ -55,7 +103,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
     if (isLoggedIn && userId != null && email != null && nickname != null) {
       state = AuthState(
         isAuthenticated: true,
-        user: UserModel(userId: userId, email: email, nickname: nickname),
+        user: UserModel(
+          userId: userId,
+          email: email,
+          nickname: nickname,
+          kakaoId: kakaoId,
+        ),
       );
     }
   }
@@ -70,7 +123,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
 // Provider 선언
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  
   return AuthNotifier();
 });
 

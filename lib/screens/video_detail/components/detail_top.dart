@@ -241,9 +241,9 @@ class _DetailTopState extends ConsumerState<DetailTop> {
   }
 
   Future<void> _toggleFavorite(WidgetRef ref) async {
+    print("로그인된 유저 아이디: ${ref.read(userIdProvider)}");
     final String? videoId = widget.item.id; // 현재 비디오 ID
     final userId = ref.read(userIdProvider); // 로그인한 사용자 ID 가져오기
-
     if (userId == null) {
       showDialog(
         context: context,
@@ -271,9 +271,13 @@ class _DetailTopState extends ConsumerState<DetailTop> {
         : "http://13.239.238.92:8080/favorite"; // 찜 추가 API URL
 
     final body = json.encode({
-      'userId': userId,
+      'userId': userId.toString(),
       'videoId': videoId,
     });
+
+    print("Request URL: $url");
+    print("Request Headers: {'Content-Type': 'application/json'}");
+    print("Request Body: $body");
 
     try {
       // 찜 상태에 따라 POST 또는 DELETE 요청
