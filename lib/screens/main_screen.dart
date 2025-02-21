@@ -5,7 +5,7 @@ import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/screens/home/home_page.dart';
 import 'package:nungil/screens/list/list_page.dart';
 import 'package:nungil/screens/ranking/ranking_page.dart';
-import 'package:nungil/screens/user/login/login_view.dart';
+import 'package:nungil/screens/user/login/login_page.dart';
 import 'package:nungil/screens/user/user_page.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -63,7 +63,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   const RankingPage(),
                   const ListPage(),
                   isLoggedIn
-                      ? (isAdmin ? const AdminPage() : const LoginView())
+                      ? (isAdmin ? const AdminPage() : const LoginPage())
                       : const UserPage(),
                 ],
               ),

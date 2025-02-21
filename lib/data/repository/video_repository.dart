@@ -10,10 +10,12 @@ class VideoRepository {
       if (response.data is Map<String, dynamic>) {
         return response.data;
       } else {
-        throw FormatException("Invalid response format: expected a map.");
+        throw const FormatException("Invalid response format: expected a map.");
       }
     } else {
       throw Exception("Failed to fetch video data. Status code: ${response.statusCode}");
     }
   }
 }
+
+

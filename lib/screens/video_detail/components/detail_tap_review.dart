@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
-import 'package:nungil/models/Video.dart';
+import 'package:nungil/models/detail/Video.dart';
 import 'package:nungil/screens/common_components/rating_widget.dart';
 import 'package:nungil/theme/common_theme.dart';
 

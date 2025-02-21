@@ -1,156 +1,214 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:nungil/screens/user/login/email_login.dart';
-import 'package:nungil/screens/user/login/kakao_login.dart';
+import 'package:nungil/data/repository/user_movie_repository.dart';
+import 'package:nungil/providers/auth_provider.dart';
+import 'package:nungil/screens/main_screen.dart';
+import 'package:nungil/screens/user/login/login_page.dart';
+import 'package:nungil/screens/user/more/watched_page.dart';
 import 'package:nungil/theme/common_theme.dart';
 
-
-import 'term/term.dart';
-
 class UserPage extends ConsumerWidget {
-  const UserPage({Key? key}) : super(key: key);
+  const UserPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // ✅ 올바른 Ref 타입 사용
-    final kakaoLoginService = ref.read(kakaoLoginProvider);
+    // AuthProvider에서 로그인된 사용자 정보를 가져옵니다.
+    final userId = ref.watch(authProvider.select((state) => state.user?.userId));
+    final nickName = ref.watch(authProvider.select((state) =>
+        state.user?.nickname != null
+            ? utf8.decode(state.user!.nickname.codeUnits)
+            : ''));
+
+    final watchedCount = getWatchedMovie().length;
+    final watchingCount = getWatchingMovie().length;
+    final bookmarkedCount = getBookmarkedMovie().length;
+
     return SafeArea(
       child: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                'assets/images/app.svg',
-                width: 270,
-                height: 270,
+        appBar: AppBar(
+          centerTitle: false,
+          automaticallyImplyLeading: false,
+          actions: [
+            userId!=null?
+            IconButton(
+              icon: const Icon(Icons.logout_rounded), // 로그아웃 아이콘
+              onPressed: () async {
+                // 로그아웃 처리
+                await ref.read(authProvider.notifier).logout();
+
+                await ref.read(authProvider.notifier).checkLoginStatus();
+                // 로그아웃 후 MainScreen으로 돌아가기
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MainScreen()),
+                );
+              },
+            ):
+            IconButton(onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            }, icon: const Icon(Icons.login_rounded))
+            ,
+            // 고객센터(도움말) 아이콘
+            IconButton(
+              icon: const Icon(Icons.help_outline), // 도움말 아이콘
+              onPressed: () {
+                // 고객센터 페이지로 이동하는 기능 추가
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MainScreen()),
+                );
+              },
+            ),
+            // 설정(톱니바퀴) 아이콘
+            IconButton(
+              icon: const Icon(Icons.settings), // 설정 아이콘
+              onPressed: () {
+                // 설정 페이지로 이동하는 기능 추가
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MainScreen(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            const SizedBox(height: 32), // 상단 여백 추가
+
+            // 닉네임 (클릭 가능한 버튼)
+            GestureDetector(
+              onTap: () {},
+              child: Text(
+                userId == null ? '로그인 후 이용 가능합니다' : '안녕하세요, $nickName 님!',
+                style: ColorTextStyle.largeNavy(context),
               ),
-              const SizedBox(height: 12),
-              const Text(
-                '최근에 이메일로 로그인했어요!',
+            ),
+
+            const SizedBox(height: 16), // 닉네임 아래 여백
+            // 구분선
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              child: Container(
+                height: 90,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor, // 연한 회색 배경색
+                  borderRadius: BorderRadius.circular(8.0), // 둥근 모서리
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 균등 정렬
+                  children: [
+                    _buildCategoryItem(bookmarkedCount, "찜했어요", context),
+                    VerticalDivider(
+                      color: Theme.of(context).colorScheme.secondary,
+                      indent: 15,
+                      endIndent: 15,
+                    ),
+                    _buildCategoryItem(watchingCount, "보는중", context),
+                    VerticalDivider(
+                      color: Theme.of(context).colorScheme.secondary,
+                      indent: 15,
+                      endIndent: 15,
+                    ),
+                    _buildCategoryItem(watchedCount, "봤어요", context),
+                  ],
+                ),
               ),
-              const SizedBox(height: 30),
-              SizedBox(
-                width: 350, // 기존 버튼과 동일한 크기 유지
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 6), // 위쪽 패딩
+              child: Align(
+                alignment: Alignment.center, // 중앙 정렬
                 child: GestureDetector(
-                  onTap: () async {
-                    print('✅ 로그인 버튼 클릭됨!'); // 로그 추가
-                    bool token = await kakaoLoginService.kakaoLogin();
-                    if (token != null) {
-                      print("카카오 로그인 성공 : $token");
-                      // TODO: 서버 토큰 전송
-                    } else {
-                      print("카카오 로그인 실패");
-                    }
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const WatchedPage()),
+                    );
                   },
-                  child: Image.asset(
-                    'assets/images/login_icons/kakao_login_medium_wide.png',
-                    fit: BoxFit.cover, // 이미지가 버튼 크기에 맞게 조정됨
+                  child: Text(
+                    '본 작품 통계 >',
+                    style: ColorTextStyle.largeNavy(context),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: 350,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    backgroundColor: Color(0xFF00D070),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding:
-                            const EdgeInsets.only(left: 10.0), // 이미지 주변에 여백 추가
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF00D070), // 이미지 배경색 설정
-                          borderRadius: BorderRadius.circular(6), // 배경의 둥근 모서리
-                        ),
-                        child: Image.asset(
-                          'assets/images/login_icons/naver_logo.jpg',
-                          width: 26,
-                          height: 26,
-                        ),
-                      ),
-                      const Expanded(
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(right: 20.0),
-                            child: Text(
-                              '네이버 로그인',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white, // 글자 색상 설정
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(8.0), // 둥근 모서리
+                ),
+                child: Column(
+                  children: [
+                    // "작성한 리뷰 0 >"
+                    _buildRowItem("작성한 리뷰", "0", context),
+
+
+                    Divider(color: Theme.of(context).colorScheme.secondary, indent: 15, endIndent: 15),
+
+                    // "구독중인 서비스 >"
+                    _buildRowItem("구독중인 서비스", "", context),
+                  ],
                 ),
               ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const EmailLogin(), // Term 화면
-                        ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal:8.0),
-                      child: Text(
-                        '이메일 로그인',
-                        style: ColorTextStyle.mediumNavy(context),
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      '|',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      // 이메일 회원가입 클릭 시 Term 화면으로 이동
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Term(), // Term 화면
-                        ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal:8.0),
-                      child: Text(
-                        '이메일 회원가입',
-                          style: ColorTextStyle.mediumNavy(context)
-                      ),
-                    ),
-                  ),
-                ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryItem(int count, String label, BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center, // 내용 중앙 정렬
+      children: [
+        Text(
+          '$count',
+          style: ColorTextStyle.largeNavy(context),
+        ),
+        Text(
+          label,
+          style: ColorTextStyle.mediumLightNavy(context),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRowItem(String label, String count, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween, // 항목들을 양쪽 끝으로 배치
+        children: [
+          Text(
+            label,
+            style: ColorTextStyle.largeNavy(context),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                count,
+                style: ColorTextStyle.mediumNavy(context),
+              ),
+              const SizedBox(width: 8.0), // "0"과 ">" 사이 간격
+              Text(
+                ">",
+                style: ColorTextStyle.mediumNavy(context),
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }

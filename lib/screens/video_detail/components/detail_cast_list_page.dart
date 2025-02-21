@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nungil/models/Video.dart';
+import 'package:nungil/models/detail/Video.dart';
 import 'package:nungil/screens/video_detail/components/detail_tap_info.dart';
 import 'package:nungil/theme/common_theme.dart';
 
@@ -15,7 +15,7 @@ class DetailCastListPage extends StatefulWidget {
 class _DetailCastListPageState extends State<DetailCastListPage> {
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _tabs = [
+    final List<Widget> tabs = [
       ListView.builder(
         itemCount: widget.item.cast.length,
         itemBuilder: (context, index) => ListTile(
@@ -50,7 +50,7 @@ class _DetailCastListPageState extends State<DetailCastListPage> {
     return SafeArea(
       // DefaultTabController를 사용해 탭바 컨트롤러를 자동으로 제공
       child: DefaultTabController(
-        length: _tabs.length, // 탭 개수
+        length: tabs.length, // 탭 개수
         child: Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -67,7 +67,7 @@ class _DetailCastListPageState extends State<DetailCastListPage> {
           ),
           // body에 TabBarView를 사용해 각 탭의 내용을 표시
           body: TabBarView(
-            children: _tabs,
+            children: tabs,
           ),
         ),
       ),

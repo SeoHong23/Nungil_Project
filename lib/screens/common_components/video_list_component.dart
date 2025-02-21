@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nungil/screens/video_detail/video_detail_page.dart';
 import 'package:nungil/theme/common_theme.dart';
 
-import '../../models/Video.dart';
+import '../../models/detail/Video.dart';
 import 'poster_image_component.dart';
 import 'rate_builder.dart';
 
