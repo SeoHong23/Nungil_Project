@@ -70,9 +70,13 @@ dependencies:
   external_path:
     path: packages/external_path # 외부 파일 경로
   path: ^1.8.3
+  objectbox: ^2.5.1
+  objectbox_flutter_libs: ^2.5.1
 
 
 dev_dependencies:
+  build_runner: ^2.3.0
+  objectbox_generator: ^2.5.1
   flutter_test:
     sdk: flutter
 

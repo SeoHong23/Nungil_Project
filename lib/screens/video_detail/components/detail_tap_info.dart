@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:nungil/models/Video.dart';
+import 'package:nungil/models/detail/Video.dart';
 import 'package:nungil/screens/video_detail/components/detail_cast_list_page.dart';
 import 'package:nungil/screens/video_detail/components/detail_image_zoom_page.dart';
 import 'package:nungil/screens/video_detail/components/skeleton.dart';

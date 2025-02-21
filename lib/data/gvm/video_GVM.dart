@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/data/repository/video_repository.dart';
-import 'package:nungil/models/Video.dart';
+import 'package:nungil/models/detail/Video.dart';
 
 class VideoGVM extends AutoDisposeFamilyNotifier<Video, String> {
   final VideoRepository videoRepository = const VideoRepository();

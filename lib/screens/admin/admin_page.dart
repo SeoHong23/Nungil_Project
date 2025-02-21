@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/providers/auth_provider.dart';
-import 'package:nungil/screens/main_screen.dart';
 import 'package:nungil/screens/user/user_page.dart';
 
 import 'component/admin_body_component.dart';
@@ -26,7 +25,7 @@ class AdminPage extends ConsumerWidget {
               // 로그아웃 후 MainScreen으로 돌아가기
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => UserPage()),
+                MaterialPageRoute(builder: (context) => const UserPage()),
               );
             },
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:nungil/data/objectbox_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nungil/providers/theme_provider.dart';
 import 'package:nungil/screens/main_screen.dart';
@@ -11,6 +12,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진 초기화
 
   final prefs = await SharedPreferences.getInstance();
+  final objectBox = ObjectBox();
+  await objectBox.init();
 
   KakaoSdk.init(
       nativeAppKey: "8624912776c557f351ebf004d8aabcf5"); // 카카오 SDK 초기화

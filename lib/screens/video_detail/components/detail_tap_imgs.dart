@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nungil/models/Video.dart';
+import 'package:nungil/models/detail/Video.dart';
 import 'package:nungil/screens/video_detail/components/detail_tap_info.dart';
 import 'package:nungil/theme/common_theme.dart';
 
