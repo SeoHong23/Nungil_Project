@@ -7,7 +7,7 @@ import 'package:nungil/screens/user/term/term.dart';
 import 'package:nungil/theme/common_theme.dart';
 
 class LoginPage extends ConsumerWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
