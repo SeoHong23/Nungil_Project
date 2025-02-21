@@ -1,13 +1,10 @@
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/theme/common_theme.dart';
 import '../../main_screen.dart';
-import 'login_view.dart';
-import 'package:nungil/theme/common_theme.dart';
-
+import '../user_page.dart';
 import 'package:nungil/providers/auth_provider.dart';
 
 class EmailLogin extends ConsumerStatefulWidget {

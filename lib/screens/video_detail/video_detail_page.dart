@@ -6,7 +6,7 @@ import 'package:nungil/screens/search/search_page.dart';
 import 'package:nungil/screens/video_detail/components/custom_animated_switcher.dart';
 import 'package:nungil/screens/video_detail/components/skeleton.dart';
 import 'package:nungil/data/gvm/video_GVM.dart';
-import 'package:nungil/models/Video.dart';
+import 'package:nungil/models/detail/Video.dart';
 import 'package:nungil/screens/video_detail/components/detail_tap_imgs.dart';
 import 'package:nungil/screens/video_detail/components/detail_tap_info.dart';
 import 'package:nungil/screens/video_detail/components/detail_tap_review.dart';
@@ -99,7 +99,7 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SearchPage(),
+                    builder: (context) => const SearchPage(),
                   ),
                 );
               },
