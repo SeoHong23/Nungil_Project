@@ -71,7 +71,8 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
               const SizedBox(height: 16),
               Expanded(
                 child: isLoading
-                    ? const Center(child: CircularProgressIndicator()) // ✅ 로딩 UI 개선
+                    ? const Center(
+                        child: CircularProgressIndicator()) // ✅ 로딩 UI 개선
                     : videoList.isEmpty
                         ? const Center(child: Text("데이터가 없습니다.")) // ✅ 빈 데이터 처리
                         : _buildRankingContent(),
@@ -104,7 +105,9 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
               decoration: BoxDecoration(
                 color: isSelected
                     ? Theme.of(context).cardColor
-                    : Theme.of(context).colorScheme.surface, // ✅ 선택 여부에 따른 색상 변경
+                    : Theme.of(context)
+                        .colorScheme
+                        .surface, // ✅ 선택 여부에 따른 색상 변경
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Text(
@@ -116,7 +119,9 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
                       : FontWeight.normal, // ✅ 선택된 경우 볼드 처리
                   color: isSelected
                       ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(context).colorScheme.primary, // ✅ 선택된 경우 텍스트 색상 변경
+                      : Theme.of(context)
+                          .colorScheme
+                          .primary, // ✅ 선택된 경우 텍스트 색상 변경
                 ),
               ),
             ),
@@ -151,12 +156,30 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
 
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VideoDetailPage(item: videoList[0].id),
-          ),
-        );
+        topVideo.poster.isNotEmpty
+            ? Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => VideoDetailPage(item: videoList[0].id),
+                ),
+              )
+            : showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("알림"),
+                    content: Text("현재 정보 준비중입니다."),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // 다이얼로그 닫기
+                        },
+                        child: Text("확인"),
+                      ),
+                    ],
+                  );
+                },
+              );
       },
       child: Stack(
         children: [
@@ -203,7 +226,10 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('1', style: CustomTextStyle.bigLogo),
-                Text(topVideo.title, style: topVideo.title.length<8?CustomTextStyle.bigLogo:CustomTextStyle.mediumLogo),
+                Text(topVideo.title,
+                    style: topVideo.title.length < 8
+                        ? CustomTextStyle.bigLogo
+                        : CustomTextStyle.mediumLogo),
               ],
             ),
           ),

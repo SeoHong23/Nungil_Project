@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nungil/screens/home/components/home_video_list_component.dart';
 
 import '../../../data/repository/video_list_repository.dart';
 import '../../../models/list/video_list_model.dart';
@@ -40,7 +41,9 @@ class _HomeMovieListComponentState extends State<HomeMovieListComponent> {
           widget.title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
-        const SizedBox(height: 8.0,),
+        const SizedBox(
+          height: 8.0,
+        ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Padding(
@@ -52,12 +55,10 @@ class _HomeMovieListComponentState extends State<HomeMovieListComponent> {
                   padding: const EdgeInsets.only(right: 16),
                   child: SizedBox(
                     width: 170,
-                    height: 310,
-                    child: VideoListComponent(
+                    height: 250,
+                    child: HomeVideoListComponent(
                       id: widget.videoList[index].id,
-                      imgUrl: widget.videoList[index].poster ?? '', // null 체크
-                      name: widget.videoList[index].title ?? '제목 없음',
-                      rate: 80.0, // 예제에서는 80.0 고정, 필요하면 API 값 사용
+                      imgUrl: widget.videoList[index].poster ?? '',
                     ),
                   ),
                 ),

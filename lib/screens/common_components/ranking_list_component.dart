@@ -22,12 +22,33 @@ class RankingListComponent extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => VideoDetailPage(item: video.id),
-            ),
-          );
+          video.poster.isNotEmpty
+              ? Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VideoDetailPage(item: video.id),
+                  ),
+                )
+              : showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(
+                        "알림",
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      content: Text("현재 정보 준비중입니다."),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // 다이얼로그 닫기
+                          },
+                          child: Text("확인"),
+                        ),
+                      ],
+                    );
+                  },
+                );
         },
         child: SizedBox(
           height: 60,
