@@ -103,15 +103,18 @@ class LoginView extends ConsumerWidget {
             IconButton(
               icon: Icon(Icons.logout), // 로그아웃 아이콘
               onPressed: () async {
-                // 로그아웃 처리
-                await ref.read(authProvider.notifier).logout();
-
-                await ref.read(authProvider.notifier).checkLoginStatus();
-                // 로그아웃 후 MainScreen으로 돌아가기
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainScreen()),
-                );
+                try {
+                  // 로그아웃 처리
+                  await ref.read(authProvider.notifier).logout();
+                  // 로그아웃 후 MainScreen으로 돌아가기
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainScreen()),
+                  );
+                  await ref.read(authProvider.notifier).checkLoginStatus();
+                } catch (e) {
+                  print("로그아웃 중 에러 발생: $e");
+                }
               },
             ),
             // 고객센터(도움말) 아이콘
@@ -172,13 +175,19 @@ class LoginView extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 균등 정렬
                   children: [
-                    _buildCategoryItem(favoriteCount, "찜했어요",context),
-                    VerticalDivider(color: Theme.of(context).colorScheme.secondary,
-                      indent: 15,endIndent: 15,),
-                    _buildCategoryItem(watchingCount, "보는중",context),
-                    VerticalDivider(color: Theme.of(context).colorScheme.secondary,
-                      indent: 15,endIndent: 15,),
-                    _buildCategoryItem(watchedCount, "봤어요",context),
+                    _buildCategoryItem(favoriteCount, "찜했어요", context),
+                    VerticalDivider(
+                      color: Theme.of(context).colorScheme.secondary,
+                      indent: 15,
+                      endIndent: 15,
+                    ),
+                    _buildCategoryItem(watchingCount, "보는중", context),
+                    VerticalDivider(
+                      color: Theme.of(context).colorScheme.secondary,
+                      indent: 15,
+                      endIndent: 15,
+                    ),
+                    _buildCategoryItem(watchedCount, "봤어요", context),
                   ],
                 ),
               ),
@@ -193,7 +202,8 @@ class LoginView extends ConsumerWidget {
                     print("본 작품 통계 클릭됨!");
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const MainScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const MainScreen()),
                     );
                   },
                   child: Text(
@@ -213,18 +223,24 @@ class LoginView extends ConsumerWidget {
                 child: Column(
                   children: [
                     // "작성한 리뷰 0 >"
-                    _buildRowItem("작성한 리뷰", "0",context),
+                    _buildRowItem("작성한 리뷰", "0", context),
 
-                    Divider(color: Theme.of(context).colorScheme.secondary,
-                    indent: 15,endIndent: 15,),
+                    Divider(
+                      color: Theme.of(context).colorScheme.secondary,
+                      indent: 15,
+                      endIndent: 15,
+                    ),
 
                     // "관심없어요 0 >"
-                    _buildRowItem("관심없어요", notinterestedCount,context),
+                    _buildRowItem("관심없어요", notinterestedCount, context),
 
-                    Divider(color: Theme.of(context).colorScheme.secondary,
-                      indent: 15,endIndent: 15,),
+                    Divider(
+                      color: Theme.of(context).colorScheme.secondary,
+                      indent: 15,
+                      endIndent: 15,
+                    ),
                     // "구독중인 서비스 >"
-                    _buildRowItem("구독중인 서비스", "",context),
+                    _buildRowItem("구독중인 서비스", "", context),
                   ],
                 ),
               ),
@@ -234,6 +250,7 @@ class LoginView extends ConsumerWidget {
       ),
     );
   }
+
   Widget _buildCategoryItem(String count, String label, BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center, // 내용 중앙 정렬
@@ -279,5 +296,3 @@ class LoginView extends ConsumerWidget {
     );
   }
 }
-
-

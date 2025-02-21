@@ -8,17 +8,18 @@ import 'package:nungil/screens/main_screen.dart';
 import 'package:nungil/theme/common_theme.dart';
 import 'package:nungil/screens/user/user_page.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진 초기화
 
   final prefs = await SharedPreferences.getInstance();
   final objectBox = ObjectBox();
   await objectBox.init();
 
-
   KakaoSdk.init(
       nativeAppKey: "8624912776c557f351ebf004d8aabcf5"); // 카카오 SDK 초기화
 
+  final keyHash = await KakaoSdk.origin;
+  print("현재 사용중인 키 해시 : $keyHash");
 
   runApp(
     ProviderScope(
