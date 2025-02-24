@@ -99,7 +99,6 @@ class VideoListRepository {
 
     // ✅ 오늘 날짜와 같다면, 캐싱된 데이터 반환
     if (cachedDate == today && cachedData != null) {
-      print('🔹 캐싱된 데이터 사용: $cacheKey');
       final List<dynamic> decoded = jsonDecode(cachedData);
       return decoded.map((item) => VideoRankModel.fromJson(item)).toList();
     }
@@ -119,7 +118,6 @@ class VideoListRepository {
             cacheKey, jsonEncode(ranks.map((e) => e.toJson()).toList()));
         await prefs.setString(dateKey, today);
 
-        print('🆕 새로운 데이터 저장: $cacheKey');
         return ranks;
       } else {
         throw Exception('Invalid response format');
