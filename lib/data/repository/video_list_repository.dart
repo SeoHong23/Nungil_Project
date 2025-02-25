@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:nungil/models/list/video_list_model.dart';
 import 'package:nungil/util/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/ranking/video_rank_model.dart';
 import '../../util/my_http.dart';
@@ -78,43 +79,58 @@ class VideoListRepository {
   }
 
   Future<List<VideoRankModel>> fetchRanksDaily() async {
+    return await _fetchRanks(
+        '/api/ranking/daily', 'cached_ranks_daily', 'cached_date_daily');
+  }
+
+  Future<List<VideoRankModel>> fetchRanksWeekly() async {
+    return await _fetchRanks(
+        '/api/ranking/weekly', 'cached_ranks_weekly', 'cached_date_weekly');
+  }
+
+  Future<List<VideoRankModel>> _fetchRanks(
+      String url, String cacheKey, String dateKey) async {
+    final prefs = await SharedPreferences.getInstance();
+    final String today = _getTodayDate();
+
+    // ✅ 캐싱된 날짜 확인
+    final String? cachedDate = prefs.getString(dateKey);
+    final String? cachedData = prefs.getString(cacheKey);
+
+    // ✅ 오늘 날짜와 같다면, 캐싱된 데이터 반환
+    if (cachedDate == today && cachedData != null) {
+      final List<dynamic> decoded = jsonDecode(cachedData);
+      return decoded.map((item) => VideoRankModel.fromJson(item)).toList();
+    }
+
     try {
       // ✅ API 호출 (JSON 데이터 직접 받음)
-      Response response = await dio.get('/api/ranking/daily');
+      Response response = await dio.get(url);
 
-      // ✅ response.data가 이미 JSON 형태일 가능성이 높음 → json.decode 제거
       if (response.statusCode == 200 && response.data is List) {
-        return (response.data as List)
+        List<VideoRankModel> ranks = (response.data as List)
             .map(
                 (item) => VideoRankModel.fromJson(item as Map<String, dynamic>))
             .toList();
+
+        // ✅ 새 데이터 캐싱
+        await prefs.setString(
+            cacheKey, jsonEncode(ranks.map((e) => e.toJson()).toList()));
+        await prefs.setString(dateKey, today);
+
+        return ranks;
       } else {
         throw Exception('Invalid response format');
       }
     } catch (e) {
-      print("Error fetching videos: $e");
+      print("⚠️ Error fetching videos: $e");
       throw Exception('Failed to load videos');
     }
   }
 
-  Future<List<VideoRankModel>> fetchRanksWeekly() async {
-    try {
-      // ✅ API 호출 (JSON 데이터 직접 받음)
-      Response response = await dio.get('/api/ranking/weekly');
-
-      // ✅ response.data가 이미 JSON 형태일 가능성이 높음 → json.decode 제거
-      if (response.statusCode == 200 && response.data is List) {
-        return (response.data as List)
-            .map(
-                (item) => VideoRankModel.fromJson(item as Map<String, dynamic>))
-            .toList();
-      } else {
-        throw Exception('Invalid response format');
-      }
-    } catch (e) {
-      print("Error fetching videos: $e");
-      throw Exception('Failed to load videos');
-    }
+  // ✅ 오늘 날짜를 yyyy-MM-dd 형식으로 반환
+  String _getTodayDate() {
+    return DateTime.now().toIso8601String().split('T')[0];
   }
 
   Map<String, dynamic> _buildQueryParams(int page, int size,

@@ -54,6 +54,7 @@ dependencies:
   flutter_secure_storage: ^8.0.0 # 어플리케이션 Secure Storage를 쉽게 사용할 수 있도록 도와주는 라이브러리입니다.
   pull_to_refresh: ^2.0.0
   image_picker: ^1.1.2 # 갤러리에서 이미지 가져오기
+  workmanager: ^0.5.1 # 백그라운드 실행
 
   # 박서홍 02-05 추가
   flutter_rating_bar: ^4.0.1 #평점 라이브러리

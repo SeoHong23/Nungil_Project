@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:nungil/screens/common_components/video_list_component.dart';
 import 'package:nungil/screens/search/search_page.dart';
 import 'package:nungil/theme/common_theme.dart';
 import 'package:nungil/util/my_http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common_components/ranking_list_component.dart';
 import 'home_Movie_list_component.dart';
@@ -53,55 +55,79 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
   }
 
   Future<void> fetchHomeData() async {
+    final repository = VideoListRepository();
+    final bannerRepository = BannerRepository();
+    final prefs = await SharedPreferences.getInstance();
+    final today = DateTime.now().toIso8601String().split('T')[0];
+
+    setState(() => isLoading = true);
+
     try {
-      final repository = VideoListRepository();
-      final bannerRepository = BannerRepository();
+      // ✅ 캐싱된 데이터 확인 (있으면 바로 적용)
+      final cachedDailyRanking =
+          _loadCachedRanking(prefs, 'daily_ranking_$today');
+      if (cachedDailyRanking != null) {
+        setState(() => dailyRanking = cachedDailyRanking);
+      }
 
-      // ✅ 첫 번째 요청 (일일 랭킹)
-      final dailyData = await repository.fetchRanksDaily();
-      setState(() {
-        dailyRanking = dailyData;
-      });
+      final cachedWeeklyRanking =
+          _loadCachedRanking(prefs, 'weekly_ranking_$today');
+      if (cachedWeeklyRanking != null) {
+        setState(() => weeklyRanking = cachedWeeklyRanking);
+      }
 
-      await Future.delayed(const Duration(milliseconds: 50)); // ⏳ 요청 간 50ms 지연
+      // ✅ 개별적으로 API 요청 후 바로 setState 호출 (병렬 실행)
+      repository.fetchRanksDaily().then((data) {
+        setState(() => dailyRanking = data);
+        _cacheRanking(prefs, 'daily_ranking_$today', data);
+      }).catchError((e) => print("Error fetching daily ranks: $e"));
 
-      // ✅ 두 번째 요청 (주간 랭킹)
-      final weeklyData = await repository.fetchRanksWeekly();
-      setState(() {
-        weeklyRanking = weeklyData;
-      });
+      repository.fetchRanksWeekly().then((data) {
+        setState(() => weeklyRanking = data);
+        _cacheRanking(prefs, 'weekly_ranking_$today', data);
+      }).catchError((e) => print("Error fetching weekly ranks: $e"));
 
-      await Future.delayed(const Duration(milliseconds: 50));
+      bannerRepository.randomBanner().then((data) {
+        setState(() => randomAd = data);
+      }).catchError((e) => print("Error fetching banner: $e"));
 
-      // ✅ 세 번째 요청 (랜덤 배너)
-      final adData = await bannerRepository.randomBanner();
-      setState(() {
-        randomAd = adData;
-      });
+      repository.fetchVideosRandom(5).then((data) {
+        setState(() => randomMovies = data);
+      }).catchError((e) => print("Error fetching random movies: $e"));
 
-      await Future.delayed(const Duration(milliseconds: 50));
-
-      // ✅ 네 번째 요청 (랜덤 추천작)
-      final randomData = await repository.fetchVideosRandom(10);
-      setState(() {
-        randomMovies = randomData;
-      });
-
-      await Future.delayed(const Duration(milliseconds: 50));
-
-      // ✅ 마지막 요청 (최신 영화)
-      final latestData =
-          await repository.fetchVideosWithFilter(0, 10, {}, "DateDESC", false);
-      setState(() {
-        latestMovies = latestData;
-        isLoading = false; // 모든 데이터가 불러와졌으면 로딩 상태 변경
+      repository
+          .fetchVideosWithFilter(0, 10, {}, "DateDESC", false)
+          .then((data) {
+        setState(() {
+          latestMovies = data;
+          isLoading = false; // 모든 요청이 끝나면 로딩 종료
+        });
+      }).catchError((e) {
+        print("Error fetching latest movies: $e");
+        setState(() => isLoading = false);
       });
     } catch (e) {
       print("Error fetching home data: $e");
-      setState(() {
-        isLoading = false;
-      });
+      setState(() => isLoading = false);
     }
+  }
+
+  // ✅ 캐싱 데이터 로드 함수
+  List<VideoRankModel>? _loadCachedRanking(
+      SharedPreferences prefs, String key) {
+    final cachedData = prefs.getString(key);
+    if (cachedData != null) {
+      final List<dynamic> jsonList = jsonDecode(cachedData);
+      return jsonList.map((json) => VideoRankModel.fromJson(json)).toList();
+    }
+    return null;
+  }
+
+  // ✅ 캐싱 데이터 저장 함수
+  void _cacheRanking(
+      SharedPreferences prefs, String key, List<VideoRankModel> ranking) {
+    final jsonData = jsonEncode(ranking.map((e) => e.toJson()).toList());
+    prefs.setString(key, jsonData);
   }
 
   @override

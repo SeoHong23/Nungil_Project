@@ -24,4 +24,15 @@ class VideoRankModel {
       rankOldAndNew: json['rankOldAndNew'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'poster': poster,
+      'rank': rank,
+      'rankInten': rankInten,
+      'rankOldAndNew': rankOldAndNew,
+    };
+  }
 }
