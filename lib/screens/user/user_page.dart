@@ -15,11 +15,22 @@ class UserPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // AuthProvider에서 로그인된 사용자 정보를 가져옵니다.
-    final userId = ref.watch(authProvider.select((state) => state.user?.userId));
-    final nickName = ref.watch(authProvider.select((state) =>
-        state.user?.nickname != null
-            ? utf8.decode(state.user!.nickname.codeUnits)
-            : ''));
+    final userId =
+        ref.watch(authProvider.select((state) => state.user?.userId));
+
+    final nickName = ref.watch(authProvider.select((state) {
+      if (state.user?.nickname == null) return '';
+
+      try {
+        // allowMalformed 옵션을 추가하여 잘못된 UTF-8도 최대한 처리
+        return utf8.decode(state.user!.nickname.codeUnits,
+            allowMalformed: true);
+      } catch (e) {
+        print('닉네임 디코딩 오류: $e');
+        // 오류 시 원본 닉네임 반환
+        return state.user!.nickname;
+      }
+    }));
 
     final watchedCount = getWatchedMovie().length;
     final watchingCount = getWatchingMovie().length;
@@ -31,28 +42,34 @@ class UserPage extends ConsumerWidget {
           centerTitle: false,
           automaticallyImplyLeading: false,
           actions: [
-            userId!=null?
-            IconButton(
-              icon: const Icon(Icons.logout_rounded), // 로그아웃 아이콘
-              onPressed: () async {
-                // 로그아웃 처리
-                await ref.read(authProvider.notifier).logout();
+            userId != null
+                ? IconButton(
+                    icon: const Icon(Icons.logout_rounded),
+                    onPressed: () async {
+                      final authNotifier = ref.read(authProvider.notifier);
 
-                await ref.read(authProvider.notifier).checkLoginStatus();
-                // 로그아웃 후 MainScreen으로 돌아가기
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MainScreen()),
-                );
-              },
-            ):
-            IconButton(onPressed: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
-            }, icon: const Icon(Icons.login_rounded))
-            ,
+                      await authNotifier.logout();
+
+                      if (context.mounted) {
+                        await authNotifier.checkLoginStatus();
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MainScreen()),
+                        );
+                      }
+                    },
+                  )
+                : IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
+                      );
+                    },
+                    icon: const Icon(Icons.login_rounded)),
             // 고객센터(도움말) 아이콘
             IconButton(
               icon: const Icon(Icons.help_outline), // 도움말 아이콘
@@ -153,8 +170,10 @@ class UserPage extends ConsumerWidget {
                     // "작성한 리뷰 0 >"
                     _buildRowItem("작성한 리뷰", "0", context),
 
-
-                    Divider(color: Theme.of(context).colorScheme.secondary, indent: 15, endIndent: 15),
+                    Divider(
+                        color: Theme.of(context).colorScheme.secondary,
+                        indent: 15,
+                        endIndent: 15),
 
                     // "구독중인 서비스 >"
                     _buildRowItem("구독중인 서비스", "", context),
