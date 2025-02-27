@@ -2,7 +2,7 @@ import 'package:nungil/objectbox.g.dart';
 import 'package:objectbox/objectbox.dart';
 
 class ObjectBox {
-  late final Store store;
+  static late final Store store;
 
   // 싱글턴 인스턴스
   static final ObjectBox _instance = ObjectBox._internal();
@@ -18,4 +18,5 @@ class ObjectBox {
 
   // 전역에서 box 접근
   Box<T> getBox<T>() => store.box<T>();
+
 }

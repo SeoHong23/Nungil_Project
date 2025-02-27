@@ -3,13 +3,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // API 서버의 기본 URL 설정
 // 눈길 URL
-const baseUrl = 'http://13.239.238.92:8080';
+// const baseUrl = 'http://13.239.238.92:8080';
 
 // 로컬 백엔드 (크롬으로 실행시)
 // const baseUrl = 'http://127.0.0.1:8080';
 
 // 로컬 백엔드 (에뮬레이터로 실행시)
-// const baseUrl = 'http://10.0.2.2:8080';
+const baseUrl = 'http://10.0.2.2:8080';
 
 final dio = Dio(
   BaseOptions(

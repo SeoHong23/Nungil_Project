@@ -4,75 +4,96 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:2581933279753088637",
-      "lastPropertyId": "11:9070030530466674174",
-      "name": "Movie",
+      "id": "2:3739474223868304647",
+      "lastPropertyId": "12:3380423253305838325",
+      "name": "VideoReaction",
       "properties": [
         {
-          "id": "1:1966263670889069915",
-          "name": "id",
+          "id": "1:8734899035898293281",
+          "name": "objectId",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:6987552514450779871",
+          "id": "2:3120971365932344357",
+          "name": "mongoId",
+          "type": 9
+        },
+        {
+          "id": "3:4962719489880639364",
           "name": "videoId",
           "type": 9
         },
         {
-          "id": "3:6423756207060662407",
+          "id": "4:7614352333826094254",
           "name": "title",
           "type": 9
         },
         {
-          "id": "4:6799811005735605070",
+          "id": "5:9093533046324336408",
           "name": "posterUrl",
           "type": 9
         },
         {
-          "id": "5:8526056136326485837",
+          "id": "6:4366328154794827948",
           "name": "isLiked",
           "type": 1
         },
         {
-          "id": "6:8952205669879977292",
+          "id": "7:6761506248849380447",
           "name": "isDisliked",
           "type": 1
         },
         {
-          "id": "7:4756327460227734154",
+          "id": "8:5298704032809115418",
           "name": "isWatching",
           "type": 1
         },
         {
-          "id": "8:8855204925951776721",
+          "id": "9:7770965617476064908",
           "name": "isWatched",
           "type": 1
         },
         {
-          "id": "9:1175661293551751892",
+          "id": "10:2161187560337658973",
           "name": "isBookmarked",
           "type": 1
         },
         {
-          "id": "10:5375974280956006017",
+          "id": "11:4837415536539722834",
           "name": "isIgnored",
+          "type": 1
+        },
+        {
+          "id": "12:3380423253305838325",
+          "name": "isModified",
           "type": 1
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "1:2581933279753088637",
+  "lastEntityId": "2:3739474223868304647",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
-  "retiredEntityUids": [],
+  "retiredEntityUids": [
+    2581933279753088637
+  ],
   "retiredIndexUids": [],
   "retiredPropertyUids": [
-    9070030530466674174
+    1966263670889069915,
+    6987552514450779871,
+    6423756207060662407,
+    6799811005735605070,
+    8526056136326485837,
+    8952205669879977292,
+    4756327460227734154,
+    8855204925951776721,
+    1175661293551751892,
+    5375974280956006017
   ],
   "retiredRelationUids": [],
   "version": 1

@@ -15,65 +15,75 @@ import 'package:objectbox/internal.dart'
 import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
-import 'models/detail/Movie.dart';
+import 'models/detail/VideoReaction.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
 final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
-      id: const obx_int.IdUid(1, 2581933279753088637),
-      name: 'Movie',
-      lastPropertyId: const obx_int.IdUid(11, 9070030530466674174),
+      id: const obx_int.IdUid(2, 3739474223868304647),
+      name: 'VideoReaction',
+      lastPropertyId: const obx_int.IdUid(12, 3380423253305838325),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(1, 1966263670889069915),
-            name: 'id',
+            id: const obx_int.IdUid(1, 8734899035898293281),
+            name: 'objectId',
             type: 6,
             flags: 1),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(2, 6987552514450779871),
+            id: const obx_int.IdUid(2, 3120971365932344357),
+            name: 'mongoId',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 4962719489880639364),
             name: 'videoId',
             type: 9,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(3, 6423756207060662407),
+            id: const obx_int.IdUid(4, 7614352333826094254),
             name: 'title',
             type: 9,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(4, 6799811005735605070),
+            id: const obx_int.IdUid(5, 9093533046324336408),
             name: 'posterUrl',
             type: 9,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(5, 8526056136326485837),
+            id: const obx_int.IdUid(6, 4366328154794827948),
             name: 'isLiked',
             type: 1,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(6, 8952205669879977292),
+            id: const obx_int.IdUid(7, 6761506248849380447),
             name: 'isDisliked',
             type: 1,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(7, 4756327460227734154),
+            id: const obx_int.IdUid(8, 5298704032809115418),
             name: 'isWatching',
             type: 1,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(8, 8855204925951776721),
+            id: const obx_int.IdUid(9, 7770965617476064908),
             name: 'isWatched',
             type: 1,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(9, 1175661293551751892),
+            id: const obx_int.IdUid(10, 2161187560337658973),
             name: 'isBookmarked',
             type: 1,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(10, 5375974280956006017),
+            id: const obx_int.IdUid(11, 4837415536539722834),
             name: 'isIgnored',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(12, 3380423253305838325),
+            name: 'isModified',
             type: 1,
             flags: 0)
       ],
@@ -116,70 +126,89 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(1, 2581933279753088637),
+      lastEntityId: const obx_int.IdUid(2, 3739474223868304647),
       lastIndexId: const obx_int.IdUid(0, 0),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
-      retiredEntityUids: const [],
+      retiredEntityUids: const [2581933279753088637],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [9070030530466674174],
+      retiredPropertyUids: const [
+        1966263670889069915,
+        6987552514450779871,
+        6423756207060662407,
+        6799811005735605070,
+        8526056136326485837,
+        8952205669879977292,
+        4756327460227734154,
+        8855204925951776721,
+        1175661293551751892,
+        5375974280956006017
+      ],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
       version: 1);
 
   final bindings = <Type, obx_int.EntityDefinition>{
-    Movie: obx_int.EntityDefinition<Movie>(
+    VideoReaction: obx_int.EntityDefinition<VideoReaction>(
         model: _entities[0],
-        toOneRelations: (Movie object) => [],
-        toManyRelations: (Movie object) => {},
-        getId: (Movie object) => object.id,
-        setId: (Movie object, int id) {
-          object.id = id;
+        toOneRelations: (VideoReaction object) => [],
+        toManyRelations: (VideoReaction object) => {},
+        getId: (VideoReaction object) => object.objectId,
+        setId: (VideoReaction object, int id) {
+          object.objectId = id;
         },
-        objectToFB: (Movie object, fb.Builder fbb) {
+        objectToFB: (VideoReaction object, fb.Builder fbb) {
+          final mongoIdOffset = fbb.writeString(object.mongoId);
           final videoIdOffset = fbb.writeString(object.videoId);
           final titleOffset = fbb.writeString(object.title);
           final posterUrlOffset = fbb.writeString(object.posterUrl);
-          fbb.startTable(12);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, videoIdOffset);
-          fbb.addOffset(2, titleOffset);
-          fbb.addOffset(3, posterUrlOffset);
-          fbb.addBool(4, object.isLiked);
-          fbb.addBool(5, object.isDisliked);
-          fbb.addBool(6, object.isWatching);
-          fbb.addBool(7, object.isWatched);
-          fbb.addBool(8, object.isBookmarked);
-          fbb.addBool(9, object.isIgnored);
+          fbb.startTable(13);
+          fbb.addInt64(0, object.objectId);
+          fbb.addOffset(1, mongoIdOffset);
+          fbb.addOffset(2, videoIdOffset);
+          fbb.addOffset(3, titleOffset);
+          fbb.addOffset(4, posterUrlOffset);
+          fbb.addBool(5, object.isLiked);
+          fbb.addBool(6, object.isDisliked);
+          fbb.addBool(7, object.isWatching);
+          fbb.addBool(8, object.isWatched);
+          fbb.addBool(9, object.isBookmarked);
+          fbb.addBool(10, object.isIgnored);
+          fbb.addBool(11, object.isModified);
           fbb.finish(fbb.endTable());
-          return object.id;
+          return object.objectId;
         },
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-          final idParam =
+          final objectIdParam =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
-          final videoIdParam = const fb.StringReader(asciiOptimization: true)
+          final mongoIdParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 6, '');
-          final titleParam = const fb.StringReader(asciiOptimization: true)
+          final videoIdParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 8, '');
-          final posterUrlParam = const fb.StringReader(asciiOptimization: true)
+          final titleParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 10, '');
+          final posterUrlParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 12, '');
           final isLikedParam =
-              const fb.BoolReader().vTableGet(buffer, rootOffset, 12, false);
-          final isDislikedParam =
               const fb.BoolReader().vTableGet(buffer, rootOffset, 14, false);
-          final isWatchingParam =
+          final isDislikedParam =
               const fb.BoolReader().vTableGet(buffer, rootOffset, 16, false);
-          final isWatchedParam =
+          final isWatchingParam =
               const fb.BoolReader().vTableGet(buffer, rootOffset, 18, false);
-          final isBookmarkedParam =
+          final isWatchedParam =
               const fb.BoolReader().vTableGet(buffer, rootOffset, 20, false);
-          final isIgnoredParam =
+          final isBookmarkedParam =
               const fb.BoolReader().vTableGet(buffer, rootOffset, 22, false);
-          final object = Movie(
-              id: idParam,
+          final isIgnoredParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 24, false);
+          final isModifiedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 26, false);
+          final object = VideoReaction(
+              objectId: objectIdParam,
+              mongoId: mongoIdParam,
               videoId: videoIdParam,
               title: titleParam,
               posterUrl: posterUrlParam,
@@ -188,7 +217,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
               isWatching: isWatchingParam,
               isWatched: isWatchedParam,
               isBookmarked: isBookmarkedParam,
-              isIgnored: isIgnoredParam);
+              isIgnored: isIgnoredParam,
+              isModified: isModifiedParam);
 
           return object;
         })
@@ -197,44 +227,53 @@ obx_int.ModelDefinition getObjectBoxModel() {
   return obx_int.ModelDefinition(model, bindings);
 }
 
-/// [Movie] entity fields to define ObjectBox queries.
-class Movie_ {
-  /// see [Movie.id]
-  static final id = obx.QueryIntegerProperty<Movie>(_entities[0].properties[0]);
+/// [VideoReaction] entity fields to define ObjectBox queries.
+class VideoReaction_ {
+  /// see [VideoReaction.objectId]
+  static final objectId =
+      obx.QueryIntegerProperty<VideoReaction>(_entities[0].properties[0]);
 
-  /// see [Movie.videoId]
+  /// see [VideoReaction.mongoId]
+  static final mongoId =
+      obx.QueryStringProperty<VideoReaction>(_entities[0].properties[1]);
+
+  /// see [VideoReaction.videoId]
   static final videoId =
-      obx.QueryStringProperty<Movie>(_entities[0].properties[1]);
+      obx.QueryStringProperty<VideoReaction>(_entities[0].properties[2]);
 
-  /// see [Movie.title]
+  /// see [VideoReaction.title]
   static final title =
-      obx.QueryStringProperty<Movie>(_entities[0].properties[2]);
+      obx.QueryStringProperty<VideoReaction>(_entities[0].properties[3]);
 
-  /// see [Movie.posterUrl]
+  /// see [VideoReaction.posterUrl]
   static final posterUrl =
-      obx.QueryStringProperty<Movie>(_entities[0].properties[3]);
+      obx.QueryStringProperty<VideoReaction>(_entities[0].properties[4]);
 
-  /// see [Movie.isLiked]
+  /// see [VideoReaction.isLiked]
   static final isLiked =
-      obx.QueryBooleanProperty<Movie>(_entities[0].properties[4]);
+      obx.QueryBooleanProperty<VideoReaction>(_entities[0].properties[5]);
 
-  /// see [Movie.isDisliked]
+  /// see [VideoReaction.isDisliked]
   static final isDisliked =
-      obx.QueryBooleanProperty<Movie>(_entities[0].properties[5]);
+      obx.QueryBooleanProperty<VideoReaction>(_entities[0].properties[6]);
 
-  /// see [Movie.isWatching]
+  /// see [VideoReaction.isWatching]
   static final isWatching =
-      obx.QueryBooleanProperty<Movie>(_entities[0].properties[6]);
+      obx.QueryBooleanProperty<VideoReaction>(_entities[0].properties[7]);
 
-  /// see [Movie.isWatched]
+  /// see [VideoReaction.isWatched]
   static final isWatched =
-      obx.QueryBooleanProperty<Movie>(_entities[0].properties[7]);
+      obx.QueryBooleanProperty<VideoReaction>(_entities[0].properties[8]);
 
-  /// see [Movie.isBookmarked]
+  /// see [VideoReaction.isBookmarked]
   static final isBookmarked =
-      obx.QueryBooleanProperty<Movie>(_entities[0].properties[8]);
+      obx.QueryBooleanProperty<VideoReaction>(_entities[0].properties[9]);
 
-  /// see [Movie.isIgnored]
+  /// see [VideoReaction.isIgnored]
   static final isIgnored =
-      obx.QueryBooleanProperty<Movie>(_entities[0].properties[9]);
+      obx.QueryBooleanProperty<VideoReaction>(_entities[0].properties[10]);
+
+  /// see [VideoReaction.isModified]
+  static final isModified =
+      obx.QueryBooleanProperty<VideoReaction>(_entities[0].properties[11]);
 }
