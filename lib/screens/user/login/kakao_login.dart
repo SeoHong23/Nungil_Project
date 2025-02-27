@@ -20,6 +20,7 @@ class KakaoLoginService {
       String email = user.kakaoAccount?.email ?? "no-email@example.com";
       String birthDay = user.kakaoAccount?.birthday ?? "";
       String birthYear = user.kakaoAccount?.birthyear ?? "";
+      print("🔥 카카오 API 응답 - birthYear: $birthYear, birthDay: $birthDay");
 
       // 성별 정보 처리
       String gender = "MALE"; // 기본값
@@ -31,10 +32,8 @@ class KakaoLoginService {
       int birthDateInt = 0;
 
       if (birthYear.isNotEmpty && birthDay.isNotEmpty) {
-        // YYYYMMDD 형식으로 변환
         birthDateInt = int.parse(birthYear + birthDay);
       } else if (birthDay.isNotEmpty) {
-        // MMDD 형식만 있는 경우 (연도 없음)
         birthDateInt = int.parse(birthDay);
       } else {
         // 생일 정보가 없는 경우 기본값 0 사용
