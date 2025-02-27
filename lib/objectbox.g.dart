@@ -23,7 +23,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(1, 2581933279753088637),
       name: 'Movie',
-      lastPropertyId: const obx_int.IdUid(10, 5375974280956006017),
+      lastPropertyId: const obx_int.IdUid(11, 9070030530466674174),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -122,7 +122,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [9070030530466674174],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -141,7 +141,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final videoIdOffset = fbb.writeString(object.videoId);
           final titleOffset = fbb.writeString(object.title);
           final posterUrlOffset = fbb.writeString(object.posterUrl);
-          fbb.startTable(11);
+          fbb.startTable(12);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, videoIdOffset);
           fbb.addOffset(2, titleOffset);
@@ -237,5 +237,4 @@ class Movie_ {
   /// see [Movie.isIgnored]
   static final isIgnored =
       obx.QueryBooleanProperty<Movie>(_entities[0].properties[9]);
-
 }

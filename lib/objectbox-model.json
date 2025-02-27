@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:2581933279753088637",
-      "lastPropertyId": "10:5375974280956006017",
+      "lastPropertyId": "11:9070030530466674174",
       "name": "Movie",
       "properties": [
         {
@@ -71,7 +71,9 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    9070030530466674174
+  ],
   "retiredRelationUids": [],
   "version": 1
 }
