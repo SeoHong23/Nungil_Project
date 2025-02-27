@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:nungil/data/repository/user_movie_repository.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nungil/data/repository/video_reaction_repository.dart';
 import 'package:nungil/theme/common_theme.dart';
 
 class WatchedPage extends StatelessWidget {
@@ -8,7 +9,7 @@ class WatchedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final movieList = getWatchedMovie();
+    final movieList = VideoReactionRepository().getWatchedMovies();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(),
@@ -21,12 +22,15 @@ class WatchedPage extends StatelessWidget {
               title: Text(movie.title),
               trailing: movie.isLiked
                   ? const Icon(
-                      Icons.thumb_up_rounded,
+                      FontAwesomeIcons.faceSmile,
                       color: DefaultColors.green,
                     )
                   : movie.isDisliked
-                      ? Icon(Icons.thumb_down_alt_rounded)
-                      : Text(''),
+                      ? const Icon(
+                          FontAwesomeIcons.faceFrown,
+                          color: DefaultColors.red,
+                        )
+                      : const Text(''),
             );
           },
         ),

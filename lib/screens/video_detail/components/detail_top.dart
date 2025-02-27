@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nungil/data/objectbox_helper.dart';
-import 'package:nungil/models/detail/Movie.dart';
+import 'package:nungil/models/detail/VideoReaction.dart';
 import 'package:nungil/models/detail/Video.dart';
 import 'package:nungil/objectbox.g.dart';
 import 'package:nungil/screens/video_detail/components/detail_image_zoom_page.dart';
@@ -24,13 +24,14 @@ class DetailTop extends ConsumerStatefulWidget {
 }
 
 class _DetailTopState extends ConsumerState<DetailTop> {
-  final movieBox = ObjectBox().getBox<Movie>();
+
+  final reactionBox = ObjectBox().getBox<VideoReaction>();
 
   bool isPosterLoaded = false;
   bool isStillLoaded = false;
   int stllsIndex = 0;
 
-  Movie? movie;
+  VideoReaction? reaction;
 
   @override
   void initState() {
@@ -43,27 +44,23 @@ class _DetailTopState extends ConsumerState<DetailTop> {
   }
 
   void _getVideoReaction() async {
-    movie = movieBox
-            .query(Movie_.videoId.equals(widget.item.id))
+    reaction = reactionBox
+            .query(VideoReaction_.videoId.equals(widget.item.id))
             .build()
             .findFirst() ??
-        Movie.copyWith(widget.item);
+        VideoReaction.copyWith(widget.item);
     setState(() {});
   }
 
   void refresh() {
-    movieBox.put(movie!);
+    reactionBox.put(reaction!);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-
-    if (movie == null) {
-      return SkeletonDetailTop();
-
-   
-
+    if(reaction==null){
+      return const SkeletonDetailTop();
     }
     return Stack(
       children: [
@@ -177,13 +174,13 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                       builder: (context, ref, child) {
                         return _buildReactionButton(
                             context: context,
-                            mIcon: movie!.isLiked
+                            mIcon: reaction!.isLiked
                                 ? FontAwesomeIcons.solidFaceSmile
                                 : FontAwesomeIcons.faceSmile,
                             color: Colors.green,
                             label: "좋아요",
                             onPressed: () {
-                              movie!.toggleLiked();
+                              reaction!.toggleLiked();
                               refresh();
                             } // API 호출 및 상태 변경
                             );
@@ -198,7 +195,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                       builder: (context, ref, child) {
                         return _buildReactionButton(
                             context: context,
-                            mIcon: movie!.isDisliked
+                            mIcon: reaction!.isDisliked
                                 ? FontAwesomeIcons
                                     .solidFaceFrown // "dislike" 상태일 때 아이콘
                                 : FontAwesomeIcons.faceFrown,
@@ -206,7 +203,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                             color: Colors.red,
                             label: "별로예요",
                             onPressed: () {
-                              movie!.toggleDisliked();
+                              reaction!.toggleDisliked();
                               refresh();
                             });
                       },
@@ -224,44 +221,44 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _buildMoreActionButton(
-                    mIcon: movie!.isBookmarked
+                    mIcon: reaction!.isBookmarked
                         ? CupertinoIcons.bookmark_fill // 찜 상태일 때 아이콘
                         : CupertinoIcons.bookmark, // 찜 안 된 상태일 때 아이콘
                     context: context,
                     label: "찜하기",
                     onPressed: () {
-                      movie!.toggleBookmarked();
+                      reaction!.toggleBookmarked();
                       refresh();
                     },
                   ),
                   _buildMoreActionButton(
-                    mIcon: movie!.isWatching
+                    mIcon: reaction!.isWatching
                         ? Icons.remove_red_eye
                         : Icons.remove_red_eye_outlined,
                     context: context,
                     label: "보고 있어요",
                     onPressed: () {
-                      movie!.toggleWatching();
+                      reaction!.toggleWatching();
                       refresh();
                     },
                   ),
                   _buildMoreActionButton(
-                    mIcon: movie!.isWatched
+                    mIcon: reaction!.isWatched
                         ? CupertinoIcons.checkmark_circle_fill
                         : CupertinoIcons.checkmark_alt,
                     context: context,
                     label: "봤어요",
                     onPressed: () {
-                      movie!.toggleWatched();
+                      reaction!.toggleWatched();
                       refresh();
                     },
                   ),
                   _buildMoreActionButton(
-                    mIcon: movie!.isIgnored ? Icons.check_circle : Icons.close,
+                    mIcon: reaction!.isIgnored ? Icons.check_circle : Icons.close,
                     context: context,
                     label: "관심 없어요",
                     onPressed: () {
-                      movie!.toggleIgnored();
+                      reaction!.toggleIgnored();
                       refresh();
                     },
                   ),

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nungil/data/repository/user_movie_repository.dart';
+import 'package:nungil/data/repository/video_reaction_repository.dart';
 import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/screens/main_screen.dart';
 import 'package:nungil/screens/user/login/login_page.dart';
@@ -31,9 +31,13 @@ class UserPage extends ConsumerWidget {
       }
     }));
 
-    final watchedCount = getWatchedMovie().length;
-    final watchingCount = getWatchingMovie().length;
-    final bookmarkedCount = getBookmarkedMovie().length;
+    final watchedCount = VideoReactionRepository().getWatchedMovies().length;
+    final watchingCount = VideoReactionRepository().getWatchingMovies().length;
+    final bookmarkedCount = VideoReactionRepository().getBookmarkedMovies().length;
+
+    if(userId!=null){
+      VideoReactionRepository().syncUserReactions(userId);
+    }
 
     return SafeArea(
       child: Scaffold(
