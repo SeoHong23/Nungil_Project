@@ -91,7 +91,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // 3️⃣ 서버로 액세스 토큰 및 사용자 정보 전송
       final response = await http.post(
         Uri.parse('http://13.239.238.92:8080/kakao/login'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json; charset=utf-8'},
         body: json.encode({
           'access_token': accessToken, // 액세스 토큰 추가
           'kakaoId': kakaoId,
@@ -101,7 +101,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        final responseBody = utf8.decode(response.bodyBytes);
+        final data = json.decode(responseBody);
 
         // 4️⃣ 서버에서 받은 userId로 UserModel 생성
         final user = UserModel(

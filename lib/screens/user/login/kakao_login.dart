@@ -18,6 +18,8 @@ class KakaoLoginService {
       User user = await UserApi.instance.me();
       String nickname = user.kakaoAccount?.profile?.nickname ?? "카카오 유저";
       String email = user.kakaoAccount?.email ?? "no-email@example.com";
+      String birthDay = user.kakaoAccount?.birthday ?? "";
+      String birthYear = user.kakaoAccount?.birthyear ?? "";
 
       // 성별 정보 처리
       String gender = "MALE"; // 기본값
@@ -26,9 +28,26 @@ class KakaoLoginService {
             user.kakaoAccount!.gender.toString().split('.').last.toUpperCase();
       }
 
+      int birthDateInt = 0;
+
+      if (birthYear.isNotEmpty && birthDay.isNotEmpty) {
+        // YYYYMMDD 형식으로 변환
+        birthDateInt = int.parse(birthYear + birthDay);
+      } else if (birthDay.isNotEmpty) {
+        // MMDD 형식만 있는 경우 (연도 없음)
+        birthDateInt = int.parse(birthDay);
+      } else {
+        // 생일 정보가 없는 경우 기본값 0 사용
+        birthDateInt = 0;
+      }
+
+// 디버깅을 위한 로그
+      print(
+          "카카오 계정 생일 정보: birthYear=$birthYear, birthDay=$birthDay, 변환된 정수=$birthDateInt");
+
       // 서버에 로그인 요청 보내기
-      bool loginResult =
-          await sendTokenToBackend(token.accessToken, email, nickname, gender);
+      bool loginResult = await sendTokenToBackend(
+          token.accessToken, email, nickname, gender, birthDateInt);
       return loginResult;
     } catch (error) {
       print("카카오 로그인 실패: $error");
@@ -36,8 +55,8 @@ class KakaoLoginService {
     }
   }
 
-  Future<bool> sendTokenToBackend(
-      String accessToken, String email, String nickname, String gender) async {
+  Future<bool> sendTokenToBackend(String accessToken, String email,
+      String nickname, String gender, int birthDateInt) async {
     try {
       print("서버로 전송할 데이터 준비 중...");
 
@@ -47,6 +66,7 @@ class KakaoLoginService {
         "email": email,
         "nickname": nickname,
         "gender": gender,
+        "birthDate": birthDateInt
       };
 
       print("서버로 보낼 데이터: $requestData");
