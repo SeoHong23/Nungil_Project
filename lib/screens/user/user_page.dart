@@ -26,7 +26,6 @@ class UserPage extends ConsumerWidget {
         final List<int> latin1Bytes = latin1.encode(originalNickname);
         return utf8.decode(latin1Bytes, allowMalformed: true);
       } catch (e) {
-        print('닉네임 디코딩 오류: $e');
         return originalNickname;
       }
     }));
