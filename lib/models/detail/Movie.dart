@@ -33,13 +33,13 @@ class Movie {
   void toggleLiked() {
     isLiked = !isLiked;
     if (isLiked) isDisliked = false;
-    if (!isWatched&&isLiked) toggleWatched();
+    if (!isWatched && isLiked) toggleWatched();
   }
 
   void toggleDisliked() {
     isDisliked = !isDisliked;
     if (isDisliked) isLiked = false;
-    if (!isWatched&&isDisliked) toggleWatched();
+    if (!isWatched && isDisliked) toggleWatched();
   }
 
   void toggleWatching() {
@@ -50,8 +50,8 @@ class Movie {
   void toggleWatched() {
     isWatched = !isWatched;
     if (isWatched) isWatching = false;
-    if (!isWatched&&isLiked) toggleLiked();
-    if (!isWatched&&isDisliked) toggleDisliked();
+    if (!isWatched && isLiked) toggleLiked();
+    if (!isWatched && isDisliked) toggleDisliked();
   }
 
   void toggleBookmarked() {
@@ -64,7 +64,7 @@ class Movie {
     if (isIgnored) isBookmarked = false;
   }
 
-  static Movie copyWith(Video video){
+  static Movie copyWith(Video video) {
     return Movie(
       videoId: video.id,
       title: video.title,

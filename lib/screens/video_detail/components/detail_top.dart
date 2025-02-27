@@ -13,7 +13,6 @@ import 'package:nungil/screens/video_detail/components/detail_image_zoom_page.da
 import 'package:nungil/screens/video_detail/components/skeleton.dart';
 import 'package:nungil/theme/common_theme.dart';
 
-
 // 상단부
 class DetailTop extends ConsumerStatefulWidget {
   final Video item;
@@ -25,7 +24,6 @@ class DetailTop extends ConsumerStatefulWidget {
 }
 
 class _DetailTopState extends ConsumerState<DetailTop> {
-
   final movieBox = ObjectBox().getBox<Movie>();
 
   bool isPosterLoaded = false;
@@ -53,16 +51,19 @@ class _DetailTopState extends ConsumerState<DetailTop> {
     setState(() {});
   }
 
-  void refresh(){
+  void refresh() {
     movieBox.put(movie!);
     setState(() {});
   }
 
-
   @override
   Widget build(BuildContext context) {
-    if(movie==null){
-      return const SkeletonDetailTop();
+
+    if (movie == null) {
+      return SkeletonDetailTop();
+
+   
+
     }
     return Stack(
       children: [
@@ -175,17 +176,17 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                     child: Consumer(
                       builder: (context, ref, child) {
                         return _buildReactionButton(
-                          context: context,
-                          mIcon: movie!.isLiked
-                              ? FontAwesomeIcons.solidFaceSmile
-                              : FontAwesomeIcons.faceSmile,
-                          color: Colors.green,
-                          label: "좋아요",
-                          onPressed: () {
-                            movie!.toggleLiked();
-                            refresh();
-                          } // API 호출 및 상태 변경
-                        );
+                            context: context,
+                            mIcon: movie!.isLiked
+                                ? FontAwesomeIcons.solidFaceSmile
+                                : FontAwesomeIcons.faceSmile,
+                            color: Colors.green,
+                            label: "좋아요",
+                            onPressed: () {
+                              movie!.toggleLiked();
+                              refresh();
+                            } // API 호출 및 상태 변경
+                            );
                       },
                     ),
                   ),
@@ -196,19 +197,18 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                     child: Consumer(
                       builder: (context, ref, child) {
                         return _buildReactionButton(
-                          context: context,
-                          mIcon: movie!.isDisliked
-                              ? FontAwesomeIcons
-                                  .solidFaceFrown // "dislike" 상태일 때 아이콘
-                              : FontAwesomeIcons.faceFrown,
-                          // 기본 상태일 때 아이콘
-                          color: Colors.red,
-                          label: "별로예요",
-                          onPressed: () {
-                            movie!.toggleDisliked();
-                            refresh();
-                          }
-                        );
+                            context: context,
+                            mIcon: movie!.isDisliked
+                                ? FontAwesomeIcons
+                                    .solidFaceFrown // "dislike" 상태일 때 아이콘
+                                : FontAwesomeIcons.faceFrown,
+                            // 기본 상태일 때 아이콘
+                            color: Colors.red,
+                            label: "별로예요",
+                            onPressed: () {
+                              movie!.toggleDisliked();
+                              refresh();
+                            });
                       },
                     ),
                   ),
