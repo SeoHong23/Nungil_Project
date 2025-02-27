@@ -30,12 +30,15 @@ class _DetailTopState extends ConsumerState<DetailTop> {
   bool isStillLoaded = false;
   int stllsIndex = 0;
 
-  Movie? movie = null;
+  Movie? movie;
 
   @override
   void initState() {
     super.initState();
-    stllsIndex = Random().nextInt(widget.item.stlls.length);
+    if(widget.item.stlls.isNotEmpty) {
+      stllsIndex = Random().nextInt(widget.item.stlls.length);
+      if(stllsIndex==widget.item.stlls.length) stllsIndex -= 1;
+    }
     _getVideoReaction();
   }
 
@@ -55,8 +58,12 @@ class _DetailTopState extends ConsumerState<DetailTop> {
 
   @override
   Widget build(BuildContext context) {
+
     if (movie == null) {
       return SkeletonDetailTop();
+
+   
+
     }
     return Stack(
       children: [

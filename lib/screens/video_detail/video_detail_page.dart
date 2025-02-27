@@ -233,7 +233,7 @@ class _DetailTopDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return CustomAnimatedSwitcher(
-        child: item.posters.isNotEmpty
+        child: item.mediaList.isNotEmpty
             ? DetailTop(
                 item: item,
                 key: const ValueKey('data'),
