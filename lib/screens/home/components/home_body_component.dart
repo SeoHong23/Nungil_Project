@@ -68,50 +68,41 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
     try {
       // ✅ 캐싱된 데이터 확인 (있으면 바로 적용)
       final cachedDailyRanking =
-          _loadCachedRanking(prefs, 'daily_ranking_$today');
+          loadCachedRanking(prefs, 'daily_ranking_$today');
       if (cachedDailyRanking != null && mounted) {
         setState(() => dailyRanking = cachedDailyRanking);
       } else {
         repository.fetchRanksDaily().then((data) {
-          setState(() => dailyRanking = data);
-          cacheRanking(prefs, 'daily_ranking_$today', data);
+          if (mounted) {
+            setState(() => dailyRanking = data);
+            cacheRanking(prefs, 'daily_ranking_$today', data);
+          }
         }).catchError((e) => print("Error fetching daily ranks: $e"));
       }
 
       final cachedWeeklyRanking =
-          _loadCachedRanking(prefs, 'weekly_ranking_$today');
-      if (cachedWeeklyRanking != null&& mounted) {
+          loadCachedRanking(prefs, 'weekly_ranking_$today');
+      if (cachedWeeklyRanking != null && mounted) {
         setState(() => weeklyRanking = cachedWeeklyRanking);
       } else {
         repository.fetchRanksWeekly().then((data) {
-          setState(() => weeklyRanking = data);
-          cacheRanking(prefs, 'weekly_ranking_$today', data);
+          if (mounted) {
+            setState(() => weeklyRanking = data);
+            cacheRanking(prefs, 'weekly_ranking_$today', data);
+          }
         }).catchError((e) => print("Error fetching weekly ranks: $e"));
       }
 
       // ✅ 개별적으로 API 요청 후 바로 setState 호출 (병렬 실행)
-      repository.fetchRanksDaily().then((data) {
-        if(mounted) {
-          setState(() => dailyRanking = data);
-          _cacheRanking(prefs, 'daily_ranking_$today', data);
-        }
-      }).catchError((e) => print("Error fetching daily ranks: $e"));
-
-      repository.fetchRanksWeekly().then((data) {
-        if(mounted) {
-        setState(() => weeklyRanking = data);
-        _cacheRanking(prefs, 'weekly_ranking_$today', data);
-        }
-      }).catchError((e) => print("Error fetching weekly ranks: $e"));
 
       bannerRepository.randomBanner().then((data) {
-        if(mounted) {
+        if (mounted) {
           setState(() => randomAd = data);
         }
       }).catchError((e) => print("Error fetching banner: $e"));
 
       repository.fetchVideosRandom(5).then((data) {
-        if(mounted) {
+        if (mounted) {
           setState(() => randomMovies = data);
         }
       }).catchError((e) => print("Error fetching random movies: $e"));
@@ -119,7 +110,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
       repository
           .fetchVideosWithFilter(0, 10, {}, "DateDESC", false)
           .then((data) {
-        if(mounted) {
+        if (mounted) {
           setState(() {
             latestMovies = data;
             isLoading = false; // 모든 요청이 끝나면 로딩 종료
@@ -127,13 +118,13 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
         }
       }).catchError((e) {
         print("Error fetching latest movies: $e");
-        if(mounted) {
+        if (mounted) {
           setState(() => isLoading = false);
         }
       });
     } catch (e) {
       print("Error fetching home data: $e");
-      if(mounted) {
+      if (mounted) {
         setState(() => isLoading = false);
       }
     }
