@@ -7,19 +7,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class ReviewRepository {
-  final String baseURl = 'http://13.239.238.92:8080';
-
   Future<Map<String, String>> _getHeaders() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token') ?? '';
 
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': token.isNotEmpty ? 'Bearer $token' : '',
+    Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=utf-8',
     };
+
+    if (token.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+    return headers;
   }
 
-// 뭐야
   // 영화별 리뷰 목록
   Future<List<Review>> getReviews(int movieId) async {
     try {
