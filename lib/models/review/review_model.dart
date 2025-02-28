@@ -1,7 +1,7 @@
 class Review {
-  final int reviewId;
+  final String reviewId;
   final int userId;
-  final int movieId;
+  final String movieId;
   final String nick; // 작성자 닉네임
   final String content; // 리뷰 내용
   final double rating; // 평점
@@ -19,6 +19,7 @@ class Review {
       required this.createdAt,
       required this.likeCount,
       required this.isLiked});
+
   factory Review.fromJson(Map<String, dynamic> json) {
     return Review(
       reviewId: json['reviewId'],
@@ -31,5 +32,19 @@ class Review {
       likeCount: json['likeCount'],
       isLiked: json['isLiked'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'reviewId': reviewId,
+      'userId': userId,
+      'movieId': movieId,
+      'nick': nick,
+      'content': content,
+      'rating': rating,
+      'createdAt': createdAt,
+      'likeCount': likeCount,
+      'isLiked': isLiked,
+    };
   }
 }
