@@ -26,51 +26,6 @@ class AuthState {
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier() : super(AuthState(isAuthenticated: false));
 
-  // Future<void> handleKakaoLogin(
-  //     String kakaoId, String email, String nickname) async {
-  //   try {
-  //     final prefs = await SharedPreferences.getInstance();
-  //
-  //     // 서버로 카카오 로그인 정보 전송
-  //     final response = await http.post(
-  //       Uri.parse('http://13.239.238.92:8080/kakao/login'),
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: json.encode({
-  //         'kakaoId': kakaoId,
-  //         'email': email,
-  //         'nickname': nickname,
-  //       }),
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //
-  //       // 서버에서 받은 userId로 UserModel 생성
-  //       final user = UserModel(
-  //         userId: data['userId'], // 서버에서 생성된 일반 userId
-  //         kakaoId: kakaoId, // 카카오 ID 저장
-  //         email: email,
-  //         nickname: nickname,
-  //       );
-  //
-  //       // 상태 업데이트
-  //       state = AuthState(isAuthenticated: true, user: user);
-  //
-  //       // SharedPreferences에 저장
-  //       await prefs.setBool('isLoggedIn', true);
-  //       await prefs.setInt('userId', data['userId']);
-  //       await prefs.setString('userEmail', email);
-  //       await prefs.setString('nickname', nickname);
-  //       await prefs.setString('kakaoId', kakaoId); // 카카오 ID도 저장
-  //     } else {
-  //       throw Exception('Server error: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('카카오 로그인 에러: $e');
-  //     throw Exception('카카오 로그인 실패');
-  //   }
-  // }
-
   Future<void> handleKakaoLogin() async {
     try {
       final prefs = await SharedPreferences.getInstance();

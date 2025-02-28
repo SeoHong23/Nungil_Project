@@ -90,7 +90,7 @@ class VideoReactionRepository {
   }
 
   Future<void> syncUserReactions(int userId) async {
-    if(getModifiedMovies().isEmpty&&ObjectBox().getBox<String>().isEmpty()) return;
+    if(getModifiedMovies().isEmpty&&ObjectBox().getBox<VideoReaction>().isEmpty()) return;
 
     try {
       // POST 요청 보내기
