@@ -97,7 +97,7 @@ class _DetailTapReviewState extends ConsumerState<DetailTapReview> {
 
   void _editReview(Review review) {
     setState(() {
-      _editingReviewId = review.reviewId;
+      // _editingReviewId = review.reviewId;
       _reviewController.text = review.content;
       _selectedRating = review.rating;
     });

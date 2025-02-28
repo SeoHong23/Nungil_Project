@@ -9,17 +9,6 @@ class Review {
   final int likeCount; // 좋아요 수
   final bool isLiked; // 좋아요 눌렸는지 유무확인
 
-  Review(
-      {required this.reviewId,
-      required this.userId,
-      required this.movieId,
-      required this.nick,
-      required this.content,
-      required this.rating,
-      required this.createdAt,
-      required this.likeCount,
-      required this.isLiked});
-
   factory Review.fromJson(Map<String, dynamic> json) {
     return Review(
       reviewId: json['reviewId'],
@@ -47,4 +36,15 @@ class Review {
       'isLiked': isLiked,
     };
   }
+
+  Review(
+      {required this.reviewId,
+      required this.userId,
+      required this.movieId,
+      required this.nick,
+      required this.content,
+      required this.rating,
+      required this.createdAt,
+      required this.likeCount,
+      required this.isLiked});
 }
