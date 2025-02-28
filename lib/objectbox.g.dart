@@ -15,6 +15,7 @@ import 'package:objectbox/internal.dart'
 import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
+import 'models/detail/DeletedItem.dart';
 import 'models/detail/VideoReaction.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
@@ -88,6 +89,25 @@ final _entities = <obx_int.ModelEntity>[
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(3, 3131336590472639130),
+      name: 'DeletedItem',
+      lastPropertyId: const obx_int.IdUid(2, 5062440662736837607),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 9085922871712819336),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 5062440662736837607),
+            name: 'itemId',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -126,7 +146,7 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(2, 3739474223868304647),
+      lastEntityId: const obx_int.IdUid(3, 3131336590472639130),
       lastIndexId: const obx_int.IdUid(0, 0),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
@@ -221,6 +241,32 @@ obx_int.ModelDefinition getObjectBoxModel() {
               isModified: isModifiedParam);
 
           return object;
+        }),
+    DeletedItem: obx_int.EntityDefinition<DeletedItem>(
+        model: _entities[1],
+        toOneRelations: (DeletedItem object) => [],
+        toManyRelations: (DeletedItem object) => {},
+        getId: (DeletedItem object) => object.id,
+        setId: (DeletedItem object, int id) {
+          object.id = id;
+        },
+        objectToFB: (DeletedItem object, fb.Builder fbb) {
+          final itemIdOffset = fbb.writeString(object.itemId);
+          fbb.startTable(3);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, itemIdOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final itemIdParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final object = DeletedItem(itemId: itemIdParam)
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+
+          return object;
         })
   };
 
@@ -276,4 +322,15 @@ class VideoReaction_ {
   /// see [VideoReaction.isModified]
   static final isModified =
       obx.QueryBooleanProperty<VideoReaction>(_entities[0].properties[11]);
+}
+
+/// [DeletedItem] entity fields to define ObjectBox queries.
+class DeletedItem_ {
+  /// see [DeletedItem.id]
+  static final id =
+      obx.QueryIntegerProperty<DeletedItem>(_entities[1].properties[0]);
+
+  /// see [DeletedItem.itemId]
+  static final itemId =
+      obx.QueryStringProperty<DeletedItem>(_entities[1].properties[1]);
 }

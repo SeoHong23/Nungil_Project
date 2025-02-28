@@ -1,4 +1,5 @@
 import 'package:nungil/data/objectbox_helper.dart';
+import 'package:nungil/models/detail/DeletedItem.dart';
 import 'package:nungil/models/detail/VideoReaction.dart';
 import 'package:nungil/objectbox.g.dart';
 import 'package:nungil/util/logger.dart';
@@ -19,6 +20,7 @@ class VideoReactionRepository {
 
   // ObjectBox의 VideoReaction 박스를 가져오는 getter
   final reactionBox = ObjectBox().getBox<VideoReaction>();
+  final deletedBox = ObjectBox().getBox<DeletedItem>();
 
   // isLiked가 true인 영화 리스트 조회
   List<VideoReaction> getLikedMovies() {
@@ -84,33 +86,48 @@ class VideoReactionRepository {
     }
   }
 
-  // VideoReaction 객체를 업데이트 (isModified 값 변경)
+  // VideoReaction 객체를 업데이트
   void updateVideoReaction(VideoReaction videoReaction) {
     reactionBox.put(videoReaction);
   }
 
   Future<void> syncUserReactions(int userId) async {
-    if(getModifiedMovies().isEmpty&&ObjectBox().getBox<VideoReaction>().isEmpty()) return;
+    final modifiedMovies = getModifiedMovies();
+    final deletedItemsBox =
+        ObjectBox().getBox<DeletedItem>(); // DeletedItem으로 변경
+    final deletedItems = deletedItemsBox.getAll();
 
+    if (modifiedMovies.isEmpty && deletedItems.isEmpty) return;
+  logger.i(modifiedMovies.toString());
     try {
-      // POST 요청 보내기
-      final response = await dio
-          .post("/sync/$userId", data: {"reactions": getModifiedMovies(),
-        "deletedItems": ObjectBox().getBox<String>().getAll()
+      final response = await dio.post("/sync/$userId", data: {
+        "reactions": modifiedMovies.map((reaction) {
+          logger.t(reaction.toJson());
+          return reaction.toJson();
+        }).toList(),
+        "deletedItems": deletedItems.map((item) => item.itemId).toList(),
+        // 수정된 부분
       });
 
       if (response.statusCode == 200) {
         List<dynamic> responseData = response.data;
         List<VideoReaction> updatedReactions =
             responseData.map((data) => VideoReaction.fromJson(data)).toList();
+        removeModifiedMovies();
+        for (VideoReaction reaction in updatedReactions) {
+          print(reaction);
+          updateVideoReaction(reaction);
+        }
+
         // 삭제한 데이터 초기화
-        ObjectBox().getBox<String>().removeAll();
+        if (!deletedBox.isEmpty()) deletedBox.removeAll();
         logger.i("업데이트된 반응 목록: $updatedReactions");
       } else {
         logger.w("동기화 실패: ${response.statusMessage}");
       }
-    } catch (e) {
-      logger.e("에러 발생: $e");
+    } catch (e, stackTrace) {
+      logger.e("Exception : $e");
+      logger.e("StackTrace : $stackTrace");
     }
   }
 }
