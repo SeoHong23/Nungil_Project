@@ -2,20 +2,37 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:nungil/models/review/review_model.dart';
+import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/util/my_http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class ReviewRepository {
-  final String baseURl = 'http://13.239.238.92:8080';
 
   Future<Map<String, String>> _getHeaders() async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token') ?? '';
+    final token = prefs.getString('access_token');
+    final isLoggedIn = prefs.getBool('isLoggedIn');
+    final userId = prefs.getInt('userId');
+
+    print('🔍 토큰 디버깅 정보:');
+    print('로그인 상태: $isLoggedIn');
+    print('UserId: $userId');
+    print('토큰 존재 여부: ${token != null}');
+    print('토큰 길이: ${token?.length}');
+    print('토큰 내용: ${token ?? "토큰 없음"}');
+
+    if (token == null || token.isEmpty) {
+      print("⚠️ 저장된 토큰이 없습니다. 로그인 상태를 확인하세요!");
+      return {
+        'Content-Type': 'application/json; charset=utf-8',
+      };
+    }
+    print("📢 저장된 토큰: $token");
 
     return {
-      'Content-Type': 'application/json',
-      'Authorization': token.isNotEmpty ? 'Bearer $token' : '',
+      'Content-Type': 'application/json; charset=utf-8',
+      'Authorization': 'Bearer $token',
     };
   }
 
@@ -46,10 +63,15 @@ class ReviewRepository {
   Future<bool> createReview(Review review) async {
     try {
       final headers = await _getHeaders();
+      final reviewJson = jsonEncode(review.toJson());
+
+      print('📢 서버로 보낼 JSON 데이터: $reviewJson'); // ✅ JSON 확인
+      print('📢 요청 헤더: $headers'); // ✅ 헤더 확인
+
       final response = await http.post(
         Uri.parse('$baseUrl/api/movie/reviews/add'),
         headers: headers,
-        body: jsonEncode(review.toJson()),
+        body: reviewJson,
       );
 
       if (response.statusCode == 200) {
