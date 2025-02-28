@@ -31,14 +31,13 @@ class UserPage extends ConsumerWidget {
         return originalNickname;
       }
     }));
-
-    final watchedCount = VideoReactionRepository().getWatchedMovies().length;
-    final watchingCount = VideoReactionRepository().getWatchingMovies().length;
-    final bookmarkedCount = VideoReactionRepository().getBookmarkedMovies().length;
-
-    if(userId!=null){
+    if (userId != null) {
       VideoReactionRepository().syncUserReactions(userId);
     }
+    final watchedCount = VideoReactionRepository().getWatchedMovies().length;
+    final watchingCount = VideoReactionRepository().getWatchingMovies().length;
+    final bookmarkedCount =
+        VideoReactionRepository().getBookmarkedMovies().length;
 
     return SafeArea(
       child: Scaffold(
@@ -74,30 +73,6 @@ class UserPage extends ConsumerWidget {
                       );
                     },
                     icon: const Icon(Icons.login_rounded)),
-            // 고객센터(도움말) 아이콘
-            IconButton(
-              icon: const Icon(Icons.help_outline), // 도움말 아이콘
-              onPressed: () {
-                // 고객센터 페이지로 이동하는 기능 추가
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainScreen()),
-                );
-              },
-            ),
-            // 설정(톱니바퀴) 아이콘
-            IconButton(
-              icon: const Icon(Icons.settings), // 설정 아이콘
-              onPressed: () {
-                // 설정 페이지로 이동하는 기능 추가
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MainScreen(),
-                  ),
-                );
-              },
-            ),
           ],
         ),
         body: Column(
