@@ -71,9 +71,28 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "3:3131336590472639130",
+      "lastPropertyId": "2:5062440662736837607",
+      "name": "DeletedItem",
+      "properties": [
+        {
+          "id": "1:9085922871712819336",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5062440662736837607",
+          "name": "itemId",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "2:3739474223868304647",
+  "lastEntityId": "3:3131336590472639130",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
