@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nungil/data/objectbox_helper.dart';
-import 'package:nungil/models/detail/VideoReaction.dart';
+import 'package:nungil/models/detail/DeletedItem.dart';
 import 'package:nungil/models/detail/Video.dart';
+import 'package:nungil/models/detail/VideoReaction.dart';
 import 'package:nungil/objectbox.g.dart';
 import 'package:nungil/screens/video_detail/components/detail_image_zoom_page.dart';
 import 'package:nungil/screens/video_detail/components/skeleton.dart';
@@ -24,7 +25,6 @@ class DetailTop extends ConsumerStatefulWidget {
 }
 
 class _DetailTopState extends ConsumerState<DetailTop> {
-
   final reactionBox = ObjectBox().getBox<VideoReaction>();
 
   bool isPosterLoaded = false;
@@ -36,9 +36,9 @@ class _DetailTopState extends ConsumerState<DetailTop> {
   @override
   void initState() {
     super.initState();
-    if(widget.item.stlls.isNotEmpty) {
+    if (widget.item.stlls.isNotEmpty) {
       stllsIndex = Random().nextInt(widget.item.stlls.length);
-      if(stllsIndex==widget.item.stlls.length) stllsIndex -= 1;
+      if (stllsIndex == widget.item.stlls.length) stllsIndex -= 1;
     }
     _getVideoReaction();
   }
@@ -53,13 +53,22 @@ class _DetailTopState extends ConsumerState<DetailTop> {
   }
 
   void refresh() {
-    reactionBox.put(reaction!);
+    var rat = reaction!;
+    reactionBox.put(rat);
+
+    if (rat.isAllFalse()) {
+      if (rat.mongoId != "") {
+        ObjectBox().getBox<DeletedItem>().put(DeletedItem(itemId: rat.mongoId));
+      }
+      ObjectBox().getBox<VideoReaction>().remove(rat.objectId);
+    }
+
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    if(reaction==null){
+    if (reaction == null) {
       return const SkeletonDetailTop();
     }
     return Stack(
@@ -254,7 +263,8 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                     },
                   ),
                   _buildMoreActionButton(
-                    mIcon: reaction!.isIgnored ? Icons.check_circle : Icons.close,
+                    mIcon:
+                        reaction!.isIgnored ? Icons.check_circle : Icons.close,
                     context: context,
                     label: "관심 없어요",
                     onPressed: () {
