@@ -9,7 +9,7 @@ import 'package:nungil/screens/common_components/rating_widget.dart';
 import 'package:nungil/theme/common_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final reviewRepositoryProvider = Provider((ref) => ReviewRepository());
+final reviewRepositoryProvider = Provider((ref) => ReviewRepository(ref));
 
 final reviewsProvider =
     FutureProvider.family<List<Review>, dynamic>((ref, movieId) async {

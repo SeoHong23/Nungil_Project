@@ -106,9 +106,11 @@ class KakaoLoginService {
         final bool admin = responseData['admin'] ?? false;
 
         // 로그인 상태 업데이트
-        ref.read(authProvider.notifier).login(userId, nickname, email, admin);
+        ref
+            .read(authProvider.notifier)
+            .login(userId, nickname, email, admin, accessToken);
         print(
-            "카카오 로그인 성공: userId=$userId, nickname=$nickname, email=$email, admin=$admin");
+            "카카오 로그인 성공: userId=$userId, nickname=$nickname, email=$email, admin=$admin, accessToken=$accessToken");
         return true;
       } else {
         print("카카오 로그인 실패: 상태 코드 ${response.statusCode}, 응답: ${response.data}");
