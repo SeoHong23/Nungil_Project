@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/data/repository/user_movie_repository.dart';
 import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/screens/main_screen.dart';
+import 'package:nungil/screens/user/components/user_setting.dart';
 import 'package:nungil/screens/user/login/login_page.dart';
 import 'package:nungil/screens/user/more/watched_page.dart';
 import 'package:nungil/theme/common_theme.dart';
@@ -177,6 +179,23 @@ class UserPage extends ConsumerWidget {
 
                     // "구독중인 서비스 >"
                     _buildRowItem("구독중인 서비스", "", context),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(8.0), // 둥근 모서리
+                ),
+                child: Column(
+                  children: [
+                    UserSetting(
+                      label: '푸시알람',
+                      context: '매일 점심 12시에 인기영화를 알려드려요!⭐',
+                    ),
                   ],
                 ),
               ),
