@@ -19,6 +19,7 @@ class ReviewRepository {
     };
   }
 
+// 뭐야
   // 영화별 리뷰 목록
   Future<List<Review>> getReviews(int movieId) async {
     try {
