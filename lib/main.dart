@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:nungil/data/objectbox_helper.dart';
+import 'package:nungil/notification/notification.dart';
 import 'package:nungil/util/call_back_dispatcher.dart';
 import 'package:nungil/util/schedule_daily_cache_update.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,6 +31,10 @@ void main() async {
 
   // 앱 실행 시, 백그라운드 작업 예약
   scheduleDailyCacheUpdate();
+
+  //로컬 타임존 초기화
+  await FlutterLocalNotification.initializeTimezone();
+  FlutterLocalNotification.init();
 
   runApp(
     ProviderScope(
