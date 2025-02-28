@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nungil/data/repository/user_movie_repository.dart';
+import 'package:nungil/data/repository/video_reaction_repository.dart';
 import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/screens/main_screen.dart';
 import 'package:nungil/screens/user/components/user_setting.dart';
@@ -16,27 +16,29 @@ class UserPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // AuthProvider에서 로그인된 사용자 정보를 가져옵니다.
     final userId =
         ref.watch(authProvider.select((state) => state.user?.userId));
 
     final nickName = ref.watch(authProvider.select((state) {
       if (state.user?.nickname == null) return '';
 
+      final originalNickname = state.user!.nickname;
+
       try {
-        // allowMalformed 옵션을 추가하여 잘못된 UTF-8도 최대한 처리
-        return utf8.decode(state.user!.nickname.codeUnits,
-            allowMalformed: true);
+        final List<int> latin1Bytes = latin1.encode(originalNickname);
+        return utf8.decode(latin1Bytes, allowMalformed: true);
       } catch (e) {
-        print('닉네임 디코딩 오류: $e');
-        // 오류 시 원본 닉네임 반환
-        return state.user!.nickname;
+        return originalNickname;
       }
     }));
 
-    final watchedCount = getWatchedMovie().length;
-    final watchingCount = getWatchingMovie().length;
-    final bookmarkedCount = getBookmarkedMovie().length;
+    final watchedCount = VideoReactionRepository().getWatchedMovies().length;
+    final watchingCount = VideoReactionRepository().getWatchingMovies().length;
+    final bookmarkedCount = VideoReactionRepository().getBookmarkedMovies().length;
+
+    if(userId!=null){
+      VideoReactionRepository().syncUserReactions(userId);
+    }
 
     return SafeArea(
       child: Scaffold(

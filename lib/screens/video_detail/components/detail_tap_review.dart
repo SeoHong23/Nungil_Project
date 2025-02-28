@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:nungil/models/detail/Video.dart';
 import 'package:nungil/screens/common_components/rating_widget.dart';
 import 'package:nungil/theme/common_theme.dart';
+import 'package:provider/provider.dart';
 
 class DetailTapReview extends StatefulWidget {
   final Video item;
@@ -17,6 +18,8 @@ class _DetailTapReviewState extends State<DetailTapReview> {
   double? _selectedRating;
   final TextEditingController _reviewController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  
+
   final String currentUser = "홍합";
   final List<Map<String, dynamic>> _reviews = [];
 

@@ -6,6 +6,8 @@ import 'package:nungil/screens/user/login/kakao_login.dart';
 import 'package:nungil/screens/user/term/term.dart';
 import 'package:nungil/theme/common_theme.dart';
 
+import 'package:nungil/providers/auth_provider.dart';
+
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
 
@@ -66,7 +68,7 @@ class LoginPage extends ConsumerWidget {
                     children: [
                       Container(
                         padding:
-                        const EdgeInsets.only(left: 10.0), // 이미지 주변에 여백 추가
+                            const EdgeInsets.only(left: 10.0), // 이미지 주변에 여백 추가
                         decoration: BoxDecoration(
                           color: const Color(0xFF00D070), // 이미지 배경색 설정
                           borderRadius: BorderRadius.circular(6), // 배경의 둥근 모서리
@@ -110,7 +112,7 @@ class LoginPage extends ConsumerWidget {
                       );
                     },
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal:8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
                         '이메일 로그인',
                         style: ColorTextStyle.mediumNavy(context),
@@ -138,11 +140,9 @@ class LoginPage extends ConsumerWidget {
                       );
                     },
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal:8.0),
-                      child: Text(
-                          '이메일 회원가입',
-                          style: ColorTextStyle.mediumNavy(context)
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text('이메일 회원가입',
+                          style: ColorTextStyle.mediumNavy(context)),
                     ),
                   ),
                 ],

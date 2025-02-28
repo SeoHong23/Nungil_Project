@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nungil/models/user/user_model.dart';
 import 'package:nungil/screens/user/login/kakao_login.dart';
@@ -25,16 +26,29 @@ class AuthState {
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier() : super(AuthState(isAuthenticated: false));
 
-  Future<void> handleKakaoLogin(
-      String kakaoId, String email, String nickname) async {
+  Future<void> handleKakaoLogin() async {
     try {
       final prefs = await SharedPreferences.getInstance();
 
-      // 서버로 카카오 로그인 정보 전송
+      // 1️⃣ 카카오 로그인 진행 후 액세스 토큰 가져오기
+      OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
+      String accessToken = token.accessToken;
+
+      // 2️⃣ 카카오 사용자 정보 가져오기
+      User user = await UserApi.instance.me();
+      String kakaoId = user.id.toString();
+      String nickname = user.kakaoAccount?.profile?.nickname ?? "카카오 유저";
+      String email = user.kakaoAccount?.email ?? "이메일 없음";
+
+      print(
+          "✅ 카카오 로그인 성공! (kakaoId: $kakaoId, email: $email, nickname: $nickname)");
+
+      // 3️⃣ 서버로 액세스 토큰 및 사용자 정보 전송
       final response = await http.post(
         Uri.parse('http://13.239.238.92:8080/kakao/login'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json; charset=utf-8'},
         body: json.encode({
+          'access_token': accessToken, // 액세스 토큰 추가
           'kakaoId': kakaoId,
           'email': email,
           'nickname': nickname,
@@ -42,30 +56,32 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        final responseBody = utf8.decode(response.bodyBytes);
+        final data = json.decode(responseBody);
 
-        // 서버에서 받은 userId로 UserModel 생성
+        // 4️⃣ 서버에서 받은 userId로 UserModel 생성
         final user = UserModel(
-          userId: data['userId'], // 서버에서 생성된 일반 userId
-          kakaoId: kakaoId, // 카카오 ID 저장
+          userId: data['userId'],
+          kakaoId: kakaoId,
           email: email,
           nickname: nickname,
         );
 
-        // 상태 업데이트
+        // 5️⃣ 상태 업데이트
         state = AuthState(isAuthenticated: true, user: user);
 
-        // SharedPreferences에 저장
+        // 6️⃣ SharedPreferences에 저장
         await prefs.setBool('isLoggedIn', true);
         await prefs.setInt('userId', data['userId']);
         await prefs.setString('userEmail', email);
         await prefs.setString('nickname', nickname);
-        await prefs.setString('kakaoId', kakaoId); // 카카오 ID도 저장
+        await prefs.setString('kakaoId', kakaoId);
+        await prefs.setString('access_token', accessToken); // 액세스 토큰 저장
       } else {
         throw Exception('Server error: ${response.statusCode}');
       }
     } catch (e) {
-      print('카카오 로그인 에러: $e');
+      print('❌ 카카오 로그인 에러: $e');
       throw Exception('카카오 로그인 실패');
     }
   }
