@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class ReviewRepository {
-  final String baseUR = 'http://13.239.238.92:8080';
+  final String baseURl = 'http://13.239.238.92:8080';
 
   Future<Map<String, String>> _getHeaders() async {
     final prefs = await SharedPreferences.getInstance();
