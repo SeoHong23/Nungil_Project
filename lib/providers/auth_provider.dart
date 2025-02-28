@@ -48,7 +48,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         Uri.parse('http://13.239.238.92:8080/kakao/login'),
         headers: {'Content-Type': 'application/json; charset=utf-8'},
         body: json.encode({
-          'access_token': accessToken, // 액세스 토큰 추가
+          'access_token': accessToken, // 🔹 여기에 카카오 액세스 토큰 포함
           'kakaoId': kakaoId,
           'email': email,
           'nickname': nickname,
@@ -59,24 +59,35 @@ class AuthNotifier extends StateNotifier<AuthState> {
         final responseBody = utf8.decode(response.bodyBytes);
         final data = json.decode(responseBody);
 
-        // 4️⃣ 서버에서 받은 userId로 UserModel 생성
-        final user = UserModel(
-          userId: data['userId'],
-          kakaoId: kakaoId,
-          email: email,
-          nickname: nickname,
-        );
-
-        // 5️⃣ 상태 업데이트
-        state = AuthState(isAuthenticated: true, user: user);
-
-        // 6️⃣ SharedPreferences에 저장
+        // ✅ SharedPreferences에 저장
         await prefs.setBool('isLoggedIn', true);
         await prefs.setInt('userId', data['userId']);
         await prefs.setString('userEmail', email);
         await prefs.setString('nickname', nickname);
         await prefs.setString('kakaoId', kakaoId);
-        await prefs.setString('access_token', accessToken); // 액세스 토큰 저장
+
+        // ✅ 서버 응답에 access_token이 있는지 확인하고 저장
+        String? serverToken = data['access_token']; // 서버에서 받은 토큰
+        String finalToken = serverToken ?? accessToken; // 서버 토큰이 없으면 카카오 토큰 사용
+        await prefs.setString('access_token', finalToken);
+
+        // ✅ 저장된 값 확인
+        String? storedToken = prefs.getString('access_token');
+        if (storedToken == null || storedToken.isEmpty) {
+          print("🚨 토큰 저장 실패! SharedPreferences에 값이 저장되지 않았습니다.");
+        } else {
+          print("✅ SharedPreferences에 저장된 access_token: $storedToken");
+        }
+
+        // 4️⃣ 상태 업데이트
+        state = AuthState(
+            isAuthenticated: true,
+            user: UserModel(
+              userId: data['userId'],
+              kakaoId: kakaoId,
+              email: email,
+              nickname: nickname,
+            ));
       } else {
         throw Exception('Server error: ${response.statusCode}');
       }
