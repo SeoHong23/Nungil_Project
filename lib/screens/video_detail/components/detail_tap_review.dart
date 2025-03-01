@@ -12,12 +12,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final reviewRepositoryProvider = Provider((ref) => ReviewRepository(ref));
 
 final reviewsProvider =
-    FutureProvider.family<List<Review>, dynamic>((ref, movieId) async {
+FutureProvider.family<List<Review>, dynamic>((ref, movieId) async {
   final repository = ref.watch(reviewRepositoryProvider);
-  final movieIdInt = movieId is String ? int.tryParse(movieId) ?? 0 : movieId;
-  return await repository.getReviews(movieIdInt);
-});
 
+  final movieIdStr = movieId.toString();
+
+  return await repository.getReviews(movieIdStr);
+});
 class DetailTapReview extends ConsumerStatefulWidget {
   final Video item;
   const DetailTapReview({required this.item, super.key});
