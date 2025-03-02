@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 class ReviewRepository {
   final Ref _ref;
 
-  // 생성자 변경 - 지연 초기화 대신 직접 참조로 변경
+
   ReviewRepository(this._ref);
 
   // 토큰 확인 기능 (디버깅 용도)
@@ -53,22 +53,46 @@ class ReviewRepository {
   Future<List<Review>> getReviews(String movieId) async {
     try {
       final headers = await _getHeaders();
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getInt('userId');
+
+      String url = '$baseUrl/api/movie/reviews/$movieId';
+      if (userId != null && userId > 0) {
+        url += '?userId=$userId';
+      }
+
+      print('📢 사용자 ID: $userId');
+      print('📢 리뷰 목록 요청 URL: $url');
 
       final response = await http.get(
-        Uri.parse('$baseUrl/api/movie/reviews/$movieId'),
+        Uri.parse(url),
         headers: headers,
       );
 
+      print("📢 API 응답 코드: ${response.statusCode}");
+      print("📢 API 응답 본문: ${response.body}");
+
       if (response.statusCode == 200) {
-        final List<dynamic> jsonList =
-            jsonDecode(utf8.decode(response.bodyBytes));
-        return jsonList.map((json) => Review.fromJson(json)).toList();
+        final decoded = jsonDecode(utf8.decode(response.bodyBytes));
+
+        if (decoded is Map) {
+          print("✅ 단일 리뷰 객체를 리스트로 변환합니다.");
+          final Map<String, dynamic> reviewMap = Map<String, dynamic>.from(decoded);
+          return [Review.fromJson(reviewMap)];
+
+        } else if (decoded is List) {
+          print("✅ 리뷰 리스트 개수: ${decoded.length}");
+          return decoded.map((json) => Review.fromJson(json)).toList();
+        } else {
+          print("❌ 알 수 없는 응답 형식: ${decoded.runtimeType}");
+          return [];
+        }
       } else {
-        print('리뷰 목록 에러: ${response.statusCode}, ${response.body}');
+        print("❌ 리뷰 목록 에러: ${response.statusCode}, ${response.body}");
         return [];
       }
     } catch (e) {
-      print('리뷰 가져오기 에러: $e');
+      print("❌ 리뷰 가져오기 에러: $e");
       return [];
     }
   }
@@ -78,16 +102,14 @@ class ReviewRepository {
     try {
       final headers = await _getHeaders();
 
-      // 서버에서 기대하는 형식으로 요청 본문 구성
       final Map<String, dynamic> requestBody = {
-        'userId': review.userId, // int를 Long으로 자동 변환됨
-        'movieId': review.movieId, // 이미 문자열이라 문제 없음
+        'userId': review.userId,
+        'movieId': review.movieId,
         'content': review.content,
         'rating': review.rating,
         'nick': review.nick,
-        // createdAt을 ISO 형식으로 변환 (서버에서 파싱 가능한 형식)
         'createdAt': DateTime.now().toIso8601String(),
-        // id 필드는 생략 (서버에서 자동 생성)
+
       };
 
       print('📢 서버로 보낼 JSON 데이터: ${jsonEncode(requestBody)}');
@@ -105,7 +127,6 @@ class ReviewRepository {
       } else {
         print('❌ 리뷰 작성 실패: ${response.statusCode}, ${response.body}');
 
-        // 에러 응답 분석 (디버깅 용도)
         if (response.body.isNotEmpty) {
           try {
             final errorData = jsonDecode(response.body);
@@ -126,14 +147,21 @@ class ReviewRepository {
   Future<bool> updateReview(Review review) async {
     try {
       final headers = await _getHeaders();
-      final reviewJson = jsonEncode(review.toJson());
 
-      print('📢 서버로 보낼 수정 리뷰 데이터: $reviewJson');
+      final Map<String, dynamic> requestBody ={
+        'id' : review.reviewId,
+        'userId' : review.userId,
+        'movieId' : review.movieId,
+        'content' : review.content,
+        'rating' : review.rating,
+        'nick' : review.nick,
+      };
+      print('📢 서버로 보낼 수정 리뷰 데이터: ${jsonEncode(requestBody)}');
 
       final response = await http.put(
         Uri.parse('$baseUrl/api/movie/reviews/update'),
         headers: headers,
-        body: reviewJson,
+        body: jsonEncode(requestBody),
       );
 
       if (response.statusCode == 200) {
@@ -153,11 +181,14 @@ class ReviewRepository {
   Future<bool> deleteReview(String reviewId) async {
     try {
       final headers = await _getHeaders();
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getInt('userId') ?? 0;
 
       print('📢 삭제할 리뷰 ID: $reviewId');
+      print('📢 사용자 ID: $userId');
 
       final response = await http.delete(
-        Uri.parse('$baseUrl/api/movie/reviews/delete/$reviewId'),
+        Uri.parse('$baseUrl/api/movie/reviews/delete/$reviewId?userId=$userId'),
         headers: headers,
       );
 
@@ -177,14 +208,16 @@ class ReviewRepository {
   // 리뷰 좋아요 토글
   Future<bool> toggleLike(String reviewId, bool liked) async {
     try {
+
       final headers = await _getHeaders();
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getInt('userId') ?? 0;
 
-      print('📢 좋아요 토글 - 리뷰 ID: $reviewId, 좋아요: $liked');
-
+      print('📢 좋아요 토글 - 리뷰 ID: $reviewId, 좋아요: $liked, 사용자 ID : $userId');
       final response = await http.post(
         Uri.parse('$baseUrl/api/movie/reviews/like/$reviewId'),
         headers: headers,
-        body: jsonEncode({'liked': liked}),
+        body: jsonEncode({'userId': userId, 'liked': liked}),
       );
 
       if (response.statusCode == 200) {
