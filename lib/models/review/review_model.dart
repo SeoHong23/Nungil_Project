@@ -14,7 +14,7 @@ class Review {
       reviewId: json['reviewId'],
       userId: json['userId'],
       nick: json['nick'],
-      movieId: json['movieId'],
+      movieId: json['movieId'].toString(),
       content: json['content'],
       rating: json['rating'].toDouble(),
       createdAt: json['createdAt'],

@@ -8,6 +8,7 @@ import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/screens/common_components/rating_widget.dart';
 import 'package:nungil/theme/common_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nungil/screens/user/login/login_page.dart';
 
 final reviewRepositoryProvider = Provider((ref) => ReviewRepository(ref));
 
@@ -257,7 +258,7 @@ class _DetailTapReviewState extends ConsumerState<DetailTapReview> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/login');
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage(),),);
             },
             child: const Text('로그인'),
           ),
