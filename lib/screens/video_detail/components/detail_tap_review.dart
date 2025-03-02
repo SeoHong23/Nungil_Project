@@ -16,9 +16,9 @@ final reviewsProvider =
 FutureProvider.family<List<Review>, dynamic>((ref, movieId) async {
   final repository = ref.watch(reviewRepositoryProvider);
 
-  final movieIdStr = movieId.toString();
+  // final movieIdStr = movieId.toString();
 
-  return await repository.getReviews(movieIdStr);
+  return await repository.getReviews(movieId);
 });
 class DetailTapReview extends ConsumerStatefulWidget {
   final Video item;
@@ -99,7 +99,7 @@ class _DetailTapReviewState extends ConsumerState<DetailTapReview> {
 
   void _editReview(Review review) {
     setState(() {
-      // _editingReviewId = review.reviewId;
+      _editingReviewId = review.reviewId;
       _reviewController.text = review.content;
       _selectedRating = review.rating;
     });
@@ -153,11 +153,11 @@ class _DetailTapReviewState extends ConsumerState<DetailTapReview> {
       return;
     }
     if (_selectedRating == null) {
-      print('별점을 선택해주세요!');
+      _showSnackBar('별점을 선택해주세요!');
       return;
     }
     if (_reviewController.text.isEmpty) {
-      print('리뷰 내용을 작성해주세요!');
+      _showSnackBar('리뷰 내용을 작성해주세요!');
       return;
     }
     setState(() {
@@ -275,7 +275,7 @@ class _DetailTapReviewState extends ConsumerState<DetailTapReview> {
 
   @override
   Widget build(BuildContext context) {
-    final itemId = int.tryParse(widget.item.id.toString()) ?? 0;
+    final itemId = widget.item.id.toString();
     final reviewsAsyncValue = ref.watch(reviewsProvider(itemId));
     final authState = ref.watch(authProvider);
 
