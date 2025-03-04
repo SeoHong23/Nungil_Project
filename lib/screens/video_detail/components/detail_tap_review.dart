@@ -13,13 +13,14 @@ import 'package:nungil/screens/user/login/login_page.dart';
 final reviewRepositoryProvider = Provider((ref) => ReviewRepository(ref));
 
 final reviewsProvider =
-FutureProvider.family<List<Review>, dynamic>((ref, movieId) async {
+    FutureProvider.family<List<Review>, dynamic>((ref, movieId) async {
   final repository = ref.watch(reviewRepositoryProvider);
 
   // final movieIdStr = movieId.toString();
 
   return await repository.getReviews(movieId);
 });
+
 class DetailTapReview extends ConsumerStatefulWidget {
   final Video item;
   const DetailTapReview({required this.item, super.key});
@@ -258,7 +259,12 @@ class _DetailTapReviewState extends ConsumerState<DetailTapReview> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage(),),);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginPage(),
+                ),
+              );
             },
             child: const Text('로그인'),
           ),
