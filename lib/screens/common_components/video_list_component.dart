@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:nungil/data/objectbox_helper.dart';
+import 'package:nungil/models/detail/VideoReaction.dart';
+import 'package:nungil/objectbox.g.dart';
 import 'package:nungil/screens/video_detail/video_detail_page.dart';
 import 'package:nungil/theme/common_theme.dart';
 
@@ -10,24 +13,55 @@ import 'rate_builder.dart';
 /// 2025-01-23 강중원 - 생성
 /// 2025-01-24 강중원 - 임시 모델로 불러오도록 설정
 
-class VideoListComponent extends StatelessWidget {
+class VideoListComponent extends StatefulWidget {
   final String imgUrl;
   final String name;
   final double rate;
   final String id;
+  final bool isLogined;
 
   const VideoListComponent(
       {super.key,
+      this.isLogined = false,
       required this.id,
       required this.imgUrl,
       required this.name,
       required this.rate});
 
   @override
+  State<VideoListComponent> createState() => _VideoListComponentState();
+}
+
+class _VideoListComponentState extends State<VideoListComponent> {
+  final reactionBox = ObjectBox().getBox<VideoReaction>();
+
+  VideoReaction? reaction;
+
+  void _getVideoReaction() async {
+    reaction = reactionBox
+            .query(VideoReaction_.videoId.equals(widget.id))
+            .build()
+            .findFirst() ??
+        VideoReaction.copyWithId(widget.id);
+    ;
+    setState(() {});
+  }
+
+  void refresh() {
+    reactionBox.put(reaction!);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getVideoReaction();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
       ),
@@ -36,7 +70,7 @@ class VideoListComponent extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => VideoDetailPage(item: id),
+              builder: (context) => VideoDetailPage(item: widget.id),
             ),
           );
         },
@@ -49,8 +83,8 @@ class VideoListComponent extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10), // 둥근 모서리
               ),
               clipBehavior: Clip.hardEdge, // 둥근 모서리를 Clip 효과로 적용
-              child: imgUrl.isNotEmpty
-                  ? PosterImageComponent(ImgURL: imgUrl)
+              child: widget.imgUrl.isNotEmpty
+                  ? PosterImageComponent(ImgURL: widget.imgUrl)
                   : SvgPicture.asset(
                       'assets/images/app.svg', // 기본 이미지
                       fit: BoxFit.cover,
@@ -58,7 +92,7 @@ class VideoListComponent extends StatelessWidget {
             ),
             SizedBox(height: 5),
             Text(
-              name,
+              widget.name,
               maxLines: 1, // 한 줄까지만 표시
               overflow: TextOverflow.ellipsis, // 넘칠 경우 '...' 표시
               style: TextStyle(
@@ -72,17 +106,18 @@ class VideoListComponent extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    RateBuilder(
-                      rate: rate,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        // 버튼 클릭 시 실행될 동작
-                      },
-                      child: Icon(
-                        Icons.add_circle_outline,
-                      ),
-                    ),
+                    Container(),
+                    widget.isLogined
+                        ? InkWell(
+                            onTap: () {
+                              reaction!.toggleBookmarked();
+                              refresh();
+                            },
+                            child: Icon(reaction!.isBookmarked
+                                ? Icons.check
+                                : Icons.add_circle_outline),
+                          )
+                        : Container(),
                   ],
                 ),
               ),

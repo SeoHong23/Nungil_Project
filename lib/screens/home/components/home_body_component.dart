@@ -198,12 +198,13 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
                   ),
 
             const SizedBox(height: 16),
-            // 오늘의 랜덤 추천작
+            // 최신 인기작
             HomeMovieListComponent(
-              title: "당신을 위한 랜덤 추천작",
-              type: "Random",
-              videoList: randomMovies,
+              title: "개봉 최신작",
+              type: "Least",
+              videoList: latestMovies,
             ),
+
             const SizedBox(height: 16),
             // 최신 리뷰
             Text(
@@ -227,11 +228,11 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
               ),
             ),
             const SizedBox(height: 16),
-            // 최신 인기작
+            // 오늘의 랜덤 추천작
             HomeMovieListComponent(
-              title: "개봉 최신작",
-              type: "Least",
-              videoList: latestMovies,
+              title: "당신을 위한 랜덤 추천작",
+              type: "Random",
+              videoList: randomMovies,
             ),
           ],
         ),

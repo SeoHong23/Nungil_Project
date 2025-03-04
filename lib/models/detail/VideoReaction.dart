@@ -26,8 +26,8 @@ class VideoReaction {
       {this.objectId = 0,
       this.mongoId = "",
       required this.videoId,
-      required this.title,
-      required this.posterUrl,
+      this.title = "",
+      this.posterUrl = "",
       this.isLiked = false,
       this.isDisliked = false,
       this.isWatching = false,
@@ -75,7 +75,6 @@ class VideoReaction {
     if (isIgnored) isBookmarked = false;
     isModified = true;
   }
-
   // 모든 상태가 false일 경우
   bool isAllFalse() {
     return !(isLiked ||
@@ -91,6 +90,12 @@ class VideoReaction {
       videoId: video.id,
       title: video.title,
       posterUrl: video.posters[0],
+    );
+  }
+
+  static VideoReaction copyWithId(String id) {
+    return VideoReaction(
+      videoId: id,
     );
   }
 
@@ -134,4 +139,3 @@ class VideoReaction {
     return 'VideoReaction{objectId: $objectId, mongoId: $mongoId, videoId: $videoId, title: $title, posterUrl: $posterUrl, isLiked: $isLiked, isDisliked: $isDisliked, isWatching: $isWatching, isWatched: $isWatched, isBookmarked: $isBookmarked, isIgnored: $isIgnored, isModified: $isModified}';
   }
 }
-

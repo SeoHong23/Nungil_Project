@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:nungil/models/detail/Video.dart';
 import 'package:nungil/screens/video_detail/components/detail_cast_list_page.dart';
 import 'package:nungil/screens/video_detail/components/detail_image_zoom_page.dart';
+import 'package:nungil/screens/video_detail/components/detail_ott.dart';
 import 'package:nungil/screens/video_detail/components/skeleton.dart';
 import 'package:nungil/theme/common_theme.dart';
 
@@ -27,6 +27,11 @@ class DetailTapInfo extends StatelessWidget {
           const SizedBox(height: 16),
           _buildInfoTable(context),
           const SizedBox(height: 24),
+          DetailOtt(
+            item: item,
+            ottLinks: item.ottLinks,
+            theaterLinks: item.theaterLinks,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
