@@ -8,13 +8,14 @@ import '../../util/my_http.dart';
 class BannerRepository {
   const BannerRepository();
 
-  Future<bool> fetchBanner(File? image, String title) async {
+  Future<bool> fetchBanner(File? image, String title, String type) async {
     try {
       FormData formData = FormData.fromMap({
         "title": title, // 배너 제목
         if (image != null) // 이미지가 있을 때만 포함
           "image": await MultipartFile.fromFile(image.path,
               filename: image.path.split('/').last),
+        "type": type,
       });
 
       Response response = await dio.post(
@@ -77,9 +78,10 @@ class BannerRepository {
     }
   }
 
-  Future<BannerModel> randomBanner() async {
+  Future<BannerModel> randomBanner(String type) async {
     try {
-      Response response = await dio.get('/api/banner/random');
+      Response response =
+          await dio.get('/api/banner/random', queryParameters: {"type": type});
 
       if (response.statusCode == 200) {
         return BannerModel.fromJson(response.data);

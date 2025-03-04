@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nungil/data/objectbox_helper.dart';
+import 'package:nungil/data/repository/Banner_repository.dart';
+import 'package:nungil/models/admin/banner_model.dart';
 import 'package:nungil/models/detail/DeletedItem.dart';
 import 'package:nungil/models/detail/Video.dart';
 import 'package:nungil/models/detail/VideoReaction.dart';
@@ -26,7 +28,7 @@ class DetailTop extends ConsumerStatefulWidget {
 
 class _DetailTopState extends ConsumerState<DetailTop> {
   final reactionBox = ObjectBox().getBox<VideoReaction>();
-
+  BannerModel? randomAd;
   bool isPosterLoaded = false;
   bool isStillLoaded = false;
   int stllsIndex = 0;
@@ -41,6 +43,14 @@ class _DetailTopState extends ConsumerState<DetailTop> {
       if (stllsIndex == widget.item.stlls.length) stllsIndex -= 1;
     }
     _getVideoReaction();
+    fetchAD();
+  }
+
+  Future<void> fetchAD() async {
+    final ADrepository = BannerRepository();
+    ADrepository.randomBanner("detailPage").then((data) {
+      setState(() => randomAd = data);
+    }).catchError((e) => print("Error fetching banner: $e"));
   }
 
   void _getVideoReaction() async {
@@ -68,6 +78,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
 
   @override
   Widget build(BuildContext context) {
+    String URL = "http://13.239.238.92:8080/api/banner/image/";
     if (reaction == null) {
       return const SkeletonDetailTop();
     }
@@ -281,8 +292,9 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Container(
                   height: 40,
+                  width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
+                    color: iconThemeColor[300],
                     border: Border.all(
                         color: Theme.of(context)
                             .colorScheme
@@ -290,12 +302,31 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                             .withOpacity(0.2)),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Center(
-                    child: Text(
-                      "광고",
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
-                  ),
+                  child: randomAd != null
+                      ? Container(
+                          height: 100,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10), // 둥근 모서리
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                          child: Image.network(
+                            URL + randomAd!.fileName,
+                            fit: BoxFit.fill,
+                          ),
+                        )
+                      : Container(
+                          height: 100,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10), // 둥근 모서리
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                          child: Image.asset(
+                            "assets/images/banner/banner2.png",
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                 ),
               ),
             ],

@@ -15,25 +15,36 @@ TextTheme textTheme() {
   return const TextTheme(
     // 가장 큰 제목 스타일
     displayLarge: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 18.0, color: DefaultColors.black,
+        fontFamily: 'GmarketSans',
+        fontSize: 18.0,
+        color: DefaultColors.black,
         fontWeight: FontWeight.w700),
     // 중간 크기의 제목 스타일
     displayMedium: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 16.0, color: DefaultColors.black,
+        fontFamily: 'GmarketSans',
+        fontSize: 16.0,
+        color: DefaultColors.black,
         fontWeight: FontWeight.w400),
 
     // 본문 텍스트 스타일 (기사, 설명)
     bodyLarge: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 16.0, color: DefaultColors.black,
+        fontFamily: 'GmarketSans',
+        fontSize: 16.0,
+        color: DefaultColors.black,
         fontWeight: FontWeight.w100),
 
     // 부제목, 작은 본문 텍스트 스타일
     // 상세설명 장르 개봉일
     bodyMedium: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 14.0, color: DefaultColors.black, fontWeight: FontWeight.w400),
+        fontFamily: 'GmarketSans',
+        fontSize: 14.0,
+        color: DefaultColors.black,
+        fontWeight: FontWeight.w400),
 
     bodySmall: TextStyle(
-        fontFamily: 'GmarketSans', fontSize: 12.0, color: DefaultColors.black,
+        fontFamily: 'GmarketSans',
+        fontSize: 12.0,
+        color: DefaultColors.black,
         fontWeight: FontWeight.w500),
     // 두꺼운 제목 스타일
     // 상세보기 제목에 사용됨
@@ -46,19 +57,25 @@ TextTheme textTheme() {
     // 중간 크기의 제목 스타일
     // 검색창
     titleMedium: TextStyle(
-        fontFamily: 'Pretendard', fontSize: 15.0, color: DefaultColors.black, fontWeight: FontWeight.w400),
+        fontFamily: 'Pretendard',
+        fontSize: 15.0,
+        color: DefaultColors.black,
+        fontWeight: FontWeight.w400),
 
     // 작은 글자 스타일
     // 버튼?에 써도 될듯?
     labelMedium: TextStyle(
-        fontFamily: 'Pretendard', fontSize: 13.0, color: DefaultColors.black,
+        fontFamily: 'Pretendard',
+        fontSize: 13.0,
+        color: DefaultColors.black,
         fontWeight: FontWeight.w400),
     // 상당히 작은 글자 스타일
     // 상세보기 부제/연도에 사용함
     labelSmall: TextStyle(
-        fontFamily: 'Pretendard', fontSize: 12.0, color: DefaultColors.black,
+        fontFamily: 'Pretendard',
+        fontSize: 12.0,
+        color: DefaultColors.black,
         fontWeight: FontWeight.w400),
-
   );
 }
 
@@ -191,11 +208,10 @@ ThemeData dTheme() {
   return ThemeData(
     // 우리가 직접 지정 함
     colorScheme: ColorScheme.fromSwatch(
-      primarySwatch: iconThemeColorDark,
-      accentColor: iconThemeColorDark[900],
-      backgroundColor: baseBackgroundColorDark[50],
-      cardColor: baseBackgroundColorDark[300]
-    ),
+        primarySwatch: iconThemeColorDark,
+        accentColor: iconThemeColorDark[900],
+        backgroundColor: baseBackgroundColorDark[50],
+        cardColor: baseBackgroundColorDark[300]),
     cardColor: baseBackgroundColorDark[400],
     scaffoldBackgroundColor: baseBackgroundColorDark,
     textTheme: textThemeDark(),
@@ -223,7 +239,6 @@ const MaterialColor baseBackgroundColor = MaterialColor(
     900: Color(0xFF8290AA), // 가장 어두운 배경 대체 색상
   },
 );
-
 
 const int _baseColorValueDark = 0xFF272A2F;
 const int _primaryColorValueDark = 0xFF788B98;
@@ -277,8 +292,6 @@ const MaterialColor iconThemeColorDark = MaterialColor(
   },
 );
 
-
-
 class DefaultColors {
   static const Color black = Color(0xFF212121); // 아주 짙은 회색(글자색)
   static const Color white = Color(0xFFF1F1F1); // 아주 밝은 회색(글자색)
@@ -292,7 +305,8 @@ class DefaultColors {
 
 class CustomTextStyle {
   static const TextStyle bigLogo = TextStyle(fontSize: 50);
-  static const TextStyle mediumLogo = TextStyle(fontSize: 30,overflow: TextOverflow.visible, height: 1.2);
+  static const TextStyle mediumLogo =
+      TextStyle(fontSize: 30, overflow: TextOverflow.visible, height: 1.2);
   static const TextStyle ranking = TextStyle(
     fontStyle: FontStyle.italic,
     fontSize: 20,
@@ -330,9 +344,7 @@ class CustomTextStyle {
       height: 1.8);
 }
 
-
-
-class ColorTextStyle{
+class ColorTextStyle {
   static TextStyle xLargeNavy(BuildContext context) {
     return TextStyle(
       fontFamily: 'Pretendard',
@@ -343,7 +355,8 @@ class ColorTextStyle{
       wordSpacing: 0.6,
     );
   }
-static TextStyle xLargeLightNavy(BuildContext context) {
+
+  static TextStyle xLargeLightNavy(BuildContext context) {
     return TextStyle(
       fontFamily: 'Pretendard',
       fontSize: 20,
@@ -353,6 +366,7 @@ static TextStyle xLargeLightNavy(BuildContext context) {
       wordSpacing: 0.6,
     );
   }
+
   static TextStyle largeNavy(BuildContext context) {
     return TextStyle(
       fontFamily: 'Pretendard',
@@ -363,7 +377,8 @@ static TextStyle xLargeLightNavy(BuildContext context) {
       wordSpacing: 0.6,
     );
   }
-static TextStyle largeLightNavy(BuildContext context) {
+
+  static TextStyle largeLightNavy(BuildContext context) {
     return TextStyle(
       fontFamily: 'Pretendard',
       fontSize: 17,
@@ -373,7 +388,8 @@ static TextStyle largeLightNavy(BuildContext context) {
       wordSpacing: 0.6,
     );
   }
-static TextStyle mediumNavy(BuildContext context) {
+
+  static TextStyle mediumNavy(BuildContext context) {
     return TextStyle(
       fontFamily: 'Pretendard',
       fontSize: 15,
@@ -420,15 +436,16 @@ static TextStyle mediumNavy(BuildContext context) {
       height: 1.5,
     );
   }
+
   static TextStyle xSmallLightNavy(BuildContext context) {
     return TextStyle(
-      fontFamily: 'Pretendard',
-      fontSize: 12,
-      color: Theme.of(context).colorScheme.primary,
-      height: 1.3,
-      wordSpacing: -1.2
-    );
+        fontFamily: 'Pretendard',
+        fontSize: 12,
+        color: Theme.of(context).colorScheme.primary,
+        height: 1.3,
+        wordSpacing: -1.2);
   }
+
   static TextStyle xxSmallNavy(BuildContext context) {
     return TextStyle(
       fontFamily: 'Pretendard',
@@ -437,13 +454,13 @@ static TextStyle mediumNavy(BuildContext context) {
       height: 1.5,
     );
   }
+
   static TextStyle xxSmallLightNavy(BuildContext context) {
     return TextStyle(
         fontFamily: 'Pretendard',
         fontSize: 10,
         color: Theme.of(context).colorScheme.primary,
         height: 1.3,
-        wordSpacing: -1.2
-    );
+        wordSpacing: -1.2);
   }
 }

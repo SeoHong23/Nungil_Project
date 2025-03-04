@@ -13,6 +13,7 @@ class BannerInsert extends StatefulWidget {
 
 class _BannerInsertState extends State<BannerInsert> {
   final TextEditingController _nameController = TextEditingController();
+  String type = "mainPage";
   File? _image;
   bool _isUploading = false;
 
@@ -41,10 +42,10 @@ class _BannerInsertState extends State<BannerInsert> {
 
     try {
       final repository = BannerRepository();
-      bool result = await repository.fetchBanner(_image, name);
+      bool result = await repository.fetchBanner(_image, name, type);
       if (result) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("  업로드 성공.")),
+          SnackBar(content: Text("업로드 성공.")),
         );
       } else {
         throw Exception("업로드 실패");
@@ -74,6 +75,16 @@ class _BannerInsertState extends State<BannerInsert> {
     Navigator.pop(context);
   }
 
+  void onSortChanged(String? newType) {
+    if (newType != null) {
+      setState(
+        () {
+          type = newType;
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,9 +107,33 @@ class _BannerInsertState extends State<BannerInsert> {
                     hintStyle: CustomTextStyle.mediumLightNavy,
                   ),
                 ),
+                Row(
+                  children: [
+                    Text("배너타입",
+                        style: Theme.of(context).textTheme.displayLarge),
+                    SizedBox(width: 8),
+                    DropdownButton<String>(
+                      value: type,
+                      items: [
+                        DropdownMenuItem(
+                          value: "mainPage",
+                          child: Text("메인페이지"),
+                        ),
+                        DropdownMenuItem(
+                          value: "detailPage",
+                          child: Text("상세페이지"),
+                        ),
+                      ],
+                      onChanged: onSortChanged, //   정렬 변경 시 실행
+                    ),
+                  ],
+                ),
                 SizedBox(height: 20),
-                Text("배너 이미지 (세로 100px)",
-                    style: Theme.of(context).textTheme.displayLarge),
+                type == "mainPage"
+                    ? Text("배너 이미지 (세로 100px)",
+                        style: Theme.of(context).textTheme.displayLarge)
+                    : Text("배너 이미지 (세로 40px)",
+                        style: Theme.of(context).textTheme.displayLarge),
                 SizedBox(height: 10),
                 Center(
                   child: GestureDetector(
@@ -106,18 +141,19 @@ class _BannerInsertState extends State<BannerInsert> {
                     child: _image != null
                         ? Image.file(
                             _image!,
-                            height: 100,
+                            height: type == "mainPage" ? 100 : 40,
                             fit: BoxFit.fill,
                           )
                         : Container(
-                            height: 100,
+                            height: type == "mainPage" ? 100 : 40,
                             width: double.infinity,
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child:
-                                Icon(Icons.image, size: 50, color: Colors.grey),
+                            child: Icon(Icons.image,
+                                size: type == "mainPage" ? 50 : 30,
+                                color: Colors.grey),
                           ),
                   ),
                 ),
@@ -140,7 +176,9 @@ class _BannerInsertState extends State<BannerInsert> {
               child: Column(
                 children: [
                   Image.asset(
-                    "assets/images/banner/banner_template/bannerTop.png",
+                    type == "mainPage"
+                        ? "assets/images/banner/banner_template/bannerTop.png"
+                        : "assets/images/banner/banner_template/bannerTopD.png",
                     fit: BoxFit.cover,
                     width: double.infinity,
                   ),
@@ -148,7 +186,7 @@ class _BannerInsertState extends State<BannerInsert> {
                       ? Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Container(
-                            height: 100,
+                            height: type == "mainPage" ? 100 : 40,
                             width: double.infinity,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10), // 둥근 모서리
@@ -163,18 +201,21 @@ class _BannerInsertState extends State<BannerInsert> {
                       : Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Container(
-                            height: 100,
+                            height: type == "mainPage" ? 100 : 40,
                             width: double.infinity,
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child:
-                                Icon(Icons.image, size: 50, color: Colors.grey),
+                            child: Icon(Icons.image,
+                                size: type == "mainPage" ? 50 : 30,
+                                color: Colors.grey),
                           ),
                         ),
                   Image.asset(
-                    "assets/images/banner/banner_template/bannerBottom.png",
+                    type == "mainPage"
+                        ? "assets/images/banner/banner_template/bannerBottom.png"
+                        : "assets/images/banner/banner_template/bannerBottomD.png",
                     fit: BoxFit.cover,
                     width: double.infinity,
                   ),

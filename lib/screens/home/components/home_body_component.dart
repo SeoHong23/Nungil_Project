@@ -95,7 +95,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
 
       //   개별적으로 API 요청 후 바로 setState 호출 (병렬 실행)
 
-      bannerRepository.randomBanner().then((data) {
+      bannerRepository.randomBanner("mainPage").then((data) {
         if (mounted) {
           setState(() => randomAd = data);
         }
