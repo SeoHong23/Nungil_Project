@@ -117,7 +117,10 @@ class _EmailLoginState extends ConsumerState<EmailLogin> {
         final String email = responseData['email'] ?? '';
         final int userId = responseData['userId'] ?? 0;
         final bool admin = responseData['admin'] ?? false;
-        ref.read(authProvider.notifier).login(userId, nickname, email, admin);
+        final String accessToken = responseData['accessToken'] ?? '';
+        ref
+            .read(authProvider.notifier)
+            .login(userId, nickname, email, admin, accessToken);
 
         Navigator.pushReplacement(
           context,
@@ -175,13 +178,17 @@ class _EmailLoginState extends ConsumerState<EmailLogin> {
                   border: const OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: emailHasError ? Colors.red : Theme.of(context).colorScheme.background,
+                      color: emailHasError
+                          ? Colors.red
+                          : Theme.of(context).colorScheme.background,
                       width: 1.0,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: emailHasError ? Colors.red : Theme.of(context).colorScheme.primary,
+                      color: emailHasError
+                          ? Colors.red
+                          : Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
@@ -226,14 +233,17 @@ class _EmailLoginState extends ConsumerState<EmailLogin> {
                   border: const OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color:
-                          passwordHasError ? Colors.red : Theme.of(context).colorScheme.background,
+                      color: passwordHasError
+                          ? Colors.red
+                          : Theme.of(context).colorScheme.background,
                       width: 1.0,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: passwordHasError ? Colors.red : Theme.of(context).colorScheme.primary,
+                      color: passwordHasError
+                          ? Colors.red
+                          : Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
@@ -245,14 +255,20 @@ class _EmailLoginState extends ConsumerState<EmailLogin> {
                     children: [
                       if (passwordController.text.isNotEmpty)
                         IconButton(
-                          icon: Icon(Icons.close_rounded,color: Theme.of(context).colorScheme.secondary,size: 18,),
+                          icon: Icon(
+                            Icons.close_rounded,
+                            color: Theme.of(context).colorScheme.secondary,
+                            size: 18,
+                          ),
                           onPressed: clearPasswordField,
                         ),
                       IconButton(
                         icon: Icon(
                           isPasswordVisible
                               ? Icons.visibility
-                              : Icons.visibility_off,color: Theme.of(context).colorScheme.secondary,size: 18,
+                              : Icons.visibility_off,
+                          color: Theme.of(context).colorScheme.secondary,
+                          size: 18,
                         ),
                         onPressed: () {
                           setState(() {
@@ -293,12 +309,13 @@ class _EmailLoginState extends ConsumerState<EmailLogin> {
                           backgroundColor: isButtonEnabled
                               ? Theme.of(context).colorScheme.secondary
                               : Theme.of(context).cardColor,
-                          disabledBackgroundColor: Theme.of(context).cardColor, // 비활성화 색상
+                          disabledBackgroundColor:
+                              Theme.of(context).cardColor, // 비활성화 색상
                           foregroundColor: isButtonEnabled
                               ? Theme.of(context).colorScheme.surface // 활성화
                               : Theme.of(context).colorScheme.primary, // 비활성화
                           disabledForegroundColor:
-                          Theme.of(context).colorScheme.primary, // 비활성화
+                              Theme.of(context).colorScheme.primary, // 비활성화
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6),
                           ),

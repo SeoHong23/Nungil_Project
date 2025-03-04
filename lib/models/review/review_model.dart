@@ -1,35 +1,78 @@
 class Review {
-  final int reviewId;
+  final String reviewId;
   final int userId;
-  final int movieId;
-  final String nick; // 작성자 닉네임
-  final String content; // 리뷰 내용
-  final double rating; // 평점
+  final String movieId;
+  final String nick;
+  final String content;
+  final double rating;
   final String createdAt;
-  final int likeCount; // 좋아요 수
-  final bool isLiked; // 좋아요 눌렸는지 유무확인
+  final int likeCount;
+  final bool isLiked;
 
-  Review(
-      {required this.reviewId,
-      required this.userId,
-      required this.movieId,
-      required this.nick,
-      required this.content,
-      required this.rating,
-      required this.createdAt,
-      required this.likeCount,
-      required this.isLiked});
+  Review({
+    required this.reviewId,
+    required this.userId,
+    required this.movieId,
+    required this.nick,
+    required this.content,
+    required this.rating,
+    required this.createdAt,
+    required this.likeCount,
+    required this.isLiked,
+  });
+
   factory Review.fromJson(Map<String, dynamic> json) {
     return Review(
-      reviewId: json['reviewId'],
-      userId: json['userId'],
-      nick: json['nick'],
-      movieId: json['movieId'],
-      content: json['content'],
-      rating: json['rating'].toDouble(),
-      createdAt: json['createdAt'],
-      likeCount: json['likeCount'],
-      isLiked: json['isLiked'],
+      reviewId: json['id'] ?? '',
+      userId: json['userId'] ?? 0,
+      movieId: json['movieId'] ?? '',
+      nick: json['nick'] ?? '',
+      content: json['content'] ?? '',
+      rating: (json['rating'] is int)
+          ? (json['rating'] as int).toDouble()
+          : (json['rating'] ?? 0.0).toDouble(),
+      createdAt: json['createdAt'] ?? '',
+      likeCount: json['likeCount'] ?? 0,
+      isLiked: json['liked'] ?? false,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': reviewId,
+      'userId': userId,
+      'movieId': movieId,
+      'nick': nick,
+      'content': content,
+      'rating': rating,
+      'createdAt': createdAt,
+      'likeCount': likeCount,
+      'isLiked': isLiked,  // 클라이언트에서는 'isLiked'로 사용
+    };
+  }
+
+  // 수정된 리뷰를 생성하는 메서드 (수정 시 사용)
+  Review copyWith({
+    String? reviewId,
+    int? userId,
+    String? movieId,
+    String? nick,
+    String? content,
+    double? rating,
+    String? createdAt,
+    int? likeCount,
+    bool? isLiked,
+  }) {
+    return Review(
+      reviewId: reviewId ?? this.reviewId,
+      userId: userId ?? this.userId,
+      movieId: movieId ?? this.movieId,
+      nick: nick ?? this.nick,
+      content: content ?? this.content,
+      rating: rating ?? this.rating,
+      createdAt: createdAt ?? this.createdAt,
+      likeCount: likeCount ?? this.likeCount,
+      isLiked: isLiked ?? this.isLiked,
     );
   }
 }

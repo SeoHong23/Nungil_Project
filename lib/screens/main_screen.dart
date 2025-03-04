@@ -61,9 +61,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   const HomePage(),
                   const RankingPage(),
                   const ListPage(),
-                  isLoggedIn
-                      ? (isAdmin ? const AdminPage() : const UserPage())
-                      : const LoginPage(),
+                  isAdmin ? const AdminPage() : const UserPage()
                 ],
               ),
               bottomNavigationBar: BottomNavigationBar(

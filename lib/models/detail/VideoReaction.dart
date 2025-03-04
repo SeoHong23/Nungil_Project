@@ -1,4 +1,3 @@
-import 'package:nungil/data/objectbox_helper.dart';
 import 'package:nungil/models/detail/Video.dart';
 import 'package:objectbox/objectbox.dart';
 
@@ -42,7 +41,6 @@ class VideoReaction {
     if (isLiked) isDisliked = false;
     if (!isWatched && isLiked) toggleWatched();
     isModified = true;
-    deleteIfAllFalse();
   }
 
   void toggleDisliked() {
@@ -50,14 +48,12 @@ class VideoReaction {
     if (isDisliked) isLiked = false;
     if (!isWatched && isDisliked) toggleWatched();
     isModified = true;
-    deleteIfAllFalse();
   }
 
   void toggleWatching() {
     isWatching = !isWatching;
     if (isWatched) toggleWatched();
     isModified = true;
-    deleteIfAllFalse();
   }
 
   void toggleWatched() {
@@ -66,36 +62,27 @@ class VideoReaction {
     if (!isWatched && isLiked) toggleLiked();
     if (!isWatched && isDisliked) toggleDisliked();
     isModified = true;
-    deleteIfAllFalse();
   }
 
   void toggleBookmarked() {
     isBookmarked = !isBookmarked;
     if (isBookmarked) isIgnored = false;
     isModified = true;
-    deleteIfAllFalse();
   }
 
   void toggleIgnored() {
     isIgnored = !isIgnored;
     if (isIgnored) isBookmarked = false;
     isModified = true;
-    deleteIfAllFalse();
   }
-
-  // 모든 상태가 false일 경우 객체 삭제
-  void deleteIfAllFalse() {
-    if (!isLiked &&
-        !isDisliked &&
-        !isWatching &&
-        !isWatched &&
-        !isBookmarked &&
-        !isIgnored) {
-      if (mongoId != "") {
-        ObjectBox().getBox<String>().put(mongoId);
-      }
-      ObjectBox().getBox<VideoReaction>().remove(objectId); // ObjectBox에서 객체 삭제
-    }
+  // 모든 상태가 false일 경우
+  bool isAllFalse() {
+    return !(isLiked ||
+        isDisliked ||
+        isWatching ||
+        isWatched ||
+        isBookmarked ||
+        isIgnored);
   }
 
   static VideoReaction copyWith(Video video) {
@@ -120,34 +107,35 @@ class VideoReaction {
       videoId: json['videoId'],
       title: json['title'],
       posterUrl: json['posterUrl'],
-      isLiked: json['isLiked'],
-      isDisliked: json['isDisliked'],
-      isWatching: json['isWatching'],
-      isWatched: json['isWatched'],
-      isBookmarked: json['isBookmarked'],
-      isIgnored: json['isIgnored'],
+      isLiked: json['isLiked']??false,
+      isDisliked: json['isDisliked']??false,
+      isWatching: json['isWatching']??false,
+      isWatched: json['isWatched']??false,
+      isBookmarked: json['isBookmarked']??false,
+      isIgnored: json['isIgnored']??false,
       isModified: false,
     );
   }
-}
 
-// VideoReaction 클래스에 JSON 변환 메서드 추가
-extension VideoReactionJson on VideoReaction {
-  // 서버로 전송할 때 JSON으로 변환
   Map<String, dynamic> toJson() {
     return {
       'objectId': objectId,
       'mongoId': mongoId,
       'videoId': videoId,
+      'userId': 0,
       'title': title,
       'posterUrl': posterUrl,
-      'isLiked': isLiked,
-      'isDisliked': isDisliked,
-      'isWatching': isWatching,
-      'isWatched': isWatched,
-      'isBookmarked': isBookmarked,
-      'isIgnored': isIgnored,
-      'isModified': isModified,
+      'isLiked': isLiked?true:false,
+      'isDisliked': isDisliked?true:false,
+      'isWatching': isWatching?true:false,
+      'isWatched': isWatched?true:false,
+      'isBookmarked': isBookmarked?true:false,
+      'isIgnored': isIgnored?true:false,
     };
+  }
+
+  @override
+  String toString() {
+    return 'VideoReaction{objectId: $objectId, mongoId: $mongoId, videoId: $videoId, title: $title, posterUrl: $posterUrl, isLiked: $isLiked, isDisliked: $isDisliked, isWatching: $isWatching, isWatched: $isWatched, isBookmarked: $isBookmarked, isIgnored: $isIgnored, isModified: $isModified}';
   }
 }
