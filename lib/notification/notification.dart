@@ -11,10 +11,10 @@ class FlutterLocalNotification {
       FlutterLocalNotificationsPlugin();
 
   static init() async {
-    // 1️⃣ 타임존 데이터 초기화
+    // 타임존 데이터 초기화
     tz.initializeTimeZones();
 
-    // 2️⃣ 기본 타임존을 수동으로 설정 (예: Asia/Seoul)
+    // 기본 타임존을 수동으로 설정 (예: Asia/Seoul)
     tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
 
     AndroidInitializationSettings androidInitializationSettings =

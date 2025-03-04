@@ -44,13 +44,13 @@ class _BannerInsertState extends State<BannerInsert> {
       bool result = await repository.fetchBanner(_image, name);
       if (result) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("✅ 업로드 성공.")),
+          SnackBar(content: Text("  업로드 성공.")),
         );
       } else {
         throw Exception("업로드 실패");
       }
     } catch (e) {
-      print("❌ 이미지 업로드 오류: $e");
+      print("  이미지 업로드 오류: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("업로드 중 오류 발생.")),
       );

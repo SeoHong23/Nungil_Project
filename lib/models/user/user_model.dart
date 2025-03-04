@@ -10,7 +10,7 @@ class UserModel {
       required this.email,
       this.kakaoId});
 
-  // ✅ JSON 변환 (서버 데이터 연동 시 필요)
+  //   JSON 변환 (서버 데이터 연동 시 필요)
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
         userId: json['userId'],

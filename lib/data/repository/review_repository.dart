@@ -12,7 +12,6 @@ import 'package:http/http.dart' as http;
 class ReviewRepository {
   final Ref _ref;
 
-
   ReviewRepository(this._ref);
 
   // 토큰 확인 기능 (디버깅 용도)
@@ -76,23 +75,23 @@ class ReviewRepository {
         final decoded = jsonDecode(utf8.decode(response.bodyBytes));
 
         if (decoded is Map) {
-          print("✅ 단일 리뷰 객체를 리스트로 변환합니다.");
-          final Map<String, dynamic> reviewMap = Map<String, dynamic>.from(decoded);
+          print("  단일 리뷰 객체를 리스트로 변환합니다.");
+          final Map<String, dynamic> reviewMap =
+              Map<String, dynamic>.from(decoded);
           return [Review.fromJson(reviewMap)];
-
         } else if (decoded is List) {
-          print("✅ 리뷰 리스트 개수: ${decoded.length}");
+          print("  리뷰 리스트 개수: ${decoded.length}");
           return decoded.map((json) => Review.fromJson(json)).toList();
         } else {
-          print("❌ 알 수 없는 응답 형식: ${decoded.runtimeType}");
+          print("  알 수 없는 응답 형식: ${decoded.runtimeType}");
           return [];
         }
       } else {
-        print("❌ 리뷰 목록 에러: ${response.statusCode}, ${response.body}");
+        print("  리뷰 목록 에러: ${response.statusCode}, ${response.body}");
         return [];
       }
     } catch (e) {
-      print("❌ 리뷰 가져오기 에러: $e");
+      print("  리뷰 가져오기 에러: $e");
       return [];
     }
   }
@@ -109,7 +108,6 @@ class ReviewRepository {
         'rating': review.rating,
         'nick': review.nick,
         'createdAt': DateTime.now().toIso8601String(),
-
       };
 
       print('📢 서버로 보낼 JSON 데이터: ${jsonEncode(requestBody)}');
@@ -122,10 +120,10 @@ class ReviewRepository {
       );
 
       if (response.statusCode == 200) {
-        print('✅ 리뷰 작성 성공!');
+        print('  리뷰 작성 성공!');
         return true;
       } else {
-        print('❌ 리뷰 작성 실패: ${response.statusCode}, ${response.body}');
+        print('  리뷰 작성 실패: ${response.statusCode}, ${response.body}');
 
         if (response.body.isNotEmpty) {
           try {
@@ -138,7 +136,7 @@ class ReviewRepository {
         return false;
       }
     } catch (e) {
-      print('❌ 리뷰 생성 중 예외 발생: $e');
+      print('  리뷰 생성 중 예외 발생: $e');
       return false;
     }
   }
@@ -148,13 +146,13 @@ class ReviewRepository {
     try {
       final headers = await _getHeaders();
 
-      final Map<String, dynamic> requestBody ={
-        'id' : review.reviewId,
-        'userId' : review.userId,
-        'movieId' : review.movieId,
-        'content' : review.content,
-        'rating' : review.rating,
-        'nick' : review.nick,
+      final Map<String, dynamic> requestBody = {
+        'id': review.reviewId,
+        'userId': review.userId,
+        'movieId': review.movieId,
+        'content': review.content,
+        'rating': review.rating,
+        'nick': review.nick,
       };
       print('📢 서버로 보낼 수정 리뷰 데이터: ${jsonEncode(requestBody)}');
 
@@ -165,14 +163,14 @@ class ReviewRepository {
       );
 
       if (response.statusCode == 200) {
-        print('✅ 리뷰 수정 성공!');
+        print('  리뷰 수정 성공!');
         return true;
       } else {
-        print('❌ 리뷰 수정 실패: ${response.statusCode}, ${response.body}');
+        print('  리뷰 수정 실패: ${response.statusCode}, ${response.body}');
         return false;
       }
     } catch (e) {
-      print('❌ 리뷰 수정 중 예외 발생: $e');
+      print('  리뷰 수정 중 예외 발생: $e');
       return false;
     }
   }
@@ -193,14 +191,14 @@ class ReviewRepository {
       );
 
       if (response.statusCode == 200) {
-        print('✅ 리뷰 삭제 성공!');
+        print('  리뷰 삭제 성공!');
         return true;
       } else {
-        print('❌ 리뷰 삭제 실패: ${response.statusCode}, ${response.body}');
+        print('  리뷰 삭제 실패: ${response.statusCode}, ${response.body}');
         return false;
       }
     } catch (e) {
-      print('❌ 리뷰 삭제 중 예외 발생: $e');
+      print('  리뷰 삭제 중 예외 발생: $e');
       return false;
     }
   }
@@ -208,7 +206,6 @@ class ReviewRepository {
   // 리뷰 좋아요 토글
   Future<bool> toggleLike(String reviewId, bool liked) async {
     try {
-
       final headers = await _getHeaders();
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getInt('userId') ?? 0;
@@ -221,14 +218,14 @@ class ReviewRepository {
       );
 
       if (response.statusCode == 200) {
-        print('✅ 리뷰 좋아요 토글 성공!');
+        print('  리뷰 좋아요 토글 성공!');
         return true;
       } else {
-        print('❌ 리뷰 좋아요 토글 실패: ${response.statusCode}, ${response.body}');
+        print('  리뷰 좋아요 토글 실패: ${response.statusCode}, ${response.body}');
         return false;
       }
     } catch (e) {
-      print('❌ 리뷰 좋아요 토글 중 예외 발생: $e');
+      print('  리뷰 좋아요 토글 중 예외 발생: $e');
       return false;
     }
   }

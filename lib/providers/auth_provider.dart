@@ -45,21 +45,21 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // 이전 로그인 데이터 초기화
       await clearStoredCredentials();
 
-      // 1️⃣ 카카오 로그인 진행 후 액세스 토큰 가져오기
+      //   카카오 로그인 진행 후 액세스 토큰 가져오기
       OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
       String accessToken = token.accessToken;
-      print("✅ 카카오 로그인 토큰 획득: ${accessToken.substring(0, 10)}...");
+      print("  카카오 로그인 토큰 획득: ${accessToken.substring(0, 10)}...");
 
-      // 2️⃣ 카카오 사용자 정보 가져오기
+      // 카카오 사용자 정보 가져오기
       User user = await UserApi.instance.me();
       String kakaoId = user.id.toString();
       String nickname = user.kakaoAccount?.profile?.nickname ?? "카카오 유저";
       String email = user.kakaoAccount?.email ?? "이메일 없음";
 
       print(
-          "✅ 카카오 로그인 성공! (kakaoId: $kakaoId, email: $email, nickname: $nickname)");
+          "  카카오 로그인 성공! (kakaoId: $kakaoId, email: $email, nickname: $nickname)");
 
-      // 3️⃣ 서버로 액세스 토큰 및 사용자 정보 전송
+      // 서버로 액세스 토큰 및 사용자 정보 전송
       final response = await http.post(
         Uri.parse('http://13.239.238.92:8080/kakao/login'),
         headers: {'Content-Type': 'application/json; charset=utf-8'},
@@ -71,26 +71,26 @@ class AuthNotifier extends StateNotifier<AuthState> {
         }),
       );
 
-      print("✅ 서버 요청 완료, 상태 코드: ${response.statusCode}");
+      print("  서버 요청 완료, 상태 코드: ${response.statusCode}");
       if (response.statusCode == 200) {
         final responseBody = utf8.decode(response.bodyBytes);
-        print("✅ 서버 응답 원본: $responseBody");
+        print("  서버 응답 원본: $responseBody");
 
         final data = json.decode(responseBody);
-        print("✅ 서버 응답 데이터: $data");
+        print("  서버 응답 데이터: $data");
 
         // 응답에서 userId와 토큰 확인
         if (data['userId'] == null) {
-          print("🚨 서버 응답에 userId가 없습니다!");
+          print(" 서버 응답에 userId가 없습니다!");
           throw Exception('서버 응답에 userId가 없습니다');
         }
 
         int userId = data['userId'];
         // 서버에서 온 토큰 또는 카카오 토큰
         String finalToken = data['access_token'] ?? accessToken;
-        print("✅ 최종 사용 토큰: ${finalToken.substring(0, 10)}...");
+        print("  최종 사용 토큰: ${finalToken.substring(0, 10)}...");
 
-        // ✅ 새로운 저장 방식 적용
+        //   새로운 저장 방식 적용
         await storeCredentials(
           isLoggedIn: true,
           userId: userId,
@@ -103,20 +103,20 @@ class AuthNotifier extends StateNotifier<AuthState> {
         // 토큰이 저장되었는지 즉시 확인
         final storedToken = prefs.getString('access_token');
         print(
-            "✅ 저장 직후 토큰 확인: ${storedToken != null ? '있음 (${storedToken.substring(0, 10)}...)' : '없음'}");
+            "  저장 직후 토큰 확인: ${storedToken != null ? '있음 (${storedToken.substring(0, 10)}...)' : '없음'}");
 
         if (storedToken == null || storedToken.isEmpty) {
           // 토큰 저장 실패 시 다시 시도
-          print("🚨 토큰 저장 실패! 다시 시도합니다...");
+          print(" 토큰 저장 실패! 다시 시도합니다...");
           bool tokenSaved = await prefs.setString('access_token', finalToken);
-          print("✅ 토큰 재저장 결과: $tokenSaved");
+          print("  토큰 재저장 결과: $tokenSaved");
 
           // 다시 확인
           final retryToken = prefs.getString('access_token');
-          print("✅ 재시도 후 토큰 확인: ${retryToken != null ? '있음' : '없음'}");
+          print("  재시도 후 토큰 확인: ${retryToken != null ? '있음' : '없음'}");
         }
 
-        // 4️⃣ 상태 업데이트
+        // 상태 업데이트
         state = AuthState(
           isAuthenticated: true,
           user: UserModel(
@@ -130,13 +130,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
         );
 
         print(
-            "✅ 로그인 상태 업데이트 완료: ${state.isAuthenticated}, 토큰: ${state.accessToken != null ? '있음' : '없음'}");
+            "  로그인 상태 업데이트 완료: ${state.isAuthenticated}, 토큰: ${state.accessToken != null ? '있음' : '없음'}");
       } else {
-        print("🚨 서버 응답 오류: ${response.statusCode}, 응답: ${response.body}");
+        print(" 서버 응답 오류: ${response.statusCode}, 응답: ${response.body}");
         throw Exception('Server error: ${response.statusCode}');
       }
     } catch (e) {
-      print('❌ 카카오 로그인 에러: $e');
+      print(' 카카오 로그인 에러: $e');
       state = AuthState(isAuthenticated: false, user: null, accessToken: null);
       await clearStoredCredentials();
       throw Exception('카카오 로그인 실패: $e');
@@ -170,7 +170,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // 액세스 토큰 저장 - 중요!!
       bool tokenSaved = await prefs.setString('access_token', accessToken);
 
-      print("✅ SharedPreferences 저장 결과:");
+      print("  SharedPreferences 저장 결과:");
       print("- isLoggedIn: $isLoggedInSaved");
       print("- userId: $userIdSaved");
       print("- email: $emailSaved");
@@ -186,12 +186,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
           tokenSaved;
 
       if (!allSaved) {
-        print("🚨 일부 데이터 저장 실패!");
+        print(" 일부 데이터 저장 실패!");
       }
 
       return allSaved;
     } catch (e) {
-      print("❌ 인증 정보 저장 오류: $e");
+      print(" 인증 정보 저장 오류: $e");
       return false;
     }
   }
@@ -209,9 +209,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       await prefs.remove('kakaoId');
       await prefs.remove('access_token');
 
-      print("✅ 저장된 인증 정보 초기화 완료");
+      print("  저장된 인증 정보 초기화 완료");
     } catch (e) {
-      print("❌ 인증 정보 초기화 오류: $e");
+      print(" 인증 정보 초기화 오류: $e");
     }
   }
 
@@ -231,7 +231,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
 
       if (!stored) {
-        print("🚨 로그인 정보 저장 실패!");
+        print(" 로그인 정보 저장 실패!");
         throw Exception('로그인 정보 저장 실패');
       }
 
@@ -249,9 +249,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
           accessToken: accessToken // 토큰을 상태에 저장
           );
 
-      print("✅ 로그인 완료: userId=$userId, 토큰 있음=${accessToken.isNotEmpty}");
+      print("  로그인 완료: userId=$userId, 토큰 있음=${accessToken.isNotEmpty}");
     } catch (e) {
-      print('❌ 로그인 오류: $e');
+      print(' 로그인 오류: $e');
       state = AuthState(isAuthenticated: false, user: null, accessToken: null);
       throw Exception('로그인 실패: $e');
     }
@@ -269,7 +269,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final kakaoId = prefs.getString('kakaoId');
       final accessToken = prefs.getString('access_token');
 
-      print("✅ 저장된 로그인 정보 확인:");
+      print("  저장된 로그인 정보 확인:");
       print("- isLoggedIn: $isLoggedIn");
       print("- userId: $userId");
       print("- nickname: $nickname");
@@ -279,7 +279,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
           "- accessToken: ${accessToken != null ? '있음 (${accessToken.length} 글자)' : '없음'}");
 
       if (!isLoggedIn || userId == null) {
-        print("🚨 로그인 정보가 없거나 userId가 없습니다. 로그아웃 상태로 설정합니다.");
+        print(" 로그인 정보가 없거나 userId가 없습니다. 로그아웃 상태로 설정합니다.");
         state =
             AuthState(isAuthenticated: false, user: null, accessToken: null);
         return;
@@ -299,13 +299,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
             ),
             accessToken: null, // 토큰 없음
           );
-          print("✅ 제한된 로그인 상태로 복원됨 (토큰 없음)");
+          print("  제한된 로그인 상태로 복원됨 (토큰 없음)");
           return;
         }
       }
 
       if (nickname == null || email == null) {
-        print("🚨 저장된 사용자 데이터가 손상되었습니다! 기본값으로 설정합니다.");
+        print(" 저장된 사용자 데이터가 손상되었습니다! 기본값으로 설정합니다.");
         await clearStoredCredentials();
         state =
             AuthState(isAuthenticated: false, user: null, accessToken: null);
@@ -325,9 +325,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
 
       print(
-          "✅ 로그인 상태 복원 완료: ${state.isAuthenticated}, userId: ${state.user?.userId}, 토큰 있음=${state.accessToken != null}");
+          "  로그인 상태 복원 완료: ${state.isAuthenticated}, userId: ${state.user?.userId}, 토큰 있음=${state.accessToken != null}");
     } catch (e) {
-      print('❌ 로그인 상태 확인 에러: $e');
+      print(' 로그인 상태 확인 에러: $e');
       state = AuthState(isAuthenticated: false, user: null, accessToken: null);
       // 오류 발생 시 로그인 정보 초기화
       await clearStoredCredentials();
@@ -338,9 +338,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       await clearStoredCredentials();
       state = AuthState(isAuthenticated: false, user: null, accessToken: null);
-      print("✅ 로그아웃 완료 및 SharedPreferences 초기화됨");
+      print("  로그아웃 완료 및 SharedPreferences 초기화됨");
     } catch (e) {
-      print('❌ 로그아웃 에러: $e');
+      print(' 로그아웃 에러: $e');
       // 오류가 발생해도 상태는 로그아웃으로 변경
       state = AuthState(isAuthenticated: false, user: null, accessToken: null);
     }

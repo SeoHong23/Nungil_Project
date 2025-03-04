@@ -1,4 +1,4 @@
-// ✅ 캐싱 데이터 로드 함수
+//   캐싱 데이터 로드 함수
 import 'dart:convert';
 
 import 'package:nungil/data/repository/video_list_repository.dart';
@@ -14,7 +14,7 @@ List<VideoRankModel>? loadCachedRanking(SharedPreferences prefs, String key) {
   return null;
 }
 
-// ✅ 캐싱 데이터 저장 함수
+//   캐싱 데이터 저장 함수
 void cacheRanking(
     SharedPreferences prefs, String key, List<VideoRankModel> ranking) {
   final jsonData = jsonEncode(ranking.map((e) => e.toJson()).toList());

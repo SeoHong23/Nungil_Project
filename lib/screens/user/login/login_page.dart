@@ -13,7 +13,7 @@ class LoginPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // ✅ 올바른 Ref 타입 사용
+    //   올바른 Ref 타입 사용
     final kakaoLoginService = ref.read(kakaoLoginProvider);
     return SafeArea(
       child: Scaffold(
@@ -36,7 +36,7 @@ class LoginPage extends ConsumerWidget {
                 width: 350, // 기존 버튼과 동일한 크기 유지
                 child: GestureDetector(
                   onTap: () async {
-                    print('✅ 로그인 버튼 클릭됨!'); // 로그 추가
+                    print('  로그인 버튼 클릭됨!'); // 로그 추가
                     bool token = await kakaoLoginService.kakaoLogin();
                     if (token != null) {
                       print("카카오 로그인 성공 : $token");

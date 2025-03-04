@@ -38,7 +38,7 @@ class BannerRepository {
             'Failed to upload banner. Status Code: ${response.statusCode}');
       }
     } catch (e) {
-      print("❌ Error uploading banner: $e");
+      print(" Error uploading banner: $e");
       throw Exception('Failed to upload banner');
     }
   }
@@ -47,7 +47,7 @@ class BannerRepository {
     try {
       Response response = await dio.get('/api/banner/list');
 
-      // ✅ response.data가 이미 JSON 형태일 가능성이 높음 → json.decode 제거
+      //   response.data가 이미 JSON 형태일 가능성이 높음 → json.decode 제거
       if (response.statusCode == 200 && response.data is List) {
         return (response.data as List)
             .map((item) => BannerModel.fromJson(item as Map<String, dynamic>))
@@ -66,7 +66,7 @@ class BannerRepository {
       Response response =
           await dio.delete('/api/banner/delete', queryParameters: {"id": id});
 
-      // ✅ response.data가 이미 JSON 형태일 가능성이 높음 → json.decode 제거
+      //   response.data가 이미 JSON 형태일 가능성이 높음 → json.decode 제거
       if (response.statusCode == 200) {
       } else {
         throw Exception('Invalid response format');

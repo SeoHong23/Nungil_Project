@@ -22,7 +22,7 @@ class _OttListComponentState extends State<OttListComponent> {
   final Set<int> _activeIndexes = {};
   final String filterKey = "OTT"; // 필터 키
 
-  /// ✅ **OTT 필터 추가/제거 메서드**
+  ///   **OTT 필터 추가/제거 메서드**
   void _toggleOttFilter(int index) {
     final String ottName = ottIconList[index].name; // 아이콘에 해당하는 OTT 이름
 
@@ -36,7 +36,7 @@ class _OttListComponentState extends State<OttListComponent> {
       }
     });
 
-    // ✅ 변경된 필터 상태 전달
+    //   변경된 필터 상태 전달
     widget.onFilterChanged(Map.from(widget.selectedFilters));
   }
 
