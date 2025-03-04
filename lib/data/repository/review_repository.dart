@@ -12,7 +12,6 @@ import 'package:http/http.dart' as http;
 class ReviewRepository {
   final Ref _ref;
 
-
   ReviewRepository(this._ref);
 
   // 토큰 확인 기능 (디버깅 용도)
@@ -49,8 +48,7 @@ class ReviewRepository {
     };
   }
 
-  // 영화별 리뷰 목록
-  Future<List<Review>> getReviews(String movieId) async {
+  Future<Map<String, dynamic>> getReviews(String movieId) async {
     try {
       final headers = await _getHeaders();
       final prefs = await SharedPreferences.getInstance();
@@ -75,25 +73,40 @@ class ReviewRepository {
       if (response.statusCode == 200) {
         final decoded = jsonDecode(utf8.decode(response.bodyBytes));
 
+        // Map 형태 응답 처리
         if (decoded is Map) {
-          print("✅ 단일 리뷰 객체를 리스트로 변환합니다.");
-          final Map<String, dynamic> reviewMap = Map<String, dynamic>.from(decoded);
-          return [Review.fromJson(reviewMap)];
-
-        } else if (decoded is List) {
-          print("✅ 리뷰 리스트 개수: ${decoded.length}");
-          return decoded.map((json) => Review.fromJson(json)).toList();
+          print("✅ 리뷰 개수 포함 응답 처리.");
+          int reviewCount = decoded['count'] ?? 0;
+          List<Review> reviews = [];
+          if (decoded['reviews'] is List) {
+            reviews = (decoded['reviews'] as List)
+                .map((json) => Review.fromJson(json))
+                .toList();
+          }
+          return {"count": reviewCount, "reviews": reviews};
+        }
+        // List 형태 응답 처리
+        else if (decoded is List) {
+          print("✅ 리스트 형태 응답 처리.");
+          List<Review> reviews = [];
+          try {
+            reviews = decoded.map((json) => Review.fromJson(json)).toList();
+            print("✅ ${reviews.length}개의 리뷰를 변환했습니다.");
+          } catch (e) {
+            print("❌ 리뷰 변환 중 오류: $e");
+          }
+          return {"count": reviews.length, "reviews": reviews};
         } else {
-          print("❌ 알 수 없는 응답 형식: ${decoded.runtimeType}");
-          return [];
+          print("❌ 예상치 못한 응답 형식: ${decoded.runtimeType}");
+          return {"count": 0, "reviews": []};
         }
       } else {
         print("❌ 리뷰 목록 에러: ${response.statusCode}, ${response.body}");
-        return [];
+        return {"count": 0, "reviews": []};
       }
     } catch (e) {
       print("❌ 리뷰 가져오기 에러: $e");
-      return [];
+      return {"count": 0, "reviews": []};
     }
   }
 
@@ -109,7 +122,6 @@ class ReviewRepository {
         'rating': review.rating,
         'nick': review.nick,
         'createdAt': DateTime.now().toIso8601String(),
-
       };
 
       print('📢 서버로 보낼 JSON 데이터: ${jsonEncode(requestBody)}');
@@ -148,13 +160,13 @@ class ReviewRepository {
     try {
       final headers = await _getHeaders();
 
-      final Map<String, dynamic> requestBody ={
-        'id' : review.reviewId,
-        'userId' : review.userId,
-        'movieId' : review.movieId,
-        'content' : review.content,
-        'rating' : review.rating,
-        'nick' : review.nick,
+      final Map<String, dynamic> requestBody = {
+        'id': review.reviewId,
+        'userId': review.userId,
+        'movieId': review.movieId,
+        'content': review.content,
+        'rating': review.rating,
+        'nick': review.nick,
       };
       print('📢 서버로 보낼 수정 리뷰 데이터: ${jsonEncode(requestBody)}');
 
@@ -208,7 +220,6 @@ class ReviewRepository {
   // 리뷰 좋아요 토글
   Future<bool> toggleLike(String reviewId, bool liked) async {
     try {
-
       final headers = await _getHeaders();
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getInt('userId') ?? 0;
