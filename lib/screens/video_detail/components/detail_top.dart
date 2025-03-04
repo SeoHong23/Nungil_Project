@@ -312,7 +312,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                           clipBehavior: Clip.hardEdge,
                           child: Image.network(
                             URL + randomAd!.fileName,
-                            fit: BoxFit.fill,
+                            fit: BoxFit.cover,
                           ),
                         )
                       : Container(
@@ -324,7 +324,7 @@ class _DetailTopState extends ConsumerState<DetailTop> {
                           clipBehavior: Clip.hardEdge,
                           child: Image.asset(
                             "assets/images/banner/banner2.png",
-                            fit: BoxFit.fill,
+                            fit: BoxFit.cover,
                           ),
                         ),
                 ),
