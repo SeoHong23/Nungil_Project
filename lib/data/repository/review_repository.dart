@@ -48,8 +48,7 @@ class ReviewRepository {
     };
   }
 
-  // 영화별 리뷰 목록
-  Future<List<Review>> getReviews(String movieId) async {
+  Future<Map<String, dynamic>> getReviews(String movieId) async {
     try {
       final headers = await _getHeaders();
       final prefs = await SharedPreferences.getInstance();
@@ -74,25 +73,41 @@ class ReviewRepository {
       if (response.statusCode == 200) {
         final decoded = jsonDecode(utf8.decode(response.bodyBytes));
 
+        // Map 형태 응답 처리
         if (decoded is Map) {
-          print("  단일 리뷰 객체를 리스트로 변환합니다.");
-          final Map<String, dynamic> reviewMap =
-              Map<String, dynamic>.from(decoded);
-          return [Review.fromJson(reviewMap)];
-        } else if (decoded is List) {
-          print("  리뷰 리스트 개수: ${decoded.length}");
-          return decoded.map((json) => Review.fromJson(json)).toList();
+
+          print("✅ 리뷰 개수 포함 응답 처리.");
+          int reviewCount = decoded['count'] ?? 0;
+          List<Review> reviews = [];
+          if (decoded['reviews'] is List) {
+            reviews = (decoded['reviews'] as List)
+                .map((json) => Review.fromJson(json))
+                .toList();
+          }
+          return {"count": reviewCount, "reviews": reviews};
+        }
+        // List 형태 응답 처리
+        else if (decoded is List) {
+          print("✅ 리스트 형태 응답 처리.");
+          List<Review> reviews = [];
+          try {
+            reviews = decoded.map((json) => Review.fromJson(json)).toList();
+            print("✅ ${reviews.length}개의 리뷰를 변환했습니다.");
+          } catch (e) {
+            print("❌ 리뷰 변환 중 오류: $e");
+          }
+          return {"count": reviews.length, "reviews": reviews};
         } else {
-          print("  알 수 없는 응답 형식: ${decoded.runtimeType}");
-          return [];
+          print("❌ 예상치 못한 응답 형식: ${decoded.runtimeType}");
+          return {"count": 0, "reviews": []};
         }
       } else {
-        print("  리뷰 목록 에러: ${response.statusCode}, ${response.body}");
-        return [];
+        print("❌ 리뷰 목록 에러: ${response.statusCode}, ${response.body}");
+        return {"count": 0, "reviews": []};
       }
     } catch (e) {
-      print("  리뷰 가져오기 에러: $e");
-      return [];
+      print("❌ 리뷰 가져오기 에러: $e");
+      return {"count": 0, "reviews": []};
     }
   }
 

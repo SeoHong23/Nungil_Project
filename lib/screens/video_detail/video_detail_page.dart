@@ -12,6 +12,19 @@ import 'package:nungil/screens/video_detail/components/detail_tap_info.dart';
 import 'package:nungil/screens/video_detail/components/detail_tap_review.dart';
 import 'package:nungil/screens/video_detail/components/detail_top.dart';
 import 'package:nungil/theme/common_theme.dart';
+import 'package:nungil/data/repository/review_repository.dart' as repo;
+
+final reviewCountProvider =
+    FutureProvider.family<int, String>((ref, movieId) async {
+  final repository = ref.read(repo.reviewRepositoryProvider);
+  try {
+    final result = await repository.getReviews(movieId);
+    return result['count'] ?? 0;
+  } catch (e) {
+    print('리뷰 개수 로드 실패: $e');
+    return 0;
+  }
+});
 
 class VideoDetailPage extends ConsumerStatefulWidget {
   final String item;
@@ -27,7 +40,7 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
   late TabController _tabController;
   final ScrollController _scrollController = ScrollController();
   double _opacity = 0.0; // 초기 투명도
-
+  int reviewCount = 0;
 
   @override
   void initState() {
@@ -64,6 +77,7 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
   @override
   Widget build(BuildContext context) {
     final video = ref.watch(videoDetailProvider(widget.item));
+    final reviewCountAsync = ref.watch(reviewCountProvider(widget.item));
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -117,20 +131,16 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
         extendBodyBehindAppBar: true,
         body: MediaQuery.removePadding(
           context: context,
-          removeTop: true, // 상단 패딩 제거
+          removeTop: true,
           child: NestedScrollView(
             controller: _scrollController,
             physics: const ClampingScrollPhysics(),
-            // 스크롤 문제 해결
             floatHeaderSlivers: true,
-            // 헤더가 자연스럽게 떠 있도록 설정
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
-              // DetailTop을 SliverPersistentHeader로 변경
               SliverPersistentHeader(
                 pinned: true,
                 delegate: _DetailTopDelegate(video),
               ),
-
               SliverPersistentHeader(
                 pinned: true,
                 delegate: _StickyTabBarDelegate(
@@ -140,9 +150,20 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
                       const Tab(
                           child:
                               Text("작품정보", style: CustomTextStyle.pretendard)),
-                      Tab(
-                          child: Text("리뷰 ${video.reviewCnt}",
-                              style: CustomTextStyle.pretendard)),
+                      reviewCountAsync.when(
+                        data: (count) => Tab(
+                          child: Text(
+                            "리뷰 $count",
+                            style: CustomTextStyle.pretendard,
+                          ),
+                        ),
+                        loading: () => const Tab(
+                          child: Text("리뷰", style: CustomTextStyle.pretendard),
+                        ),
+                        error: (_, __) => const Tab(
+                          child: Text("리뷰", style: CustomTextStyle.pretendard),
+                        ),
+                      ),
                       Tab(
                           child: Text("영상/이미지 ${video.mediaList.length}",
                               style: CustomTextStyle.pretendard))
@@ -167,7 +188,7 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
                         ? DetailTapInfo(
                             key: const ValueKey('data'),
                             item: video,
-                      changeTab: _switchTab,
+                            changeTab: _switchTab,
                           )
                         : const ShimmerInfo(
                             key: ValueKey('shimmer'),
@@ -192,7 +213,6 @@ class _VideoDetailPageState extends ConsumerState<VideoDetailPage>
   }
 }
 
-// SliverPersistentHeader로 탭바를 고정하는 델리게이트
 class _StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
   final TabBar tabBar;
 
