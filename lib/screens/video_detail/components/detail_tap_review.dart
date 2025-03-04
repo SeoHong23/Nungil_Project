@@ -9,6 +9,7 @@ import 'package:nungil/screens/common_components/rating_widget.dart';
 import 'package:nungil/theme/common_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/screens/user/login/login_page.dart';
+import 'dart:convert';
 
 final reviewRepositoryProvider = Provider((ref) => ReviewRepository(ref));
 
@@ -18,7 +19,9 @@ final reviewsProvider =
 
   // final movieIdStr = movieId.toString();
 
-  return await repository.getReviews(movieId);
+  // return await repository.getReviews(movieId);
+  final result = await repository.getReviews(movieId.toString());
+  return (result['reviews'] as List).cast<Review>();
 });
 
 class DetailTapReview extends ConsumerStatefulWidget {
@@ -60,12 +63,15 @@ class _DetailTapReviewState extends ConsumerState<DetailTapReview> {
 
   String get _currentUsername {
     final authState = ref.read(authProvider);
+    if (authState.user == null) {
+      return '';
+    }
     return authState.user!.nickname;
   }
 
-  int get _currentUserId {
+  int? get _currentUserId {
     final authState = ref.read(authProvider);
-    return authState.user!.userId;
+    return authState.user?.userId;
   }
 
   bool get _isLoggedIn {
@@ -95,6 +101,20 @@ class _DetailTapReviewState extends ConsumerState<DetailTapReview> {
     } catch (e) {
       ref.invalidate(reviewsProvider(widget.item.id));
       _showSnackBar('좋아요 업데이트 중 오류 발생');
+    }
+  }
+
+  String processNickname(String nickname) {
+    if (nickname.isEmpty) {
+      return '';
+    }
+
+    try {
+      final List<int> latin1Bytes = latin1.encode(nickname);
+      return utf8.decode(latin1Bytes, allowMalformed: true);
+    } catch (e) {
+      print('닉네임 디코딩 에러: $e');
+      return nickname;
     }
   }
 
@@ -463,7 +483,7 @@ class _DetailTapReviewState extends ConsumerState<DetailTapReview> {
                                 Row(
                                   children: [
                                     Text(
-                                      review.nick,
+                                      processNickname(review.nick),
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: DefaultColors.navy,
