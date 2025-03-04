@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nungil/data/repository/setting_repository.dart';
 import 'package:nungil/theme/common_theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserSetting extends StatefulWidget {
   const UserSetting({required this.label, required this.context, super.key});
@@ -15,6 +16,7 @@ class UserSetting extends StatefulWidget {
 
 class _UserSettingState extends State<UserSetting> {
   bool _isAlert = false;
+
   @override
   void initState() {
     super.initState();
@@ -22,18 +24,22 @@ class _UserSettingState extends State<UserSetting> {
   }
 
   Future<void> getSetting() async {
-    bool alertValue = await SettingRepository().getAlert(3);
+    final prefs = await SharedPreferences.getInstance();
 
+    bool alertValue = await prefs.getBool('isAlert') ?? false;
     setState(() {
       _isAlert = alertValue;
     });
   }
 
   Future<void> setSetting(bool isAlert) async {
-    setState(() {
-      SettingRepository().setAlert(3, isAlert);
-      _isAlert = isAlert;
-    });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isAlert', isAlert);
+    setState(
+      () {
+        _isAlert = isAlert;
+      },
+    );
   }
 
   @override

@@ -46,7 +46,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         ref.watch(authProvider.select((state) => state.isAuthenticated));
     final isAdmin =
         ref.watch(authProvider.select((state) => state.isAdmin)) ?? false;
-
     return SafeArea(
       child: Scaffold(
         body: Center(

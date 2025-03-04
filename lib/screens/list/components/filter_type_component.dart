@@ -8,6 +8,8 @@ class FilterTypeComponent extends StatefulWidget {
   final Function(Map<String, Set<String>>) onFilterChanged;
   final Function(bool isOpen) onOpenChanged;
   final bool isNotOpen;
+  final String sortOrder;
+  final Function(String? newValue) onSortChanged;
 
   const FilterTypeComponent({
     super.key,
@@ -15,6 +17,8 @@ class FilterTypeComponent extends StatefulWidget {
     required this.onOpenChanged,
     required this.selectedFilters,
     required this.onFilterChanged,
+    required this.sortOrder,
+    required this.onSortChanged,
   });
 
   @override
@@ -173,43 +177,73 @@ class _FilterTypeComponentState extends State<FilterTypeComponent> {
         const SizedBox(height: 5),
 
         /// ✅ **선택된 필터 리스트**
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: widget.selectedFilters.entries
-                .where((entry) => entry.key != "OTT") // ✅ OTT 제외
-                .expand((entry) {
-              String category = entry.key;
-              return entry.value.map((filter) {
-                return Padding(
-                  padding: const EdgeInsets.only(right: 5.0),
-                  child: Container(
-                    padding: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: iconThemeColor[300],
-                      borderRadius: BorderRadius.circular(5),
+        Row(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: widget.selectedFilters.entries
+                      .where((entry) => entry.key != "OTT") // ✅ OTT 제외
+                      .expand(
+                    (entry) {
+                      String category = entry.key;
+                      return entry.value.map(
+                        (filter) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 5.0),
+                            child: Container(
+                              padding: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                color: iconThemeColor[300],
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Row(
+                                children: [
+                                  Text("$category: $filter",
+                                      style: TextStyle(color: Colors.white)),
+                                  GestureDetector(
+                                    onTap: () {
+                                      _toggleFilter(category, filter);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 5.0),
+                                      child: Icon(Icons.cancel_outlined,
+                                          size: 18, color: Colors.white),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
+            ),
+            SizedBox(width: 8),
+            Row(
+              children: [
+                const Text("정렬: "),
+                DropdownButton<String>(
+                  value: widget.sortOrder,
+                  items: const [
+                    DropdownMenuItem(
+                      value: "DateDESC",
+                      child: Text("최신순"),
                     ),
-                    child: Row(
-                      children: [
-                        Text("$category: $filter",
-                            style: TextStyle(color: Colors.white)),
-                        GestureDetector(
-                          onTap: () {
-                            _toggleFilter(category, filter);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 5.0),
-                            child: Icon(Icons.cancel_outlined,
-                                size: 18, color: Colors.white),
-                          ),
-                        ),
-                      ],
+                    DropdownMenuItem(
+                      value: "DateASC",
+                      child: Text("오래된순"),
                     ),
-                  ),
-                );
-              });
-            }).toList(),
-          ),
+                  ],
+                  onChanged: widget.onSortChanged, // ✅ 정렬 변경 시 실행
+                ),
+              ],
+            ),
+          ],
         ),
       ],
     );

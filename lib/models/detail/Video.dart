@@ -51,6 +51,8 @@ class Video {
   List<dynamic>? keywords;
   int reviewCnt;
   List<dynamic> mediaList;
+  Map<String, dynamic> ottLinks;
+  Map<String, dynamic> theaterLinks;
 
   Video(
       {required this.id,
@@ -75,32 +77,35 @@ class Video {
       this.awards2,
       this.keywords,
       this.reviewCnt = 0,
-      this.mediaList = const []});
+      this.mediaList = const [],
+      this.ottLinks = const {},
+      this.theaterLinks = const {}});
 
   factory Video.fromNull() {
     return Video(
-      id: "",
-      title: "",
-      titleEng: "",
-      prodYear: "",
-      nation: "",
-      score: 0.0,
-      company: [],
-      plots: "",
-      runtime: "",
-      genre: [],
-      releaseDate: "",
-      rating: "",
-      posters: [],
-      stlls: [],
-      directors: {},
-      cast: [],
-      makers: {},
-      crew: {},
-      awards1: "",
-      awards2: "",
-      keywords: [],
-    );
+        id: "",
+        title: "",
+        titleEng: "",
+        prodYear: "",
+        nation: "",
+        score: 0.0,
+        company: [],
+        plots: "",
+        runtime: "",
+        genre: [],
+        releaseDate: "",
+        rating: "",
+        posters: [],
+        stlls: [],
+        directors: {},
+        cast: [],
+        makers: {},
+        crew: {},
+        awards1: "",
+        awards2: "",
+        keywords: [],
+        ottLinks: {},
+        theaterLinks: {});
   }
 
   // Map 데이터를 Video 객체로 변환하는 팩토리 메서드
@@ -134,6 +139,8 @@ class Video {
         ...map['stlls'],
         ...map['posters'],
       ],
+      ottLinks: map['ottInfo'] ?? {},
+      theaterLinks: map['theaterInfo'] ?? {},
     );
   }
 }

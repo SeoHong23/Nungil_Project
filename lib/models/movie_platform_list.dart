@@ -1,8 +1,9 @@
 class OttIconList {
   final String name;
   final String uri;
+  String? link = "";
 
-  OttIconList({required this.name, required this.uri});
+  OttIconList({required this.name, required this.uri, this.link});
 }
 
 List<OttIconList> ottIconList = [
@@ -18,4 +19,20 @@ List<OttIconList> ottIconList = [
   OttIconList(name: 'U+모바일tv', uri: 'assets/images/ott_icons/lguplus.png'),
   OttIconList(name: '아마존 프라임 비디오', uri: 'assets/images/ott_icons/amazon.png'),
   OttIconList(name: '씨네폭스', uri: 'assets/images/ott_icons/cinefox.png'),
+];
+
+class TheaterList {
+  final String name;
+  final String uri;
+  String? link = "";
+  TheaterList({required this.name, required this.uri, this.link});
+}
+
+List<TheaterList> theaterList = [
+  TheaterList(name: 'CGV', uri: 'assets/images/theater_icons/CGV.svg'),
+  TheaterList(name: '롯데시네마', uri: 'assets/images/theater_icons/롯데시네마.svg'),
+  TheaterList(name: '메가박스', uri: 'assets/images/theater_icons/메가박스.svg'),
+  TheaterList(
+      name: 'KT&G 상상마당 시네마',
+      uri: 'assets/images/theater_icons/KT&G 상상마당 시네마.svg'),
 ];

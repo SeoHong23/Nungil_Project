@@ -13,9 +13,23 @@ class VideoRepository {
         throw const FormatException("Invalid response format: expected a map.");
       }
     } else {
-      throw Exception("Failed to fetch video data. Status code: ${response.statusCode}");
+      throw Exception(
+          "Failed to fetch video data. Status code: ${response.statusCode}");
+    }
+  }
+
+  Future<Map<String, dynamic>> readLink(String id) async {
+    final response = await dio.get('/api/video/link?id=$id');
+
+    if (response.statusCode == 200) {
+      if (response.data is Map<String, dynamic>) {
+        return response.data;
+      } else {
+        throw const FormatException("Invalid response format: expected a map.");
+      }
+    } else {
+      throw Exception(
+          "Failed to fetch video data. Status code: ${response.statusCode}");
     }
   }
 }
-
-

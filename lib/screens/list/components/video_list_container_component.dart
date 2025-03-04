@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/data/gvm/video_list_GVM.dart';
 import 'package:nungil/models/list/video_list_tmp.dart';
+import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/util/logger.dart';
 
 import '../../common_components/video_list_component.dart';
@@ -66,6 +67,8 @@ class _VideoListContainerComponentState
 
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn =
+        ref.watch(authProvider.select((state) => state.isAuthenticated));
     final videoList = ref.watch(videoNotifierProvider);
 
     // 화면 크기에 따른 열 개수 조절
@@ -92,6 +95,7 @@ class _VideoListContainerComponentState
             imgUrl: video.poster,
             name: video.title,
             rate: 80.0,
+            isLogined: isLoggedIn,
           );
         },
       ),

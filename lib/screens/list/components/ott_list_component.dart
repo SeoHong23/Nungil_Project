@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nungil/models/ott_icon_list.dart';
+import 'package:nungil/models/movie_platform_list.dart';
 
 /// 2025-01-25 강중원 - 기존 위젯 컴포넌트화
 ///

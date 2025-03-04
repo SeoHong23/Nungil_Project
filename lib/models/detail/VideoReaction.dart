@@ -23,25 +23,24 @@ class VideoReaction {
 
   bool isModified;
 
-  VideoReaction({
-    this.objectId = 0,
-    this.mongoId = "",
-    required this.videoId,
-    required this.title,
-    required this.posterUrl,
-    this.isLiked = false,
-    this.isDisliked = false,
-    this.isWatching = false,
-    this.isWatched = false,
-    this.isBookmarked = false,
-    this.isIgnored = false,
-    this.isModified = true
-  });
+  VideoReaction(
+      {this.objectId = 0,
+      this.mongoId = "",
+      required this.videoId,
+      this.title = "",
+      this.posterUrl = "",
+      this.isLiked = false,
+      this.isDisliked = false,
+      this.isWatching = false,
+      this.isWatched = false,
+      this.isBookmarked = false,
+      this.isIgnored = false,
+      this.isModified = true});
 
   void toggleLiked() {
     isLiked = !isLiked;
     if (isLiked) isDisliked = false;
-    if (!isWatched&&isLiked) toggleWatched();
+    if (!isWatched && isLiked) toggleWatched();
     isModified = true;
     deleteIfAllFalse();
   }
@@ -49,7 +48,7 @@ class VideoReaction {
   void toggleDisliked() {
     isDisliked = !isDisliked;
     if (isDisliked) isLiked = false;
-    if (!isWatched&&isDisliked) toggleWatched();
+    if (!isWatched && isDisliked) toggleWatched();
     isModified = true;
     deleteIfAllFalse();
   }
@@ -64,8 +63,8 @@ class VideoReaction {
   void toggleWatched() {
     isWatched = !isWatched;
     if (isWatched) isWatching = false;
-    if (!isWatched&&isLiked) toggleLiked();
-    if (!isWatched&&isDisliked) toggleDisliked();
+    if (!isWatched && isLiked) toggleLiked();
+    if (!isWatched && isDisliked) toggleDisliked();
     isModified = true;
     deleteIfAllFalse();
   }
@@ -83,23 +82,36 @@ class VideoReaction {
     isModified = true;
     deleteIfAllFalse();
   }
+
   // 모든 상태가 false일 경우 객체 삭제
   void deleteIfAllFalse() {
-    if (!isLiked && !isDisliked && !isWatching && !isWatched && !isBookmarked && !isIgnored) {
-      if(mongoId!=""){
+    if (!isLiked &&
+        !isDisliked &&
+        !isWatching &&
+        !isWatched &&
+        !isBookmarked &&
+        !isIgnored) {
+      if (mongoId != "") {
         ObjectBox().getBox<String>().put(mongoId);
       }
-      ObjectBox().getBox<VideoReaction>().remove(objectId);  // ObjectBox에서 객체 삭제
+      ObjectBox().getBox<VideoReaction>().remove(objectId); // ObjectBox에서 객체 삭제
     }
   }
 
-  static VideoReaction copyWith(Video video){
+  static VideoReaction copyWith(Video video) {
     return VideoReaction(
       videoId: video.id,
       title: video.title,
       posterUrl: video.posters[0],
     );
   }
+
+  static VideoReaction copyWithId(String id) {
+    return VideoReaction(
+      videoId: id,
+    );
+  }
+
   // 서버에서 받은 JSON 데이터를 VideoReaction 객체로 변환
   factory VideoReaction.fromJson(Map<String, dynamic> json) {
     return VideoReaction(
