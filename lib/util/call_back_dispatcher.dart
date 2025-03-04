@@ -16,9 +16,9 @@ void callbackDispatcher() {
     (task, inputData) async {
       try {
         if (task == "cacheRankingData") {
-          final repository = VideoListRepository(); // ✅ Repository 초기화
+          final repository = VideoListRepository(); //   Repository 초기화
           await cacheRankingData(
-              repository); // ✅ 데이터를 가져오고 SharedPreferences에 캐싱
+              repository); //   데이터를 가져오고 SharedPreferences에 캐싱
         }
 
         // 타임존 초기화
@@ -81,7 +81,7 @@ Future<void> cacheRankingData(VideoListRepository repository) async {
     final dailyRanking = await repository.fetchRanksDaily();
     final weeklyRanking = await repository.fetchRanksWeekly();
 
-    // ✅ JSON 변환 후 SharedPreferences에 저장
+    //   JSON 변환 후 SharedPreferences에 저장
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("daily_ranking",
         jsonEncode(dailyRanking.map((e) => e.toJson()).toList()));
@@ -89,9 +89,9 @@ Future<void> cacheRankingData(VideoListRepository repository) async {
         jsonEncode(weeklyRanking.map((e) => e.toJson()).toList()));
     prefs.setString("last_cache_time", DateTime.now().toIso8601String());
 
-    print("✅ 랭킹 데이터 캐싱 완료!");
+    print("  랭킹 데이터 캐싱 완료!");
   } catch (e) {
-    print("❌ 랭킹 데이터 캐싱 실패: $e");
+    print("  랭킹 데이터 캐싱 실패: $e");
   }
 }
 

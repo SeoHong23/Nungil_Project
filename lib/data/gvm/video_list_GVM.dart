@@ -8,7 +8,7 @@ class VideoNotifier extends Notifier<List<VideoListModel>> {
   final int _size = 10;
   bool _hasMore = true;
   bool _isLoading = false;
-  Map<String, Set<String>> _selectedFilters = {}; // ✅ 현재 선택된 필터
+  Map<String, Set<String>> _selectedFilters = {}; //   현재 선택된 필터
   String _sortOrder = "";
   bool _isNotOpen = false;
 

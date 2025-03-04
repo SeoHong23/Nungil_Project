@@ -66,7 +66,7 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
     setState(() => isLoading = true);
 
     try {
-      // ✅ 캐싱된 데이터 확인 (있으면 바로 적용)
+      //   캐싱된 데이터 확인 (있으면 바로 적용)
       final cachedDailyRanking =
           loadCachedRanking(prefs, 'daily_ranking_$today');
       if (cachedDailyRanking != null && mounted) {
@@ -93,9 +93,9 @@ class _HomeBodyComponentState extends State<HomeBodyComponent> {
         }).catchError((e) => print("Error fetching weekly ranks: $e"));
       }
 
-      // ✅ 개별적으로 API 요청 후 바로 setState 호출 (병렬 실행)
+      //   개별적으로 API 요청 후 바로 setState 호출 (병렬 실행)
 
-      bannerRepository.randomBanner().then((data) {
+      bannerRepository.randomBanner("mainPage").then((data) {
         if (mounted) {
           setState(() => randomAd = data);
         }

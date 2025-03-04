@@ -14,11 +14,11 @@ class VideoListRepository {
   // 사용안함
   Future<List<VideoListModel>> fetchVideos(int page, int size) async {
     try {
-      // ✅ API 호출 (JSON 데이터 직접 받음)
+      //API 호출 (JSON 데이터 직접 받음)
       Response response =
           await dio.get('/api/videos/paged?page=$page&size=$size');
 
-      // ✅ response.data가 이미 JSON 형태일 가능성이 높음 → json.decode 제거
+      //response.data가 이미 JSON 형태일 가능성이 높음 → json.decode 제거
       if (response.statusCode == 200 && response.data is List) {
         return (response.data as List)
             .map(
@@ -38,11 +38,11 @@ class VideoListRepository {
     Map<String, dynamic> queryParams =
         _buildQueryParams(page, size, filter, sortOrder, isNotOpen);
     try {
-      // ✅ API 호출 (JSON 데이터 직접 받음)
+      //API 호출 (JSON 데이터 직접 받음)
       Response response =
           await dio.get('/api/videos/paged', queryParameters: queryParams);
 
-      // ✅ response.data가 이미 JSON 형태일 가능성이 높음 → json.decode 제거
+      //response.data가 이미 JSON 형태일 가능성이 높음 → json.decode 제거
       if (response.statusCode == 200 && response.data is List) {
         return (response.data as List)
             .map(
@@ -60,10 +60,10 @@ class VideoListRepository {
   // 랜덤한 영상 10개
   Future<List<VideoListModel>> fetchVideosRandom(int size) async {
     try {
-      // ✅ API 호출 (JSON 데이터 직접 받음)
+      //   API 호출 (JSON 데이터 직접 받음)
       Response response = await dio.get('/api/videos/random?size=$size');
 
-      // ✅ response.data가 이미 JSON 형태일 가능성이 높음 → json.decode 제거
+      //   response.data가 이미 JSON 형태일 가능성이 높음 → json.decode 제거
       if (response.statusCode == 200 && response.data is List) {
         return (response.data as List)
             .map(
@@ -93,18 +93,18 @@ class VideoListRepository {
     final prefs = await SharedPreferences.getInstance();
     final String today = _getTodayDate();
 
-    // ✅ 캐싱된 날짜 확인
+    //   캐싱된 날짜 확인
     final String? cachedDate = prefs.getString(dateKey);
     final String? cachedData = prefs.getString(cacheKey);
 
-    // ✅ 오늘 날짜와 같다면, 캐싱된 데이터 반환
+    //   오늘 날짜와 같다면, 캐싱된 데이터 반환
     if (cachedDate == today && cachedData != null) {
       final List<dynamic> decoded = jsonDecode(cachedData);
       return decoded.map((item) => VideoRankModel.fromJson(item)).toList();
     }
 
     try {
-      // ✅ API 호출 (JSON 데이터 직접 받음)
+      //   API 호출 (JSON 데이터 직접 받음)
       Response response = await dio.get(url);
 
       if (response.statusCode == 200 && response.data is List) {
@@ -113,7 +113,7 @@ class VideoListRepository {
                 (item) => VideoRankModel.fromJson(item as Map<String, dynamic>))
             .toList();
 
-        // ✅ 새 데이터 캐싱
+        //   새 데이터 캐싱
         await prefs.setString(
             cacheKey, jsonEncode(ranks.map((e) => e.toJson()).toList()));
         await prefs.setString(dateKey, today);
@@ -128,7 +128,7 @@ class VideoListRepository {
     }
   }
 
-  // ✅ 오늘 날짜를 yyyy-MM-dd 형식으로 반환
+  //   오늘 날짜를 yyyy-MM-dd 형식으로 반환
   String _getTodayDate() {
     return DateTime.now().toIso8601String().split('T')[0];
   }

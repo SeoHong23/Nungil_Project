@@ -6,7 +6,7 @@ class SettingModel {
   SettingModel(
       {required this.userId, required this.settingId, required this.isAlert});
 
-  // ✅ JSON 변환 (서버 데이터 연동 시 필요)
+  //   JSON 변환 (서버 데이터 연동 시 필요)
   factory SettingModel.fromJson(Map<String, dynamic> json) {
     return SettingModel(
         userId: json['userId'],

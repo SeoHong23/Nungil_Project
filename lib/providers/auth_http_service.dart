@@ -30,7 +30,7 @@ class AuthHttpService {
 
       return token;
     } catch (e) {
-      print('❌ 토큰 가져오기 오류: $e');
+      print('  토큰 가져오기 오류: $e');
       return null;
     }
   }
@@ -68,7 +68,7 @@ class AuthHttpService {
 
       return response;
     } catch (e) {
-      print('❌ 인증 GET 요청 오류: $e');
+      print('  인증 GET 요청 오류: $e');
       rethrow;
     }
   }
@@ -110,7 +110,7 @@ class AuthHttpService {
 
       return response;
     } catch (e) {
-      print('❌ 인증 POST 요청 오류: $e');
+      print('  인증 POST 요청 오류: $e');
       rethrow;
     }
   }
@@ -152,7 +152,7 @@ class AuthHttpService {
 
       return response;
     } catch (e) {
-      print('❌ 인증 PUT 요청 오류: $e');
+      print('  인증 PUT 요청 오류: $e');
       rethrow;
     }
   }
@@ -190,7 +190,7 @@ class AuthHttpService {
 
       return response;
     } catch (e) {
-      print('❌ 인증 DELETE 요청 오류: $e');
+      print('  인증 DELETE 요청 오류: $e');
       rethrow;
     }
   }

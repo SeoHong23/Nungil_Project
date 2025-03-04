@@ -26,7 +26,7 @@ class FilterTypeComponent extends StatefulWidget {
 }
 
 class _FilterTypeComponentState extends State<FilterTypeComponent> {
-  /// ✅ **필터 선택 다이얼로그**
+  ///   **필터 선택 다이얼로그**
   void _showFilterDialog(String filterType) {
     List<String> options = FilterRepository.getOptionsByCategory(filterType);
 
@@ -37,7 +37,7 @@ class _FilterTypeComponentState extends State<FilterTypeComponent> {
       builder: (context) {
         return Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).cardColor, // ✅ 바텀시트 배경색 지정
+            color: Theme.of(context).cardColor, //   바텀시트 배경색 지정
             borderRadius: BorderRadius.vertical(
               top: Radius.circular(20),
             ),
@@ -46,7 +46,7 @@ class _FilterTypeComponentState extends State<FilterTypeComponent> {
             initialChildSize: 0.7,
             minChildSize: 0.7,
             maxChildSize: 0.7,
-            expand: false, // ✅ 바텀시트가 전체 화면을 덮지 않도록 설정
+            expand: false, //   바텀시트가 전체 화면을 덮지 않도록 설정
             builder: (context, scrollController) {
               return Container(
                 padding: EdgeInsets.all(16),
@@ -94,7 +94,7 @@ class _FilterTypeComponentState extends State<FilterTypeComponent> {
     );
   }
 
-  /// ✅ **필터 추가/삭제 함수**
+  ///   **필터 추가/삭제 함수**
   void _toggleFilter(String category, String option) {
     final newFilters = Map<String, Set<String>>.from(widget.selectedFilters);
 
@@ -111,11 +111,11 @@ class _FilterTypeComponentState extends State<FilterTypeComponent> {
       newFilters[category]!.add(option);
     }
 
-    widget.onFilterChanged(newFilters); // ✅ 필터 변경 이벤트 호출
+    widget.onFilterChanged(newFilters); //   필터 변경 이벤트 호출
   }
 
   void _toggleOpen(bool isNotOpen) {
-    widget.onOpenChanged(isNotOpen); // ✅ 필터 변경 이벤트 호출
+    widget.onOpenChanged(isNotOpen); //   필터 변경 이벤트 호출
   }
 
   @override
@@ -123,7 +123,7 @@ class _FilterTypeComponentState extends State<FilterTypeComponent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        /// ✅ **필터 버튼 (클릭 시 다이얼로그 열림)**
+        ///   **필터 버튼 (클릭 시 다이얼로그 열림)**
         Row(
           children: [
             Expanded(
@@ -176,7 +176,7 @@ class _FilterTypeComponentState extends State<FilterTypeComponent> {
         ),
         const SizedBox(height: 5),
 
-        /// ✅ **선택된 필터 리스트**
+        ///   **선택된 필터 리스트**
         Row(
           children: [
             Expanded(
@@ -184,7 +184,7 @@ class _FilterTypeComponentState extends State<FilterTypeComponent> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: widget.selectedFilters.entries
-                      .where((entry) => entry.key != "OTT") // ✅ OTT 제외
+                      .where((entry) => entry.key != "OTT") //   OTT 제외
                       .expand(
                     (entry) {
                       String category = entry.key;
@@ -239,7 +239,7 @@ class _FilterTypeComponentState extends State<FilterTypeComponent> {
                       child: Text("오래된순"),
                     ),
                   ],
-                  onChanged: widget.onSortChanged, // ✅ 정렬 변경 시 실행
+                  onChanged: widget.onSortChanged, //   정렬 변경 시 실행
                 ),
               ],
             ),

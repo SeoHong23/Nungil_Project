@@ -75,6 +75,7 @@ class ReviewRepository {
 
         // Map 형태 응답 처리
         if (decoded is Map) {
+
           print("✅ 리뷰 개수 포함 응답 처리.");
           int reviewCount = decoded['count'] ?? 0;
           List<Review> reviews = [];
@@ -134,10 +135,10 @@ class ReviewRepository {
       );
 
       if (response.statusCode == 200) {
-        print('✅ 리뷰 작성 성공!');
+        print('  리뷰 작성 성공!');
         return true;
       } else {
-        print('❌ 리뷰 작성 실패: ${response.statusCode}, ${response.body}');
+        print('  리뷰 작성 실패: ${response.statusCode}, ${response.body}');
 
         if (response.body.isNotEmpty) {
           try {
@@ -150,7 +151,7 @@ class ReviewRepository {
         return false;
       }
     } catch (e) {
-      print('❌ 리뷰 생성 중 예외 발생: $e');
+      print('  리뷰 생성 중 예외 발생: $e');
       return false;
     }
   }
@@ -177,14 +178,14 @@ class ReviewRepository {
       );
 
       if (response.statusCode == 200) {
-        print('✅ 리뷰 수정 성공!');
+        print('  리뷰 수정 성공!');
         return true;
       } else {
-        print('❌ 리뷰 수정 실패: ${response.statusCode}, ${response.body}');
+        print('  리뷰 수정 실패: ${response.statusCode}, ${response.body}');
         return false;
       }
     } catch (e) {
-      print('❌ 리뷰 수정 중 예외 발생: $e');
+      print('  리뷰 수정 중 예외 발생: $e');
       return false;
     }
   }
@@ -205,14 +206,14 @@ class ReviewRepository {
       );
 
       if (response.statusCode == 200) {
-        print('✅ 리뷰 삭제 성공!');
+        print('  리뷰 삭제 성공!');
         return true;
       } else {
-        print('❌ 리뷰 삭제 실패: ${response.statusCode}, ${response.body}');
+        print('  리뷰 삭제 실패: ${response.statusCode}, ${response.body}');
         return false;
       }
     } catch (e) {
-      print('❌ 리뷰 삭제 중 예외 발생: $e');
+      print('  리뷰 삭제 중 예외 발생: $e');
       return false;
     }
   }
@@ -232,14 +233,14 @@ class ReviewRepository {
       );
 
       if (response.statusCode == 200) {
-        print('✅ 리뷰 좋아요 토글 성공!');
+        print('  리뷰 좋아요 토글 성공!');
         return true;
       } else {
-        print('❌ 리뷰 좋아요 토글 실패: ${response.statusCode}, ${response.body}');
+        print('  리뷰 좋아요 토글 실패: ${response.statusCode}, ${response.body}');
         return false;
       }
     } catch (e) {
-      print('❌ 리뷰 좋아요 토글 중 예외 발생: $e');
+      print('  리뷰 좋아요 토글 중 예외 발생: $e');
       return false;
     }
   }

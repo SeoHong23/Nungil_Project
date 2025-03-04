@@ -21,12 +21,12 @@ class _BannerItemComponentState extends State<BannerItemComponent> {
       final repository = BannerRepository();
       await repository.DeleteBanner(id);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("✅ 삭제 완료되었습니다.")),
+        SnackBar(content: Text("  삭제 완료되었습니다.")),
       );
       widget.onDelete(id);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("❌ 오류 발생: 삭제 실패했습니다. $e")),
+        SnackBar(content: Text(" 오류 발생: 삭제 실패했습니다. $e")),
       );
     }
 

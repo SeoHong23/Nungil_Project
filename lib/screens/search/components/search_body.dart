@@ -72,7 +72,7 @@ class _SearchBodyState extends State<SearchBody> {
                   child: Text("장르"),
                 ),
               ],
-              onChanged: (value) => _typeChange(value!), // ✅ 검색 타입 변경
+              onChanged: (value) => _typeChange(value!), //   검색 타입 변경
             ),
           ],
         ),
@@ -97,12 +97,12 @@ class _SearchBodyState extends State<SearchBody> {
                 icon: Icon(FontAwesomeIcons.arrowRight,
                     color: Theme.of(context).iconTheme.color),
                 onPressed: () =>
-                    _searchKey(_searchController.text), // ✅ 검색 버튼 클릭 시 검색 실행
+                    _searchKey(_searchController.text), //   검색 버튼 클릭 시 검색 실행
               ),
             ],
           ),
         ),
-        // ✅ **Expanded 제거하여 오류 해결**
+        //   **Expanded 제거하여 오류 해결**
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(8.0),

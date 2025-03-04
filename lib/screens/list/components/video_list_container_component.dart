@@ -50,7 +50,7 @@ class _VideoListContainerComponentState
     }
   }
 
-  /// ✅ **필터 적용된 데이터 불러오기**
+  ///   **필터 적용된 데이터 불러오기**
   void _fetchVideos() {
     ref.read(videoNotifierProvider.notifier).fetchMoreVideosWithFilter(
         widget.selectedFilters, widget.sortOrder,

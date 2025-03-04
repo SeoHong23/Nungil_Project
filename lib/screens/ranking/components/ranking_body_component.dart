@@ -17,15 +17,15 @@ class RankingBodyComponent extends StatefulWidget {
 class _RankingBodyComponentState extends State<RankingBodyComponent> {
   List<VideoRankModel> videoList = [];
   bool isLoading = true;
-  String selectedCategory = "일일"; // ✅ 기본 선택값
+  String selectedCategory = "일일"; //   기본 선택값
 
   @override
   void initState() {
     super.initState();
-    fetchVideos(); // ✅ 초기 데이터는 "일별" 데이터 가져오기
+    fetchVideos(); //   초기 데이터는 "일별" 데이터 가져오기
   }
 
-  /// ✅ **선택된 카테고리에 따라 데이터 불러오기**
+  ///   **선택된 카테고리에 따라 데이터 불러오기**
   Future<void> fetchVideos() async {
     setState(() {
       isLoading = true;
@@ -64,7 +64,7 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _rankingCategoryButtons(), // ✅ 카테고리 버튼
+              _rankingCategoryButtons(), //   카테고리 버튼
               const SizedBox(height: 16),
               Text(selectedCategory == "일일" ? "오늘의 박스오피스 랭킹" : "금주의 박스오피스 랭킹",
                   style: Theme.of(context).textTheme.titleLarge),
@@ -72,9 +72,9 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
               Expanded(
                 child: isLoading
                     ? const Center(
-                        child: CircularProgressIndicator()) // ✅ 로딩 UI 개선
+                        child: CircularProgressIndicator()) //   로딩 UI 개선
                     : videoList.isEmpty
-                        ? const Center(child: Text("데이터가 없습니다.")) // ✅ 빈 데이터 처리
+                        ? const Center(child: Text("데이터가 없습니다.")) //   빈 데이터 처리
                         : _buildRankingContent(),
               ),
             ],
@@ -84,19 +84,19 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
     );
   }
 
-  /// ✅ **카테고리 버튼 UI (일일/주간 선택 가능)**
+  ///   **카테고리 버튼 UI (일일/주간 선택 가능)**
   Widget _rankingCategoryButtons() {
     List<String> categories = ["일일", "주간별"];
 
     return Row(
       children: categories.map((category) {
-        bool isSelected = category == selectedCategory; // ✅ 현재 선택된 카테고리 확인
+        bool isSelected = category == selectedCategory; //   현재 선택된 카테고리 확인
         return GestureDetector(
           onTap: () {
             setState(() {
-              selectedCategory = category; // ✅ 선택된 카테고리 업데이트
+              selectedCategory = category; //   선택된 카테고리 업데이트
             });
-            fetchVideos(); // ✅ 카테고리 변경 시 데이터 새로 불러오기
+            fetchVideos(); //   카테고리 변경 시 데이터 새로 불러오기
           },
           child: Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -107,7 +107,7 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
                     ? Theme.of(context).cardColor
                     : Theme.of(context)
                         .colorScheme
-                        .surface, // ✅ 선택 여부에 따른 색상 변경
+                        .surface, //   선택 여부에 따른 색상 변경
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Text(
@@ -116,12 +116,12 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
                   fontSize: 15,
                   fontWeight: isSelected
                       ? FontWeight.bold
-                      : FontWeight.normal, // ✅ 선택된 경우 볼드 처리
+                      : FontWeight.normal, //   선택된 경우 볼드 처리
                   color: isSelected
                       ? Theme.of(context).colorScheme.secondary
                       : Theme.of(context)
                           .colorScheme
-                          .primary, // ✅ 선택된 경우 텍스트 색상 변경
+                          .primary, //   선택된 경우 텍스트 색상 변경
                 ),
               ),
             ),
@@ -131,13 +131,13 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
     );
   }
 
-  /// ✅ **랭킹 데이터 리스트 렌더링**
+  ///   **랭킹 데이터 리스트 렌더링**
   Widget _buildRankingContent() {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Column(
         children: [
-          _buildTopRanking(), // ✅ 1위 영화 UI
+          _buildTopRanking(), //   1위 영화 UI
           ...List.generate(
             videoList.length - 1,
             (index) => RankingListComponent(
@@ -150,7 +150,7 @@ class _RankingBodyComponentState extends State<RankingBodyComponent> {
     );
   }
 
-  /// ✅ **1위 영화 강조 UI**
+  ///   **1위 영화 강조 UI**
   Widget _buildTopRanking() {
     final topVideo = videoList[0];
 

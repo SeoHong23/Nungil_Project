@@ -43,9 +43,9 @@ class _VideoListContainerComponentState
     super.didUpdateWidget(oldWidget);
     if (oldWidget.keyword != widget.keyword ||
         oldWidget.searchType != widget.searchType) {
-      // ✅ 검색어 또는 검색 타입이 변경되면 새로운 검색 수행
+      //   검색어 또는 검색 타입이 변경되면 새로운 검색 수행
       _page = 0;
-      _searchResults.clear(); // ✅ 기존 검색 결과 초기화
+      _searchResults.clear(); //   기존 검색 결과 초기화
       _hasMoreData = true;
       _performSearch(widget.keyword, reset: true);
     }
@@ -57,9 +57,9 @@ class _VideoListContainerComponentState
     super.dispose();
   }
 
-  /// ✅ **검색 API 호출**
+  ///   **검색 API 호출**
   Future<void> _performSearch(String query, {bool reset = false}) async {
-    if (_isLoading || !_hasMoreData) return; // ✅ 중복 호출 방지 & 더 불러올 데이터가 없으면 종료
+    if (_isLoading || !_hasMoreData) return; //   중복 호출 방지 & 더 불러올 데이터가 없으면 종료
     if (query.isEmpty) {
       setState(() {
         _searchResults = [];
@@ -71,7 +71,7 @@ class _VideoListContainerComponentState
     if (reset) {
       setState(() {
         _page = 0;
-        _searchResults.clear(); // ✅ 기존 검색 결과 초기화
+        _searchResults.clear(); //   기존 검색 결과 초기화
         _hasMoreData = true;
       });
     }
@@ -82,7 +82,7 @@ class _VideoListContainerComponentState
       final repository = VideoListRepository();
       final results = await repository.searchVideos(
         _page,
-        10, // ✅ 한 번에 불러올 데이터 개수
+        10, //   한 번에 불러올 데이터 개수
         query,
         widget.searchType,
       );
@@ -91,11 +91,11 @@ class _VideoListContainerComponentState
         if (reset) {
           _searchResults = results;
         } else {
-          _searchResults.addAll(results); // ✅ 기존 데이터에 추가
+          _searchResults.addAll(results); //   기존 데이터에 추가
         }
 
         if (results.length < 10) {
-          _hasMoreData = false; // ✅ 더 이상 가져올 데이터가 없으면 false 처리
+          _hasMoreData = false; //   더 이상 가져올 데이터가 없으면 false 처리
         }
       });
     } catch (e) {
@@ -125,11 +125,11 @@ class _VideoListContainerComponentState
     }
 
     return Container(
-      child: _isLoading && _searchResults.isEmpty // ✅ 처음 검색 중일 때 로딩 화면 표시
+      child: _isLoading && _searchResults.isEmpty //   처음 검색 중일 때 로딩 화면 표시
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : _searchResults.isEmpty // ✅ 검색 결과가 없을 때 메시지 표시
+          : _searchResults.isEmpty //   검색 결과가 없을 때 메시지 표시
               ? Center(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
@@ -144,7 +144,7 @@ class _VideoListContainerComponentState
                   shrinkWrap: true,
                   physics: AlwaysScrollableScrollPhysics(),
                   controller: _scrollController,
-                  itemCount: _searchResults.length + 1, // ✅ 로딩 아이템 추가
+                  itemCount: _searchResults.length + 1, //   로딩 아이템 추가
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: crossAxisCount,
                     crossAxisSpacing: 8.0,

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/theme/common_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// ✅ 테마 변경을 관리하는 StateNotifier
+///   테마 변경을 관리하는 StateNotifier
 class ThemeNotifier extends StateNotifier<bool> {
   static const String _themeKey = 'isDarkMode';
   final SharedPreferences prefs;
@@ -18,7 +18,7 @@ class ThemeNotifier extends StateNotifier<bool> {
   ThemeData get currentTheme => state ? dTheme() : mTheme();
 }
 
-/// ✅ 전역 Provider 선언
+///   전역 Provider 선언
 final themeProvider = StateNotifierProvider<ThemeNotifier, bool>((ref) {
   throw UnimplementedError('main.dart에서 override 해주세요.');
 });

@@ -26,10 +26,6 @@ class AdminBodyComponent extends StatelessWidget {
               child: Column(
                 children: [
                   AdminColumComponent(title: "유저관리"),
-                  Divider(),
-                  AdminColumComponent(title: "유저관리"),
-                  Divider(),
-                  AdminColumComponent(title: "유저관리"),
                 ],
               ),
             ),
@@ -48,8 +44,6 @@ class AdminBodyComponent extends StatelessWidget {
               child: Column(
                 children: [
                   AdminBannerComponent(title: "🚩  배너"),
-                  Divider(),
-                  AdminColumComponent(title: "🔔  푸쉬알림 관리"),
                 ],
               ),
             ),

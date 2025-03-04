@@ -25,7 +25,7 @@ class _RankingPageState extends ConsumerState<RankingPage> {
         actions: [
           IconButton(
             onPressed: () {
-              themeNotifier.toggleTheme(); // ✅ 다크 모드 토글 기능 추가
+              themeNotifier.toggleTheme(); //   다크 모드 토글 기능 추가
             },
             icon: Icon(isDarkMode ? Icons.nightlight_round : Icons.wb_sunny),
           ),
