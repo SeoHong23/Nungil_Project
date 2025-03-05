@@ -11,17 +11,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nungil/screens/user/login/login_page.dart';
 import 'dart:convert';
 
-final reviewRepositoryProvider = Provider((ref) => ReviewRepository(ref));
-
 final reviewsProvider =
     FutureProvider.family<List<Review>, dynamic>((ref, movieId) async {
   final repository = ref.watch(reviewRepositoryProvider);
 
-  // final movieIdStr = movieId.toString();
-
-  // return await repository.getReviews(movieId);
+  // Map<String, dynamic>에서 리뷰 목록 추출
   final result = await repository.getReviews(movieId.toString());
-  return (result['reviews'] as List).cast<Review>();
+  return result['reviews'] as List<Review>;
 });
 
 class DetailTapReview extends ConsumerStatefulWidget {
@@ -63,15 +59,12 @@ class _DetailTapReviewState extends ConsumerState<DetailTapReview> {
 
   String get _currentUsername {
     final authState = ref.read(authProvider);
-    if (authState.user == null) {
-      return '';
-    }
     return authState.user!.nickname;
   }
 
-  int? get _currentUserId {
+  int get _currentUserId {
     final authState = ref.read(authProvider);
-    return authState.user?.userId;
+    return authState.user!.userId;
   }
 
   bool get _isLoggedIn {
