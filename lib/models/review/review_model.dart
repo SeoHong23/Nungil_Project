@@ -47,7 +47,7 @@ class Review {
       'rating': rating,
       'createdAt': createdAt,
       'likeCount': likeCount,
-      'isLiked': isLiked,  // 클라이언트에서는 'isLiked'로 사용
+      'isLiked': isLiked,
     };
   }
 

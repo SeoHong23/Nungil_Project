@@ -48,6 +48,7 @@ class ReviewRepository {
     };
   }
 
+// 영화별 리뷰 목록
   Future<Map<String, dynamic>> getReviews(String movieId) async {
     try {
       final headers = await _getHeaders();
@@ -73,29 +74,18 @@ class ReviewRepository {
       if (response.statusCode == 200) {
         final decoded = jsonDecode(utf8.decode(response.bodyBytes));
 
-        // Map 형태 응답 처리
         if (decoded is Map) {
 
           print("✅ 리뷰 개수 포함 응답 처리.");
-          int reviewCount = decoded['count'] ?? 0;
-          List<Review> reviews = [];
-          if (decoded['reviews'] is List) {
-            reviews = (decoded['reviews'] as List)
-                .map((json) => Review.fromJson(json))
-                .toList();
-          }
+          int reviewCount = decoded['count'];
+          List<Review> reviews = (decoded['reviews'] as List)
+              .map((json) => Review.fromJson(json))
+              .toList();
           return {"count": reviewCount, "reviews": reviews};
-        }
-        // List 형태 응답 처리
-        else if (decoded is List) {
-          print("✅ 리스트 형태 응답 처리.");
-          List<Review> reviews = [];
-          try {
-            reviews = decoded.map((json) => Review.fromJson(json)).toList();
-            print("✅ ${reviews.length}개의 리뷰를 변환했습니다.");
-          } catch (e) {
-            print("❌ 리뷰 변환 중 오류: $e");
-          }
+        } else if (decoded is List) {
+          print("✅ 리뷰 목록만 응답 처리.");
+          List<Review> reviews =
+              decoded.map((json) => Review.fromJson(json)).toList();
           return {"count": reviews.length, "reviews": reviews};
         } else {
           print("❌ 예상치 못한 응답 형식: ${decoded.runtimeType}");
