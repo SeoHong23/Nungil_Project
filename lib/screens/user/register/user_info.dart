@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:nungil/screens/user/user_page.dart';
 import 'package:nungil/theme/common_theme.dart';
+import 'package:nungil/util/my_http.dart';
 
 import '../../main_screen.dart';
 
@@ -146,17 +148,13 @@ class _UserInfoState extends State<UserInfo> {
 
     try {
       // HTTP POST 요청
-      final response = await http.post(
-        Uri.parse('http://13.239.238.92:8080/register'), // 포트 번호를 8080으로 변경
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
+      final response = await dio.post('/register',data: {
           'nickname': nickname,
           'gender': gender,
           'birthDate': birthDate,
           'email': widget.email,
           'password': widget.password,
-        }),
-      );
+        });
 
       if (response.statusCode == 200) {
         print('회원가입 성공!');
@@ -424,7 +422,7 @@ class _UserInfoState extends State<UserInfo> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      const MainScreen(), // 이동할 페이지 지정
+                                      const UserPage(), // 이동할 페이지 지정
                                 ),
                               );
                             }
