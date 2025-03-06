@@ -23,21 +23,26 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.nungil"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
-
+    signingConfigs {
+        release {
+            storeFile file("C:/Users/KDP/Desktop/Nungil_Project/android/nungil-release-key.jks") // 서명키 파일 경로
+            storePassword "nungil123&" // 서명키 비밀번호
+            keyAlias "nungil-key-alias" // 서명에 사용할 키 별칭
+            keyPassword "nungil123&" // 키 비밀번호
+        }
+    }
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            signingConfig signingConfigs.release // 서명 설정 연결
+            shrinkResources true  // R8 최적화
+            minifyEnabled true    // 코드 난독화 활성화
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'  // proguard 설정 파일 경로 추가
         }
     }
 }
