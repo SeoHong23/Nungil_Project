@@ -77,13 +77,18 @@ class ReviewRepository {
         if (decoded is Map) {
 
           print("✅ 리뷰 개수 포함 응답 처리.");
+
           int reviewCount = decoded['count'];
+
           List<Review> reviews = (decoded['reviews'] as List)
               .map((json) => Review.fromJson(json))
               .toList();
+
           return {"count": reviewCount, "reviews": reviews};
+
         } else if (decoded is List) {
           print("✅ 리뷰 목록만 응답 처리.");
+
           List<Review> reviews =
               decoded.map((json) => Review.fromJson(json)).toList();
           return {"count": reviews.length, "reviews": reviews};
@@ -100,6 +105,47 @@ class ReviewRepository {
       return {"count": 0, "reviews": []};
     }
   }
+
+  Future<List<Review>> getUserReviews() async {
+    try {
+      final headers = await _getHeaders();
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getInt('userId');
+
+      if(userId == null) {
+        print("사용자 ID 가 없습니다!");
+        return[];
+      }
+
+      String url = '$baseUrl/api/user/reviews/$userId';
+
+      print('📢 사용자 리뷰 요청 URL: $url');
+
+      final response = await http.get(
+        Uri.parse(url),
+        headers: headers,
+      );
+
+      print("API 응답코드 : ${response.statusCode}");
+      print("API 응답 본문 : ${response.body}");
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(utf8.decode(response.bodyBytes));
+
+        List<dynamic> reviewList = decoded['reviews'] ?? [];
+        List<Review> reviews = reviewList.map((json) => Review.fromJson(json)).toList();
+
+        return reviews;
+      } else {
+        print("❌ 리뷰 불러오기 실패: ${response.statusCode}, ${response.body}");
+        return [];
+      }
+    } catch (e) {
+      print("❌ 리뷰 가져오기 예외 발생: $e");
+      return [];
+    }
+  }
+
 
   // 리뷰 작성
   Future<bool> createReview(Review review) async {
@@ -245,4 +291,9 @@ class ReviewRepository {
 // ReviewRepository Provider
 final reviewRepositoryProvider = Provider<ReviewRepository>((ref) {
   return ReviewRepository(ref);
+});
+
+final userReviewsProvider = FutureProvider<List<Review>>((ref) async {
+  final repository = ref.watch(reviewRepositoryProvider);
+  return repository.getUserReviews();
 });

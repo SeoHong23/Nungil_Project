@@ -3,12 +3,15 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nungil/data/repository/review_repository.dart';
 import 'package:nungil/data/repository/video_reaction_repository.dart';
 import 'package:nungil/providers/auth_provider.dart';
 import 'package:nungil/screens/main_screen.dart';
+import 'package:nungil/screens/user/components/my_review_page.dart';
 import 'package:nungil/screens/user/components/user_setting.dart';
 import 'package:nungil/screens/user/login/login_page.dart';
 import 'package:nungil/screens/user/more/watched_page.dart';
+import 'package:nungil/screens/video_detail/components/detail_tap_review.dart';
 import 'package:nungil/theme/common_theme.dart';
 
 class UserPage extends ConsumerWidget {
@@ -147,7 +150,19 @@ class UserPage extends ConsumerWidget {
                 child: Column(
                   children: [
                     // "작성한 리뷰 0 >"
-                    _buildRowItem("작성한 리뷰", "0", context),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const MyReviewPage()));
+                      },
+
+                    child: _buildRowItem("작성한 리뷰",
+                        ref.watch(userReviewsProvider).when(data: (reviews) => reviews.length.toString(),
+                          loading: () => "-",
+                          error: (_, __) => "0",
+                        ),
+                      context,
+                    ),
+                    ),
 
                     Divider(
                         color: Theme.of(context).colorScheme.secondary,

@@ -2,6 +2,7 @@ class Review {
   final String reviewId;
   final int userId;
   final String movieId;
+  final String movieTitle;
   final String nick;
   final String content;
   final double rating;
@@ -13,6 +14,7 @@ class Review {
     required this.reviewId,
     required this.userId,
     required this.movieId,
+    required this.movieTitle,
     required this.nick,
     required this.content,
     required this.rating,
@@ -26,6 +28,7 @@ class Review {
       reviewId: json['id'] ?? '',
       userId: json['userId'] ?? 0,
       movieId: json['movieId'] ?? '',
+      movieTitle: json['movieTitle'] ?? '제목 없음',
       nick: json['nick'] ?? '',
       content: json['content'] ?? '',
       rating: (json['rating'] is int)
@@ -42,6 +45,7 @@ class Review {
       'id': reviewId,
       'userId': userId,
       'movieId': movieId,
+      'movieTitle': movieTitle,
       'nick': nick,
       'content': content,
       'rating': rating,
@@ -56,6 +60,7 @@ class Review {
     String? reviewId,
     int? userId,
     String? movieId,
+    String? movieTitle,
     String? nick,
     String? content,
     double? rating,
@@ -67,6 +72,7 @@ class Review {
       reviewId: reviewId ?? this.reviewId,
       userId: userId ?? this.userId,
       movieId: movieId ?? this.movieId,
+      movieTitle: movieId ?? this.movieTitle,
       nick: nick ?? this.nick,
       content: content ?? this.content,
       rating: rating ?? this.rating,
